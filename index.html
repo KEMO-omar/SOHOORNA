@@ -10,37 +10,57 @@
     
     <style>
         :root {
-            --bg: #05070a;
-            --surface: #0d121b;
+            /* Dark Mode - Deep & Elegant */
+            --bg: #030508;
+            --surface: #0f141e;
             --gold: #D4AF37;
-            --gold-light: #f3cf58;
-            --text-main: #ffffff;
-            --text-dim: #a0aec0;
-            --nav-bg: rgba(13, 18, 27, 0.95);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            --sidebar-bg: #010409;
+            --gold-light: #FFD700;
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+            --nav-bg: rgba(15, 20, 30, 0.9);
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            --sidebar-bg: #080c14;
+            --decoration-opacity: 0.4;
         }
 
         [data-theme="light"] {
-            --bg: #f8fafc;
+            /* Light Mode - Clean & Soft */
+            --bg: #f0f2f5;
             --surface: #ffffff;
-            --gold: #b38b00;
-            --gold-light: #d4af37;
-            --text-main: #1a202c;
-            --text-dim: #4a5568;
-            --nav-bg: rgba(255, 255, 255, 0.95);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --gold: #a37e00;
+            --gold-light: #c5a021;
+            --text-main: #1e293b;
+            --text-dim: #64748b;
+            --nav-bg: rgba(255, 255, 255, 0.9);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
             --sidebar-bg: #ffffff;
+            --decoration-opacity: 0.2;
         }
 
-        * { box-sizing: border-box; transition: background 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; transition: all 0.3s ease; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Cairo', sans-serif;
-            margin: 0; padding-bottom: 110px;
+            margin: 0; padding-bottom: 120px;
             overflow-x: hidden;
+            background-image: radial-gradient(circle at top right, rgba(212, 175, 55, 0.05), transparent);
+        }
+
+        /* --- زينة رمضان الواقعية --- */
+        .ramadan-decor {
+            position: absolute; top: 0; width: 100%; height: 150px;
+            background-image: url('https://www.transparentpng.com/download/ramadan-lantern/H0X7n7-ramadan-lantern-free-download.png');
+            background-repeat: repeat-x; background-size: contain;
+            opacity: var(--decoration-opacity); pointer-events: none; z-index: 1;
+            animation: swing 3s ease-in-out infinite alternate;
+            transform-origin: top;
+        }
+
+        @keyframes swing {
+            from { transform: rotate(-2deg); }
+            to { transform: rotate(2deg); }
         }
 
         /* Sidebar Styling */
@@ -48,21 +68,21 @@
             position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
             background: var(--sidebar-bg); z-index: 3000;
             transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 20px; overflow-y: auto; box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+            padding: 20px; overflow-y: auto; box-shadow: -5px 0 30px rgba(0,0,0,0.5);
         }
         .sidebar.active { right: 0; }
-        .sidebar-header { border-bottom: 1px solid var(--gold); padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
+        .sidebar-header { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 20px; text-align: center; }
         .sidebar-item {
             display: flex; align-items: center; gap: 15px; color: var(--text-main);
-            text-decoration: none; padding: 12px; border-radius: 12px; margin-bottom: 5px; transition: 0.2s;
+            text-decoration: none; padding: 14px; border-radius: 12px; margin-bottom: 8px; font-weight: 600;
         }
-        .sidebar-item:hover { background: var(--gold); color: #000; }
-        .sidebar-item i { width: 25px; text-align: center; color: var(--gold); }
+        .sidebar-item:hover { background: var(--gold); color: #000; transform: translateX(-5px); }
+        .sidebar-item i { width: 25px; text-align: center; color: var(--gold); font-size: 1.2rem; }
         .sidebar-item:hover i { color: #000; }
 
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); display: none; z-index: 2500;
+            background: rgba(0,0,0,0.8); display: none; z-index: 2500; backdrop-filter: blur(4px);
         }
         .overlay.active { display: block; }
 
@@ -71,64 +91,72 @@
             position: fixed; top: 20px; left: 20px; right: 20px;
             display: flex; justify-content: space-between; align-items: center; z-index: 1001;
         }
-        .control-group { display: flex; gap: 10px; }
+        .control-group { display: flex; gap: 12px; }
         .top-btn {
-            background: var(--surface); border: 1px solid var(--gold);
-            color: var(--gold); width: 45px; height: 45px; border-radius: 12px;
+            background: var(--surface); border: 1.5px solid var(--gold);
+            color: var(--gold); width: 48px; height: 48px; border-radius: 14px;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            box-shadow: var(--card-shadow); text-decoration: none;
+            box-shadow: var(--card-shadow); font-size: 1.1rem;
         }
-        .site-link-btn {
-            background: var(--gold); color: #000; padding: 0 15px;
-            height: 45px; border-radius: 12px; display: flex; align-items: center;
-            font-weight: 700; font-size: 13px; text-decoration: none; box-shadow: var(--card-shadow);
-        }
+        .top-btn:active { transform: scale(0.9); }
 
         .header {
-            height: 220px; background: linear-gradient(to bottom, rgba(212,175,55,0.2), transparent);
-            text-align: center; padding-top: 80px; position: relative;
+            height: 260px; text-align: center; padding-top: 90px; position: relative;
+            background: linear-gradient(to bottom, rgba(212,175,55,0.15), transparent);
         }
-        .header h1 { font-family: 'Amiri', serif; font-size: 45px; margin: 0; color: var(--gold); }
-        .header p { font-size: 16px; color: var(--text-dim); margin: 5px 0; }
+        .header h1 { font-family: 'Amiri', serif; font-size: 52px; margin: 0; color: var(--gold); text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .header p { font-size: 18px; color: var(--text-dim); margin-top: 10px; font-weight: 600; }
 
         .timer-container {
-            margin: -40px 20px 30px; background: var(--surface);
-            border-radius: 30px; padding: 25px; border: 1px solid rgba(212,175,55,0.2);
-            box-shadow: var(--card-shadow); text-align: center;
+            margin: -50px 20px 30px; background: var(--surface);
+            border-radius: 35px; padding: 30px 20px; border: 1px solid rgba(212,175,55,0.3);
+            box-shadow: var(--card-shadow); text-align: center; position: relative; z-index: 2;
         }
-        .countdown-row { display: flex; justify-content: center; gap: 15px; }
-        .c-item { background: rgba(212, 175, 55, 0.08); padding: 15px; border-radius: 18px; min-width: 80px; }
-        .c-item span { display: block; font-size: 32px; font-weight: 900; color: var(--gold); font-family: 'Amiri', serif; }
-        .c-item label { font-size: 11px; color: var(--text-dim); }
+        .next-label { color: var(--gold); font-weight: 900; font-size: 15px; margin-bottom: 15px; display: block; }
+        .countdown-row { display: flex; justify-content: center; gap: 12px; }
+        .c-item { background: rgba(212, 175, 55, 0.1); padding: 15px 10px; border-radius: 20px; min-width: 85px; border: 1px solid rgba(212,175,55,0.1); }
+        .c-item span { display: block; font-size: 36px; font-weight: 900; color: var(--gold); font-family: 'Amiri', serif; line-height: 1; }
+        .c-item label { font-size: 12px; color: var(--text-dim); font-weight: 700; margin-top: 5px; display: block; }
 
-        .group-name { padding: 10px 25px; font-weight: 900; color: var(--gold); font-size: 17px; display: flex; align-items: center; gap: 10px; }
-        .main-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0 15px 30px; }
+        .group-name { padding: 15px 25px 10px; font-weight: 900; color: var(--gold); font-size: 19px; display: flex; align-items: center; gap: 12px; }
+        .main-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 0 20px 40px; }
         .card {
-            background: var(--surface); border-radius: 20px; padding: 15px 5px;
+            background: var(--surface); border-radius: 22px; padding: 18px 5px;
             text-decoration: none; color: var(--text-main); text-align: center;
-            border: 1px solid rgba(255,255,255,0.03); box-shadow: var(--card-shadow); transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.05); box-shadow: var(--card-shadow);
         }
-        .card:active { transform: scale(0.9); }
-        .card i { font-size: 24px; margin-bottom: 8px; display: block; color: var(--gold); }
-        .card span { font-size: 11px; font-weight: 700; display: block; }
+        .card:active { transform: translateY(3px); filter: brightness(1.2); }
+        .card i { font-size: 26px; margin-bottom: 10px; display: block; color: var(--gold); }
+        .card span { font-size: 12px; font-weight: 800; display: block; }
 
+        /* Bottom Nav */
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; background: var(--nav-bg);
-            display: flex; justify-content: space-around; padding: 15px 0 30px;
-            border-top: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); z-index: 1000;
+            display: flex; justify-content: space-around; padding: 15px 0 35px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); backdrop-filter: blur(15px); z-index: 1000;
         }
-        .nav-btn { color: var(--text-dim); text-decoration: none; text-align: center; flex: 1; font-size: 20px; }
+        .nav-btn { color: var(--text-dim); text-decoration: none; text-align: center; flex: 1; position: relative; }
         .nav-btn.active { color: var(--gold); }
-        .nav-btn span { display: block; font-size: 10px; margin-top: 4px; font-weight: bold; }
+        .nav-btn i { font-size: 22px; }
+        .nav-btn span { display: block; font-size: 11px; margin-top: 6px; font-weight: 800; }
+        
+        /* Share Notification */
+        #toast {
+            position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%);
+            background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px;
+            font-weight: bold; display: none; z-index: 5000; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body data-theme="dark">
 
+    <div class="ramadan-decor"></div>
     <div class="overlay" id="overlay"></div>
+    <div id="toast">تم نسخ رابط الموقع بنجاح!</div>
 
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2 style="font-family: 'Amiri'; color: var(--gold);">سحورنا 2026</h2>
+            <h2 style="font-family: 'Amiri'; color: var(--gold); margin:0;">سحورنا 2026</h2>
         </div>
         <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
         <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
@@ -152,9 +180,10 @@
         <div class="control-group">
             <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
             <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+            <button class="top-btn" onclick="shareApp()"><i class="fa-solid fa-share-nodes"></i></button>
         </div>
-        <a href="https://kemo-omar.github.io/SOHOORNA/" class="site-link-btn">
-            <i class="fa-solid fa-globe" style="margin-left: 8px;"></i> موقعنا الرسمي
+        <a href="https://kemo-omar.github.io/SOHOORNA/" class="top-btn" style="width: auto; padding: 0 15px; font-weight: 700; text-decoration: none; font-size: 13px;">
+            الموقع الرسمي
         </a>
     </div>
 
@@ -205,7 +234,7 @@
     </nav>
 
     <script>
-        // إمساكية رمضان 2026 كاملة (دقيقة 100%)
+        // إمساكية رمضان 2026 دقيقة
         const RAMADAN_2026 = [
             {day:1, d:18, m:1, f:"05:04", g:"17:43"}, {day:2, d:19, m:1, f:"05:03", g:"17:44"},
             {day:3, d:20, m:1, f:"05:02", g:"17:45"}, {day:4, d:21, m:1, f:"05:01", g:"17:45"},
@@ -224,24 +253,35 @@
             {day:29, d:18, m:2, f:"04:32", g:"18:03"}, {day:30, d:19, m:2, f:"04:31", g:"18:03"}
         ];
 
-        // Sidebar Logic
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         const menuBtn = document.getElementById('menuBtn');
 
-        menuBtn.onclick = () => {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-        };
-
-        overlay.onclick = () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        };
+        menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+        overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 
         function toggleTheme() {
             const current = document.body.getAttribute('data-theme');
-            document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+            const target = current === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+        }
+
+        function shareApp() {
+            const shareData = {
+                title: 'سحورنا 2026',
+                text: 'تابع مواقيت الصلاة والقرآن الكريم في رمضان 2026 عبر تطبيق سحورنا',
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData);
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                const toast = document.getElementById('toast');
+                toast.style.display = 'block';
+                setTimeout(() => toast.style.display = 'none', 3000);
+            }
         }
 
         function updateApp() {
@@ -276,16 +316,21 @@
                 }
             }
 
-            const diff = target - now;
-            const h = Math.floor(diff / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-
-            document.getElementById('h').innerText = h.toString().padStart(2, '0');
-            document.getElementById('m').innerText = m.toString().padStart(2, '0');
-            document.getElementById('s').innerText = s.toString().padStart(2, '0');
-            document.getElementById('next-event-title').innerText = label;
+            if(target){
+                const diff = target - now;
+                const h = Math.floor(diff / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                document.getElementById('h').innerText = h.toString().padStart(2, '0');
+                document.getElementById('m').innerText = m.toString().padStart(2, '0');
+                document.getElementById('s').innerText = s.toString().padStart(2, '0');
+                document.getElementById('next-event-title').innerText = label;
+            }
         }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if(savedTheme) document.body.setAttribute('data-theme', savedTheme);
 
         setInterval(updateApp, 1000);
         updateApp();
