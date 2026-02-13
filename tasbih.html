@@ -3,215 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PULSE PRAY | المسبحة الاحترافية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <title>PULSE PRAY | النسخة النهائية الألترا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Cairo:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg: #080808;
-            --surface: #121212;
+            --bg: #050505;
+            --surface: rgba(255, 255, 255, 0.05);
             --accent: #FFD700;
-            --accent-glow: rgba(255, 215, 0, 0.3);
-            --neon-green: #39FF14;
+            --accent-glow: rgba(255, 215, 0, 0.4);
             --text-main: #ffffff;
-            --text-muted: #a0a0a0;
-            --glass: rgba(255, 255, 255, 0.05);
+            --stage-bg: radial-gradient(circle at center, #1a1a2e 0%, #050505 100%);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --egyptian-wood: #4e342e;
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         [data-theme="light"] {
-            --bg: #f8f9fa;
-            --surface: #ffffff;
+            --bg: #f8faff;
+            --surface: rgba(255, 255, 255, 0.9);
             --accent: #b8860b;
-            --accent-glow: rgba(184, 134, 11, 0.1);
+            --accent-glow: rgba(184, 134, 11, 0.2);
             --text-main: #1a1a1a;
-            --text-muted: #666666;
-            --glass: rgba(0, 0, 0, 0.03);
+            --stage-bg: radial-gradient(circle at center, #ffffff 0%, #d1d9e6 100%);
             --glass-border: rgba(0, 0, 0, 0.1);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
         body {
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Cairo', sans-serif;
             margin: 0;
-            overflow: hidden; /* لمنع التمرير غير المرغوب في الموبايل */
             height: 100vh;
-            display: flex;
-            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* تحسينات الشريط الجانبي */
+        /* القائمة الجانبية 16 صفحة */
         .sidebar {
-            position: fixed; top: 0; right: -300px; width: 300px; height: 100%;
-            background: var(--surface); z-index: 4000; padding: 30px 20px; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5); border-left: 2px solid var(--accent);
-            transition: var(--transition);
+            position: fixed; top: 0; right: -320px; width: 320px; height: 100%;
+            background: var(--surface); z-index: 5000; padding: 25px; 
+            backdrop-filter: blur(25px); border-left: 2px solid var(--accent);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto;
         }
-        .sidebar.active { right: 0; }
-        .sidebar-header { text-align: center; margin-bottom: 30px; }
+        .sidebar.active { right: 0; box-shadow: -20px 0 60px rgba(0,0,0,0.8); }
+        .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--glass-border); padding-bottom: 20px; }
         .sidebar-item {
             display: flex; align-items: center; gap: 15px; color: var(--text-main);
-            text-decoration: none; padding: 14px 18px; border-radius: 15px; margin-bottom: 8px;
-            font-weight: 600; border: 1px solid transparent;
+            text-decoration: none; padding: 14px; border-radius: 12px; margin-bottom: 8px;
+            font-weight: 600; transition: 0.3s; border: 1px solid transparent;
         }
-        .sidebar-item:hover { 
-            background: var(--glass); border-color: var(--accent); color: var(--accent);
-            transform: translateX(-5px);
-        }
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); display: none; z-index: 3500; backdrop-filter: blur(8px);
-        }
+        .sidebar-item:hover { background: var(--accent); color: #000; transform: translateX(-10px); }
+
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 4500; backdrop-filter: blur(5px); }
         .overlay.active { display: block; }
 
         /* التحكم العلوي */
-        .nav-controls {
-            padding: 20px; display: flex; justify-content: space-between; align-items: center;
-            z-index: 2000; position: relative;
+        .nav-header {
+            position: fixed; top: 0; left: 0; right: 0; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center; z-index: 4000;
         }
-        .btn-circle {
-            background: var(--glass); border: 1px solid var(--glass-border);
-            color: var(--text-main); width: 50px; height: 50px; border-radius: 50%; 
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; transition: var(--transition);
-        }
-        .btn-circle:hover { background: var(--accent); color: #000; transform: rotate(90deg); }
-        
-        .share-pill {
-            background: var(--accent); color: #000; padding: 10px 20px; border-radius: 50px;
-            font-weight: 900; border: none; cursor: pointer; display: flex; align-items: center;
-            gap: 10px; box-shadow: 0 4px 15px var(--accent-glow);
+        .icon-btn {
+            background: var(--surface); border: 1px solid var(--glass-border);
+            color: var(--text-main); width: 45px; height: 45px; border-radius: 12px; cursor: pointer;
+            backdrop-filter: blur(10px); font-size: 1.2rem;
         }
 
-        /* صفحة الاختيار */
+        /* صفحة اختيار النمط */
         #selectionPage {
+            height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--stage-bg); text-align: center;
+        }
+        .mode-container { display: flex; gap: 25px; margin-top: 40px; flex-wrap: wrap; justify-content: center; }
+        .mode-box {
+            background: var(--surface); padding: 40px; border-radius: 35px; border: 1px solid var(--glass-border);
+            width: 260px; cursor: pointer; transition: 0.5s; backdrop-filter: blur(10px);
+        }
+        .mode-box:hover { transform: translateY(-15px); border-color: var(--accent); box-shadow: 0 20px 40px var(--accent-glow); }
+        .mode-box i { font-size: 3.5rem; color: var(--accent); margin-bottom: 20px; }
+
+        /* التطبيق الرئيسي */
+        #rosaryApp { display: none; height: 100vh; width: 100%; }
+        .side-controls {
+            width: 380px; background: var(--surface); backdrop-filter: blur(30px);
+            border-left: 1px solid var(--glass-border); padding: 30px; display: flex; flex-direction: column;
+        }
+        .dhikr-grid { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 1fr; gap: 10px; margin: 20px 0; }
+        .dhikr-btn {
+            background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--glass-border);
+            padding: 15px; border-radius: 15px; cursor: pointer; text-align: right; font-weight: 700; transition: 0.3s;
+        }
+        .dhikr-btn.active { background: var(--accent); color: #000; border-color: var(--accent); transform: scale(1.02); }
+
+        .main-display {
             flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; text-align: center;
+            background: var(--stage-bg); position: relative;
         }
-        .choice-container { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
-        .choice-card {
-            background: var(--surface); border: 1px solid var(--glass-border); padding: 40px 30px;
-            border-radius: 30px; cursor: pointer; width: 280px; transition: var(--transition);
-            position: relative; overflow: hidden;
-        }
-        .choice-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--accent);
-        }
-        .choice-card:hover { 
-            transform: translateY(-15px); border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-        .choice-card i { font-size: 3.5rem; margin-bottom: 20px; display: block; }
-
-        /* واجهة التطبيق الرئيسية */
-        #rosaryApp { display: none; flex: 1; overflow: hidden; }
-        .app-container { display: flex; width: 100%; height: 100%; }
-
-        .sidebar-app {
-            width: 350px; background: var(--surface); padding: 30px;
-            border-left: 1px solid var(--glass-border); display: flex; flex-direction: column;
-            box-shadow: 5px 0 20px rgba(0,0,0,0.2);
-        }
-        .dhikr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .dhikr-opt {
-            background: var(--glass); padding: 15px; border-radius: 15px;
-            cursor: pointer; text-align: center; font-size: 0.9rem; font-weight: 700;
-            border: 1px solid var(--glass-border); transition: 0.3s;
-        }
-        .dhikr-opt.active { background: var(--accent); color: #000; border-color: var(--accent); }
-
-        .main-stage {
-            flex: 1; display: flex; flex-direction: column; align-items: center;
-            justify-content: center; position: relative; background: radial-gradient(circle at center, #1a1a1a 0%, #080808 100%);
-        }
-
-        /* السبحة الخشبية المطورة */
-        .rosary-wood-container {
-            position: relative; width: 320px; height: 450px; perspective: 1500px; display: none;
-        }
-        #beadWheel {
-            width: 100%; height: 100%; transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .bead-wood {
-            position: absolute; width: 85px; height: 85px; left: 50%; top: 50%;
-            margin: -42px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #a1887f 0%, #3e2723 70%, #1b110b 100%);
-            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.5), 10px 15px 25px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        /* السبحة الرقمية المطورة */
-        #digitalRosary {
-            width: 280px; height: 400px; background: #222; border-radius: 60px 60px 120px 120px;
-            border: 10px solid #111; display: none; flex-direction: column; align-items: center;
-            justify-content: space-around; padding: 30px 20px; position: relative;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.1);
-        }
-        .screen {
-            width: 100%; height: 90px; background: #8da38d; border: 6px solid #000;
-            border-radius: 15px; display: flex; align-items: center; justify-content: flex-end;
-            padding: 0 20px; font-family: 'Orbitron'; font-size: 3rem; color: #050505;
-            box-shadow: inset 0 5px 15px rgba(0,0,0,0.3); text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
-        }
-        .push-btn {
-            width: 120px; height: 120px; background: linear-gradient(145deg, #333, #1a1a1a);
-            border-radius: 50%; border: 5px solid #111; cursor: pointer;
-            box-shadow: 0 10px 0 #000, 0 15px 25px rgba(0,0,0,0.5);
-            transition: 0.1s;
-        }
-        .push-btn:active { transform: translateY(6px); box-shadow: 0 4px 0 #000; }
-        .reset-btn {
-            position: absolute; left: 30px; top: 55%; width: 35px; height: 35px;
-            background: #d32f2f; border: 3px solid #000; border-radius: 50%; cursor: pointer;
-            box-shadow: 0 4px 0 #800;
-        }
-
-        /* إحصائيات */
-        #countDisplay { 
-            font-family: 'Orbitron'; font-size: 6rem; font-weight: 900; 
-            color: var(--accent); text-shadow: 0 0 30px var(--accent-glow);
-            margin-bottom: 20px;
-        }
-
-        .save-section {
-            margin-top: auto; background: var(--glass); padding: 20px; border-radius: 20px;
-            border: 1px solid var(--glass-border);
-        }
-        .input-dark {
-            width: 100%; padding: 12px; background: #000; color: #fff; border: 1px solid var(--glass-border);
-            border-radius: 10px; margin-bottom: 10px; outline: none;
-        }
-        .input-dark:focus { border-color: var(--accent); }
         
-        .btn-action {
-            width: 100%; padding: 15px; background: var(--accent); color: #000; border: none;
-            border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.3s;
-        }
-        .btn-action:hover { opacity: 0.9; transform: scale(1.02); }
-
-        .back-nav {
-            position: absolute; top: 20px; right: 20px; background: var(--glass);
-            padding: 8px 15px; border-radius: 10px; color: #fff; cursor: pointer; border: 1px solid var(--glass-border);
+        #totalCounter {
+            font-family: 'Orbitron'; font-size: 8rem; font-weight: 900;
+            color: var(--accent); text-shadow: 0 0 50px var(--accent-glow); margin-bottom: 20px;
         }
 
-        /* سجل الإنجازات */
-        .log-container { margin-top: 15px; max-height: 120px; overflow-y: auto; font-size: 0.8rem; }
-        .log-entry { 
-            padding: 8px; border-bottom: 1px solid var(--glass-border); 
-            display: flex; justify-content: space-between; color: var(--text-muted);
+        /* الأنماط */
+        .wood-wrap { width: 320px; height: 450px; perspective: 1200px; display: none; cursor: pointer; }
+        #woodEngine { width: 100%; height: 100%; transform-style: preserve-3d; transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .bead-item {
+            position: absolute; width: 85px; height: 85px; left: 50%; top: 50%; margin: -42px;
+            border-radius: 50%; background: radial-gradient(circle at 30% 30%, #8d6e63, #3e2723, #1b110b);
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.6);
         }
+
+        .digital-wrap {
+            width: 290px; height: 420px; background: #111; border-radius: 60px 60px 120px 120px;
+            border: 12px solid #000; display: none; flex-direction: column; align-items: center;
+            justify-content: space-around; padding: 30px; box-shadow: 0 50px 80px rgba(0,0,0,0.6);
+        }
+        .lcd {
+            width: 100%; height: 90px; background: #879687; border: 6px solid #000; border-radius: 12px;
+            color: #000; font-family: 'Orbitron'; font-size: 3.5rem; display: flex; 
+            align-items: center; justify-content: flex-end; padding-right: 20px; box-shadow: inset 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .main-trigger {
+            width: 125px; height: 125px; background: radial-gradient(#333, #111);
+            border-radius: 50%; border: 5px solid #000; cursor: pointer; 
+            box-shadow: 0 10px 0 #000; transition: 0.1s;
+        }
+        .main-trigger:active { transform: translateY(8px); box-shadow: 0 2px 0 #000; }
 
         @media (max-width: 900px) {
-            .app-container { flex-direction: column; }
-            .sidebar-app { width: 100%; order: 2; height: auto; }
-            #countDisplay { font-size: 4rem; }
-            .rosary-wood-container { transform: scale(0.8); }
+            #rosaryApp { flex-direction: column; overflow-y: auto; }
+            .side-controls { width: 100%; height: auto; order: 2; }
+            #totalCounter { font-size: 5rem; }
         }
     </style>
 </head>
@@ -221,229 +144,208 @@
 
 <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <h2 style="font-family: 'Orbitron'; color: var(--accent); letter-spacing: 2px;">PULSE PRAY</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">الإصدار الاحترافي 2.0</p>
+        <h2 style="font-family: 'Orbitron'; color: var(--accent);">PULSE PRAY</h2>
+        <p>الإصدار الذهبي 2026</p>
     </div>
-    <div class="sidebar-menu">
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-rosary"></i> أذكار المسلم</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-hand-holding-dollar"></i> حاسبة الزكاة</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-gear"></i> الإعدادات</a>
-    </div>
+    <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+    <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+    <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المصحف الشريف</a>
+    <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-moon"></i> أذكار الصباح والمساء</a>
+    <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-fingerprint"></i> المسبحة المطورة</a>
+    <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-scroll"></i> منظم الختمة</a>
+    <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> ركن الزكاة</a>
+    <a href="food.html" class="sidebar-item"><i class="fa-solid fa-bowl-food"></i> مطبخ رمضان</a>
+    <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-check-to-slot"></i> متبع العادات</a>
+    <a href="health.html" class="sidebar-item"><i class="fa-solid fa-stethoscope"></i> الصحة في رمضان</a>
+    <a href="charity.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
+    <a href="media.html" class="sidebar-item"><i class="fa-solid fa-clapperboard"></i> خريطة المسلسلات</a>
+    <a href="fatawa.html" class="sidebar-item"><i class="fa-solid fa-scale-balanced"></i> فتاوى الصيام</a>
+    <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-palette"></i> واحة الأطفال</a>
+    <a href="settings.html" class="sidebar-item"><i class="fa-solid fa-sliders"></i> التخصيص</a>
+    <a href="about.html" class="sidebar-item"><i class="fa-solid fa-info-circle"></i> عن التطبيق</a>
 </nav>
 
-<div class="nav-controls">
-    <div style="display: flex; gap: 15px;">
-        <button class="btn-circle" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
-        <button class="btn-circle" onclick="toggleTheme()" id="themeBtn"><i class="fa-solid fa-moon"></i></button>
+<div class="nav-header">
+    <div style="display: flex; gap: 12px;">
+        <button class="icon-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars-staggered"></i></button>
+        <button class="icon-btn" onclick="toggleTheme()"><i class="fa-solid fa-sun"></i></button>
     </div>
-    <button class="share-pill" onclick="shareApp()">
-        <i class="fa-solid fa-share-nodes"></i> مشاركة التطبيق
-    </button>
+    <div style="display: flex; gap: 12px;">
+        <button class="icon-btn" onclick="location.reload()" title="تغيير النمط"><i class="fa-solid fa-arrows-rotate"></i></button>
+        <button onclick="shareApp()" style="background:var(--accent); color:#000; border:none; padding:10px 20px; border-radius:12px; font-weight:900; cursor:pointer; box-shadow: 0 5px 15px var(--accent-glow);">
+            <i class="fa-solid fa-share-nodes"></i> مشاركة
+        </button>
+    </div>
 </div>
 
 <div id="selectionPage">
-    <h1 style="font-weight: 900; font-size: 2.5rem; margin: 0;">نور طاعتك بذكر الله</h1>
-    <p style="color: var(--text-muted); margin-top: 10px;">اختر نمط المسبحة المفضل لديك للبدء</p>
-    
-    <div class="choice-container">
-        <div class="choice-card" onclick="initRosary('wood')">
-            <i class="fa-solid fa-gem" style="color: var(--accent);"></i>
+    <h1 style="font-size: 3rem; font-weight: 900; margin: 0;">مرحباً بك في PULSE PRAY</h1>
+    <p style="color: var(--text-muted); font-size: 1.2rem;">اختر المسبحة المفضلة لديك للبدء في الذكر</p>
+    <div class="mode-container">
+        <div class="mode-box" onclick="initApp('wood')">
+            <i class="fa-solid fa-gem"></i>
             <h3>المسبحة التراثية</h3>
-            <p style="font-size: 0.9rem; color: var(--text-muted);">محاكاة خشبية ثلاثية الأبعاد بلمسات أصيلة</p>
+            <p>خشب مصري - دوران كلاسيكي</p>
         </div>
-        <div class="choice-card" onclick="initRosary('digital')">
-            <i class="fa-solid fa-bolt-lightning" style="color: var(--neon-green);"></i>
-            <h3>المسبحة الذكية</h3>
-            <p style="font-size: 0.9rem; color: var(--text-muted);">عداد إلكتروني متطور بألوان ديناميكية</p>
+        <div class="mode-box" onclick="initApp('digital')">
+            <i class="fa-solid fa-keyboard"></i>
+            <h3>المسبحة الرقمية</h3>
+            <p>ألوان نيون - عداد LCD ذكي</p>
         </div>
     </div>
 </div>
 
 <div id="rosaryApp">
-    <div class="app-container">
-        <aside class="sidebar-app">
-            <h3 style="margin: 0; color: var(--accent);"><i class="fa-solid fa-hands-praying"></i> ورد الذكر</h3>
-            <div class="dhikr-grid">
-                <div class="dhikr-opt active" onclick="setDhikr(this, 'سبحان الله')">سبحان الله</div>
-                <div class="dhikr-opt" onclick="setDhikr(this, 'الحمد لله')">الحمد لله</div>
-                <div class="dhikr-opt" onclick="setDhikr(this, 'الله أكبر')">الله أكبر</div>
-                <div class="dhikr-opt" onclick="setDhikr(this, 'لا إله إلا الله')">لا إله إلا الله</div>
-                <div class="dhikr-opt" onclick="setDhikr(this, 'أستغفر الله')">أستغفر الله</div>
-                <div class="dhikr-opt" onclick="setDhikr(this, 'اللهم صل على محمد')">صلّ على النبي</div>
+    <aside class="side-controls">
+        <h2 style="color: var(--accent); border-right: 4px solid var(--accent); padding-right: 15px;">الورد المختار</h2>
+        <div class="dhikr-grid" id="dhikrBox">
             </div>
+        <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; border: 1px solid var(--glass-border);">
+            <p style="margin: 0 0 10px 0; font-size: 0.8rem; opacity: 0.7;">إجمالي التسبيحات المحفوظة:</p>
+            <div id="savedTotal" style="font-family: Orbitron; font-size: 1.5rem; color: var(--accent);">0</div>
+            <input type="text" id="userName" placeholder="اسمك الكريم.." style="width:100%; margin-top:15px; padding:12px; background:#000; border:1px solid var(--glass-border); color:#fff; border-radius:10px;">
+        </div>
+    </aside>
 
-            <div class="save-section">
-                <input type="text" id="userName" class="input-dark" placeholder="اكتب اسمك هنا...">
-                <button class="btn-action" onclick="saveProgress()">حفظ التقدم <i class="fa-solid fa-floppy-disk"></i></button>
-                <div class="log-container" id="logs">
-                    </div>
-            </div>
-        </aside>
+    <main class="main-display">
+        <div id="totalCounter">0</div>
+        
+        <div class="wood-wrap" id="woodMode" onclick="handleWoodCount()">
+            <div id="woodEngine"></div>
+        </div>
 
-        <main class="main-stage">
-            <div class="back-nav" onclick="location.reload()">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i> تغيير النمط
-            </div>
-
-            <div id="countDisplay">0</div>
-
-            <div class="rosary-wood-container" id="woodRosary" onclick="incrementWood()">
-                <div style="position: absolute; width: 6px; height: 100%; background: linear-gradient(to bottom, #111, #333, #111); left: 50%; transform: translateX(-50%); z-index: 1; border-radius: 10px;"></div>
-                <div id="beadWheel"></div>
-            </div>
-
-            <div id="digitalRosary">
-                <div class="screen" id="digitalScreen">0000</div>
-                <div class="reset-btn" onclick="resetCount()" title="إعادة ضبط"></div>
-                <div class="push-btn" onclick="incrementDigital()"></div>
-                <p style="font-size: 0.75rem; color: #555; font-weight: 700; letter-spacing: 1px;">PULSE DIGITAL V2</p>
-            </div>
-        </main>
-    </div>
+        <div class="digital-wrap" id="digitalMode">
+            <div class="lcd" id="lcdVal">0000</div>
+            <div class="main-trigger" onclick="handleDigitalCount()"></div>
+            <button onclick="resetSession()" style="background:none; border:none; color:#ff4757; cursor:pointer; font-size: 1.2rem;"><i class="fa-solid fa-trash-can"></i> تصفير</button>
+        </div>
+    </main>
 </div>
 
 <script>
-    let mode = '';
-    let count = 0;
+    const MY_ورد = [
+        "سبحان الله", 
+        "الحمد لله", 
+        "الله أكبر", 
+        "اللهم صلي على سيدنا محمد", 
+        "لا إله إلا الله", 
+        "أستغفر الله", 
+        "سبحان الله وبحمده سبحان الله العظيم"
+    ];
+
+    let sessionCount = 0;
+    let globalCount = parseInt(localStorage.getItem('pulse_total_v3')) || 0;
     let rotX = 0;
-    let currentDhikr = "سبحان الله";
-    const totalBeads = 12;
+    let currentMode = '';
 
-    // Elements
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const menuBtn = document.getElementById('menuBtn');
-    const themeBtn = document.getElementById('themeBtn');
+    // تهيئة البيانات عند التشغيل
+    window.onload = () => {
+        document.getElementById('savedTotal').innerText = globalCount.toLocaleString();
+    };
 
-    // Menu Logic
-    menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
-    overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+    function toggleMenu() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
 
-    // Theme Toggle
+    document.getElementById('overlay').onclick = toggleMenu;
+
     function toggleTheme() {
         const body = document.body;
-        const isDark = body.getAttribute('data-theme') === 'dark';
-        body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        themeBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+        const current = body.getAttribute('data-theme');
+        body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
     }
 
-    // Share Logic
-    async function shareApp() {
-        if (navigator.share) {
-            try {
-                await navigator.share({ title: 'PULSE PRAY', text: 'جرب مسبحة Pulse Pray الإلكترونية المتطورة!', url: window.location.href });
-            } catch (err) { console.log("Share failed"); }
-        }
-    }
-
-    // Initialize Rosary
-    function initRosary(type) {
-        mode = type;
+    function initApp(mode) {
+        currentMode = mode;
         document.getElementById('selectionPage').style.display = 'none';
         document.getElementById('rosaryApp').style.display = 'flex';
         
-        if(type === 'wood') {
-            document.getElementById('woodRosary').style.display = 'block';
-            document.getElementById('digitalRosary').style.display = 'none';
-            document.getElementById('countDisplay').style.display = 'block';
-            buildBeads();
+        // بناء الورد
+        const box = document.getElementById('dhikrBox');
+        MY_ورد.forEach((txt, i) => {
+            const btn = document.createElement('button');
+            btn.className = `dhikr-btn ${i === 0 ? 'active' : ''}`;
+            btn.innerText = txt;
+            btn.onclick = function() {
+                document.querySelectorAll('.dhikr-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                if (navigator.vibrate) navigator.vibrate(20);
+            };
+            box.appendChild(btn);
+        });
+
+        if(mode === 'wood') {
+            document.getElementById('woodMode').style.display = 'block';
+            buildWoodSystem();
         } else {
-            document.getElementById('woodRosary').style.display = 'none';
-            document.getElementById('digitalRosary').style.display = 'flex';
-            document.getElementById('countDisplay').style.display = 'none';
-        }
-        updateUI();
-    }
-
-    // Build 3D Beads
-    function buildBeads() {
-        const wheel = document.getElementById('beadWheel');
-        wheel.innerHTML = '';
-        for (let i = 0; i < totalBeads; i++) {
-            const bead = document.createElement('div');
-            bead.className = 'bead-wood';
-            const angle = (i / totalBeads) * 360;
-            bead.style.transform = `rotateX(${angle}deg) translateZ(180px)`;
-            wheel.appendChild(bead);
+            document.getElementById('digitalMode').style.display = 'flex';
+            document.getElementById('totalCounter').style.display = 'none';
         }
     }
 
-    // Increment Functions
-    function incrementWood() {
-        count++;
-        rotX -= (360 / totalBeads);
-        document.getElementById('beadWheel').style.transform = `rotateX(${rotX}deg)`;
-        triggerFeedback();
-    }
-
-    function incrementDigital() {
-        count++;
-        const colors = ['#1a1a1a', '#2d3436', '#0f0f0f', '#1e272e'];
-        document.getElementById('digitalRosary').style.backgroundColor = colors[count % colors.length];
-        triggerFeedback();
-    }
-
-    function triggerFeedback() {
-        updateUI();
-        if (navigator.vibrate) navigator.vibrate(40);
-        // إضافة صوت نقرة خفيف (اختياري)
-    }
-
-    function resetCount() {
-        if(confirm("هل تريد تصفير العداد؟")) {
-            count = 0;
-            updateUI();
-            document.getElementById('digitalRosary').style.backgroundColor = "#222";
+    function buildWoodSystem() {
+        const engine = document.getElementById('woodEngine');
+        for(let i=0; i<12; i++) {
+            const b = document.createElement('div');
+            b.className = 'bead-item';
+            b.style.transform = `rotateX(${i * 30}deg) translateZ(160px)`;
+            engine.appendChild(b);
         }
     }
 
-    function updateUI() {
-        document.getElementById('countDisplay').innerText = count;
-        document.getElementById('digitalScreen').innerText = count.toString().padStart(4, '0');
+    function handleWoodCount() {
+        updateAll(1);
+        rotX -= 30;
+        document.getElementById('woodEngine').style.transform = `rotateX(${rotX}deg)`;
+        feedback(40);
+    }
+
+    function handleDigitalCount() {
+        updateAll(1);
+        const colors = ['#111', '#002b36', '#1a1a2e', '#2d3436', '#000'];
+        document.getElementById('digitalMode').style.background = colors[sessionCount % colors.length];
+        feedback(60);
+    }
+
+    function updateAll(val) {
+        sessionCount += val;
+        globalCount += val;
         
-        // تأثير نبض عند العد
-        const display = mode === 'wood' ? document.getElementById('countDisplay') : document.getElementById('digitalScreen');
-        display.style.transform = 'scale(1.1)';
-        setTimeout(() => display.style.transform = 'scale(1)', 100);
-    }
-
-    function setDhikr(el, val) {
-        document.querySelectorAll('.dhikr-opt').forEach(opt => opt.classList.remove('active'));
-        el.classList.add('active');
-        currentDhikr = val;
-    }
-
-    // Persistence
-    function saveProgress() {
-        const name = document.getElementById('userName').value.trim() || "ذاكر";
-        if(count === 0) return alert("ابدأ التسبيح أولاً!");
+        document.getElementById('totalCounter').innerText = sessionCount;
+        document.getElementById('lcdVal').innerText = sessionCount.toString().padStart(4, '0');
+        document.getElementById('savedTotal').innerText = globalCount.toLocaleString();
         
-        let history = JSON.parse(localStorage.getItem('tasbih_v2_history') || '[]');
-        history.unshift({ name, count, dhikr: currentDhikr, date: new Date().toLocaleTimeString('ar-EG') });
-        localStorage.setItem('tasbih_v2_history', JSON.stringify(history.slice(0, 10)));
-        
-        renderLogs();
-        count = 0;
-        updateUI();
-        alert("تم حفظ إنجازك بنجاح!");
+        // حفظ في الذاكرة حتى لو حدث خطأ
+        localStorage.setItem('pulse_total_v3', globalCount);
     }
 
-    function renderLogs() {
-        const history = JSON.parse(localStorage.getItem('tasbih_v2_history') || '[]');
-        const container = document.getElementById('logs');
-        container.innerHTML = history.map(h => `
-            <div class="log-entry">
-                <span><b>${h.dhikr}</b> (${h.count})</span>
-                <span>${h.date}</span>
-            </div>
-        `).join('');
+    function resetSession() {
+        if(confirm("هل تريد تصفير عداد هذه الجلسة؟ (لن يتم مسح الإجمالي العام)")) {
+            sessionCount = 0;
+            document.getElementById('totalCounter').innerText = "0";
+            document.getElementById('lcdVal').innerText = "0000";
+        }
     }
 
-    // Load logs on start
-    renderLogs();
+    function feedback(ms) {
+        if (navigator.vibrate) navigator.vibrate(ms);
+        // إضافة صوت خفيف جداً
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+    }
+
+    function shareApp() {
+        const text = `أسبح الآن باستخدام تطبيق Pulse Pray، إجمالي تسبيحاتي وصل إلى ${globalCount}! جربه الآن:`;
+        if(navigator.share) {
+            navigator.share({ title: 'Pulse Pray', text: text, url: window.location.href });
+        }
+    }
 </script>
 </body>
-  </html>
+</html>
