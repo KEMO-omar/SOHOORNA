@@ -55,6 +55,7 @@
         .sidebar-item {
             display: flex; align-items: center; gap: 15px; color: var(--text-main);
             text-decoration: none; padding: 12px; border-radius: 12px; margin-bottom: 5px;
+            font-size: 14px;
         }
         .sidebar-item:hover { background: var(--gold); color: #000; }
         .sidebar-item i { width: 25px; text-align: center; color: var(--gold); }
@@ -94,7 +95,6 @@
         }
         .header span { color: var(--gold); font-size: 14px; opacity: 0.8; letter-spacing: 2px; }
 
-        /* Modern Input Card */
         .add-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -121,7 +121,6 @@
             font-size: 16px; box-shadow: 0 10px 20px var(--gold-glow);
         }
 
-        /* Habit Card Styling */
         .habit-card {
             background: var(--surface);
             border-radius: 28px; padding: 25px; margin-bottom: 25px;
@@ -157,7 +156,7 @@
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px;
-            font-weight: bold; font-size: 14px; visibility: hidden; z-index: 1000;
+            font-weight: bold; font-size: 14px; visibility: hidden; z-index: 4000;
         }
     </style>
 </head>
@@ -173,10 +172,17 @@
         <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
         <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
         <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-check-double"></i> متابعة الختمة</a>
-        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
+        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-rosary"></i> أذكار المسلم</a>
         <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-circle-dot"></i> المسبحة الإلكترونية</a>
+        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-dollar"></i> حاسبة الزكاة</a>
+        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-utensils"></i> وصفات الفطور</a>
+        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-bread-slice"></i> وجبات السحور</a>
         <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-list-check"></i> متبع العادات</a>
-        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-tv"></i> المسلسلات</a>
+        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-heart"></i> أعمال الخير</a>
+        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-notes-medical"></i> صحتك في رمضان</a>
+        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-tv"></i> المسلسلات والبرامج</a>
+        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-circle-question"></i> فتاوى الصيام</a>
+        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book"></i> المكتبة الرمضانية</a>
         <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-users"></i> فريق العمل</a>
     </nav>
 
@@ -235,7 +241,7 @@
         // Share Logic
         function shareSite() {
             const text = "🌙 انضم إلي في تحدي العادات الرمضانية عبر موقع سحورنا 2026! متتبع احترافي لصلواتك وعاداتك:";
-            const url = "https://kemo-omar.github.io/SOHOORNA/";
+            const url = window.location.href; 
             if (navigator.share) {
                 navigator.share({ title: 'سحورنا 2026', text: text, url: url });
             } else {
