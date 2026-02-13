@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PULSE PRAY | مواقيت الصلاة الاحترافية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <title>نبض الصلاة | PULSE PRAY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
+            /* الوضع الليلي */
             --bg: #050505;
             --surface: #0f0f0f;
             --neon-green: #39FF14;
@@ -18,18 +19,22 @@
             --text-main: #ffffff;
             --text-gray: #b0b0b0;
             --glass: rgba(255, 255, 255, 0.03);
+            --card-bg: rgba(20, 20, 20, 0.8);
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         [data-theme="light"] {
-            --bg: #f8f9fa;
+            /* الوضع النهاري المطور */
+            --bg: #fdfdfd;
             --surface: #ffffff;
-            --neon-green: #2ecc71;
-            --neon-red: #e74c3c;
-            --neon-gold: #b8860b;
-            --text-main: #1a1a1a;
-            --text-gray: #555555;
+            --neon-green: #1b8d34;
+            --neon-red: #c0392b;
+            --neon-gold: #996515;
+            --accent-glow: rgba(153, 101, 21, 0.15);
+            --text-main: #1e272e;
+            --text-gray: #485460;
             --glass: rgba(0, 0, 0, 0.05);
+            --card-bg: #f1f2f6;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -41,29 +46,35 @@
             margin: 0;
             overflow-x: hidden;
             scroll-behavior: smooth;
+            transition: background 0.5s ease;
         }
 
-        /* --- القائمة الجانبية (Sidebar) --- */
+        /* خط الرقعة المعدل للعناوين */
+        h1, h2, .ruqaa-font {
+            font-family: 'Almarai', sans-serif;
+            font-weight: 800;
+        }
+
+        /* --- القائمة الجانبية (16 صفحة) --- */
         .sidebar {
             position: fixed; top: 0; right: -320px; width: 320px; height: 100%;
             background: var(--surface); z-index: 5000; padding: 30px 20px;
-            border-left: 2px solid var(--neon-gold);
-            box-shadow: -15px 0 40px rgba(0,0,0,0.8);
+            border-left: 3px solid var(--neon-gold);
+            box-shadow: -15px 0 40px rgba(0,0,0,0.5);
             transition: var(--transition);
             overflow-y: auto;
         }
         .sidebar.active { right: 0; }
-        .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--glass); padding-bottom: 20px; }
+        .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--neon-gold); padding-bottom: 20px; }
         .sidebar-item {
             display: flex; align-items: center; gap: 15px; color: var(--text-main);
             text-decoration: none; padding: 14px 18px; border-radius: 15px; margin-bottom: 8px;
-            font-weight: 600; border: 1px solid transparent; transition: var(--transition);
+            font-weight: 700; border: 1px solid transparent; transition: 0.3s;
         }
         .sidebar-item:hover { 
-            background: var(--glass); border-color: var(--neon-gold); color: var(--neon-gold);
+            background: var(--neon-gold); color: #000;
             transform: translateX(-10px);
         }
-        .sidebar-item i { font-size: 1.1rem; }
 
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -77,142 +88,139 @@
             display: flex; justify-content: space-between; z-index: 3000;
         }
         .btn-circle {
-            background: var(--surface); border: 1px solid var(--neon-gold);
+            background: var(--surface); border: 1.5px solid var(--neon-gold);
             color: var(--neon-gold); width: 50px; height: 50px; border-radius: 12px;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-size: 1.3rem; transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .btn-circle:hover { background: var(--neon-gold); color: #000; transform: scale(1.1) rotate(90deg); }
+        .btn-circle:hover { background: var(--neon-gold); color: #000; transform: scale(1.1); }
         
         .share-pill {
             background: var(--neon-gold); color: #000; padding: 0 25px;
             border-radius: 12px; font-weight: 900; border: none; cursor: pointer;
-            display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 20px var(--accent-glow);
+            display: flex; align-items: center; gap: 10px; font-size: 1rem;
         }
 
         /* --- الهيدر (Header) --- */
         header {
             padding: 120px 20px 60px; text-align: center;
-            background: radial-gradient(circle at center, #1a1a1a 0%, var(--bg) 100%);
+            background: radial-gradient(circle at center, var(--glass) 0%, transparent 100%);
         }
         header h1 {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 10vw, 5.5rem);
-            margin: 0; color: var(--neon-gold); text-shadow: 0 0 30px var(--accent-glow);
-            letter-spacing: 5px;
+            font-size: clamp(2.5rem, 8vw, 4.5rem); margin: 0;
+            color: var(--neon-gold); text-shadow: 0 0 20px var(--accent-glow);
+            letter-spacing: -1px;
         }
         .status-badge {
-            display: inline-block; padding: 8px 20px; border-radius: 50px;
-            background: rgba(57, 255, 20, 0.1); border: 1px solid var(--neon-green);
-            color: var(--neon-green); font-weight: 900; margin-top: 15px; font-size: 0.9rem;
+            display: inline-block; padding: 8px 25px; border-radius: 50px;
+            background: var(--neon-green); color: #000;
+            font-weight: 800; margin-top: 20px; font-size: 0.9rem;
         }
 
-        /* --- محرك الوقت (Timer Engine) --- */
+        /* --- لوحة العداد (Timer Card) --- */
         .countdown-section { display: flex; flex-direction: column; align-items: center; padding: 0 20px 60px; }
         .timer-card {
-            background: var(--surface); border: 2px solid var(--neon-red);
-            padding: 40px; border-radius: 30px; text-align: center;
+            background: var(--card-bg); border: 3px solid var(--neon-red);
+            padding: 40px; border-radius: 40px; text-align: center;
             width: 100%; max-width: 700px; position: relative;
-            box-shadow: 0 0 50px rgba(255, 49, 49, 0.15);
+            box-shadow: 0 20px 50px rgba(255, 49, 49, 0.1);
         }
         .timer-card::before {
-            content: "NEXT PRAYER SCAN"; position: absolute; top: -12px; left: 50%;
+            content: "موعد الصلاة القادمة"; position: absolute; top: -15px; left: 50%;
             transform: translateX(-50%); background: var(--neon-red); color: #fff;
-            padding: 2px 15px; font-size: 0.7rem; font-weight: 900; border-radius: 5px;
+            padding: 4px 25px; font-size: 0.9rem; font-weight: 900; border-radius: 50px;
         }
         #timer {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(3.5rem, 15vw, 5.5rem);
-            color: var(--neon-red); text-shadow: 0 0 20px var(--neon-red); direction: ltr;
+            font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 12vw, 5rem);
+            color: var(--neon-red); text-shadow: 0 0 15px var(--neon-red); direction: ltr;
+            margin-top: 10px;
         }
 
         /* --- شبكة المواقيت (Prayer Grid) --- */
         .prayer-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 20px; padding: 0 5%; margin-bottom: 80px;
         }
         .prayer-card {
-            background: var(--surface); border: 1px solid var(--glass);
+            background: var(--surface); border: 1.5px solid var(--glass);
             padding: 30px 20px; border-radius: 25px; text-align: center;
-            transition: var(--transition); position: relative; overflow: hidden;
-        }
-        .prayer-card::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
-            background: transparent; transition: 0.3s;
+            transition: var(--transition); position: relative;
         }
         .prayer-card.active {
             border-color: var(--neon-gold); transform: translateY(-10px);
-            background: rgba(255, 215, 0, 0.05);
+            background: var(--accent-glow); box-shadow: 0 10px 30px var(--accent-glow);
         }
-        .prayer-card.active::after { background: var(--neon-gold); box-shadow: 0 0 15px var(--neon-gold); }
-        .prayer-card h3 { color: var(--text-gray); font-size: 1.1rem; margin-bottom: 15px; }
-        .prayer-card p { font-family: 'Orbitron'; font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-main); }
+        .prayer-card h3 { color: var(--neon-gold); font-size: 1.3rem; margin-bottom: 10px; font-weight: 800; }
+        .prayer-card p { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: 900; margin: 0; color: var(--text-main); }
 
-        /* --- شريط الصور (Neon Slider) --- */
-        .neon-slider-container { max-width: 900px; margin: 40px auto; padding: 15px; position: relative; }
+        /* --- إطار الصور النيوني --- */
+        .neon-slider-container { max-width: 950px; margin: 40px auto; padding: 20px; }
         .frame-outer {
-            border: 4px solid var(--neon-red); border-radius: 35px; padding: 10px;
-            box-shadow: 0 0 30px var(--neon-red), inset 0 0 20px var(--neon-red);
-            background: #000;
+            border: 5px solid var(--neon-red); border-radius: 40px; padding: 12px;
+            box-shadow: 0 0 30px var(--neon-red); background: #000;
         }
         .frame-inner {
-            border: 4px solid var(--neon-gold); border-radius: 22px; overflow: hidden;
+            border: 5px solid var(--neon-gold); border-radius: 25px; overflow: hidden;
             aspect-ratio: 16/9; position: relative;
         }
-        .faith-img { width: 100%; height: 100%; object-fit: cover; transition: 1s; }
+        .faith-img { width: 100%; height: 100%; object-fit: cover; transition: 1.5s ease-in-out; }
         .scanline {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 50%);
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.2) 50%);
             background-size: 100% 4px; pointer-events: none;
         }
 
-        /* --- أقسام المعلومات (Info) --- */
-        .info-container { width: 90%; max-width: 1100px; margin: 60px auto; }
+        /* --- أقسام النصائح (Wisdom) --- */
         .section-header {
-            font-size: 2rem; font-weight: 900; color: var(--neon-green);
-            border-right: 6px solid var(--neon-green); padding-right: 20px;
-            margin-bottom: 40px; text-transform: uppercase;
+            font-size: 2.2rem; font-weight: 900; color: var(--neon-green);
+            border-right: 8px solid var(--neon-green); padding-right: 20px;
+            margin: 60px 5% 40px;
         }
-        .info-flex { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .info-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px; padding: 0 5%; margin-bottom: 60px;
+        }
         .info-card {
-            background: var(--surface); padding: 35px; border-radius: 25px;
-            border: 1px solid var(--glass); transition: 0.3s;
+            background: var(--surface); padding: 40px; border-radius: 30px;
+            border-bottom: 5px solid var(--neon-gold); box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .info-card:hover { border-color: var(--neon-gold); }
-        .info-card h4 { color: var(--neon-gold); font-size: 1.4rem; margin-top: 0; }
-        .info-card p { color: var(--text-gray); line-height: 1.8; }
+        .info-card h4 { color: var(--neon-gold); font-size: 1.5rem; margin-top: 0; font-weight: 800; }
+        .info-card p { color: var(--text-gray); line-height: 2; font-size: 1.05rem; }
 
-        /* --- خطوات الوضوء --- */
+        /* --- دليل الوضوء المطور --- */
+        .wudu-wrapper { padding: 0 5% 80px; }
         .wudu-scroll {
             display: flex; overflow-x: auto; gap: 20px; padding: 20px 0;
-            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
         }
         .wudu-step {
-            min-width: 220px; background: var(--surface); padding: 30px;
-            border-radius: 20px; text-align: center; border-bottom: 4px solid var(--neon-green);
-            scroll-snap-align: center;
+            min-width: 250px; background: var(--card-bg); padding: 35px;
+            border-radius: 25px; text-align: center; border-top: 5px solid var(--neon-green);
         }
         .step-id {
-            width: 40px; height: 40px; background: var(--neon-green); color: #000;
+            width: 50px; height: 50px; background: var(--neon-green); color: #000;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; margin: 0 auto 15px; font-family: 'Orbitron';
+            font-weight: 900; margin: 0 auto 20px; font-size: 1.2rem;
         }
 
         footer {
-            text-align: center; padding: 80px 20px; border-top: 1px solid var(--glass);
-            color: var(--text-gray); font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 2px;
+            text-align: center; padding: 100px 20px; background: var(--surface);
+            color: var(--text-gray); border-top: 1.5px solid var(--neon-gold);
+            font-family: 'Orbitron'; letter-spacing: 3px; font-weight: 700;
         }
 
         .toast {
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-            background: var(--neon-gold); color: #000; padding: 12px 30px;
+            background: var(--neon-gold); color: #000; padding: 15px 40px;
             border-radius: 50px; font-weight: 900; display: none; z-index: 9999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--neon-gold); border-radius: 10px; }
+        @media (max-width: 768px) {
+            .prayer-grid { grid-template-columns: 1fr 1fr; }
+            .timer-card { padding: 25px; }
+            #timer { font-size: 3.5rem; }
+        }
     </style>
 </head>
 <body data-theme="dark">
@@ -221,47 +229,49 @@
 
 <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <h2 style="font-family: 'Orbitron'; color: var(--neon-gold); letter-spacing: 2px;">PULSE PRAY</h2>
+        <h2 style="color: var(--neon-gold); margin:0;">نبض الصلاة</h2>
+        <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.7;">إصدار رمضان 2026</p>
     </div>
-    <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+    <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الواجهة الرئيسية</a>
     <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
-    <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
-    <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-check-double"></i> متابعة الختمة</a>
-    <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-rosary"></i> أذكار المسلم</a>
-    <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-circle-dot"></i> المسبحة الإلكترونية</a>
-    <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-dollar"></i> حاسبة الزكاة</a>
-    <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-utensils"></i> وصفات الفطور</a>
-    <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-bread-slice"></i> وجبات السحور</a>
+    <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الإلكتروني</a>
+    <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-scroll"></i> تنظيم الختمة</a>
+    <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-hands-praying"></i> حصن المسلم</a>
+    <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-fingerprint"></i> سبحة النبض</a>
+    <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-calculator"></i> حاسبة الزكاة</a>
+    <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-bowl-food"></i> مائدة الإفطار</a>
+    <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-moon"></i> بركة السحور</a>
     <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-list-check"></i> متبع العادات</a>
-    <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-heart"></i> أعمال الخير</a>
-    <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-notes-medical"></i> صحتك في رمضان</a>
-    <a href="series.html" class="sidebar-item"><i class="fa-solid fa-tv"></i> المسلسلات والبرامج</a>
-    <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-circle-question"></i> فتاوى الصيام</a>
-    <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book"></i> المكتبة الرمضانية</a>
-    <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-users"></i> فريق العمل</a>
+    <a href="charity.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> صنائع المعروف</a>
+    <a href="health.html" class="sidebar-item"><i class="fa-solid fa-heart-pulse"></i> طبيبك الصائم</a>
+    <a href="media.html" class="sidebar-item"><i class="fa-solid fa-clapperboard"></i> خريطة البرامج</a>
+    <a href="fatawa.html" class="sidebar-item"><i class="fa-solid fa-scale-balanced"></i> فتاوى الصيام</a>
+    <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open-reader"></i> مكتبة الهدى</a>
+    <a href="settings.html" class="sidebar-item"><i class="fa-solid fa-gears"></i> الإعدادات</a>
 </nav>
 
 <div class="nav-controls">
     <div style="display: flex; gap: 15px;">
         <button class="btn-circle" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
-        <button class="btn-circle" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        <button class="btn-circle" onclick="toggleTheme()" id="themeBtn"><i class="fa-solid fa-sun"></i></button>
     </div>
     <button class="share-pill" onclick="shareSite()">
-        <i class="fa-solid fa-share-nodes"></i> مشاركة التطبيق
+        <i class="fa-solid fa-share-nodes"></i> مشاركة الأجر
     </button>
 </div>
 
 <header>
-    <h1>PULSE PRAY</h1>
-    <div id="location-display" class="status-badge">جاري تحديد الموقع الجغرافي...</div>
+    <h1 class="ruqaa-font">نـبـض الـصـلاة</h1>
+    <div id="location-display" class="status-badge">جاري رصد إحداثيات موقعك...</div>
 </header>
 
-<div class="countdown-section">
+<section class="countdown-section">
     <div class="timer-card">
-        <h2 id="next-prayer-title" style="color: var(--neon-gold); font-family: 'Cairo'; margin-bottom: 5px;">تحميل البيانات...</h2>
+        <h2 id="next-prayer-title" class="ruqaa-font">جاري الحساب...</h2>
         <div id="timer">00:00:00</div>
+        <p id="tip-text" style="margin-top: 15px; font-weight: 700; color: var(--text-gray);">"الصلاة نور، والصدقة برهان"</p>
     </div>
-</div>
+</section>
 
 <div class="prayer-grid" id="prayer-cards">
     </div>
@@ -269,75 +279,79 @@
 <div class="neon-slider-container">
     <div class="frame-outer">
         <div class="frame-inner">
-            <img id="faith-img" src="" class="faith-img" alt="Islamic Art">
+            <img id="faith-img" src="" class="faith-img" alt="معالم إسلامية">
             <div class="scanline"></div>
         </div>
     </div>
 </div>
 
-<div class="info-container">
-    <h2 class="section-header">نور العبادات</h2>
-    <div class="info-flex">
-        <div class="info-card">
-            <h4><i class="fa-solid fa-sun" style="margin-left:10px"></i> صلاة الفجر</h4>
-            <p>بداية العهد مع الله، وبوابة الرزق الواسع. من صلى الفجر في جماعة فهو في ذمة الله حتى يُمسي.</p>
-        </div>
-        <div class="info-card">
-            <h4><i class="fa-solid fa-cloud-moon" style="margin-left:10px"></i> السكينة الليلية</h4>
-            <p>صلاة المغرب والعشاء هما ختام يومك بالصلة. اجعل عشاءك انطلاقة لمناجاة الخالق قبل النوم.</p>
-        </div>
+<h2 class="section-header ruqaa-font">أسرار العبادة</h2>
+<div class="info-grid">
+    <div class="info-card">
+        <h4><i class="fa-solid fa-mosque"></i> خشوع المصلين</h4>
+        <p>الخشوع ليس مجرد سكون الجسد، بل هو حضور القلب واستشعار عظمة الخالق. حاول إغلاق هاتفك قبل الدخول للمسجد بخمس دقائق لتهيئة روحك.</p>
+    </div>
+    <div class="info-card" style="border-bottom-color: var(--neon-red);">
+        <h4><i class="fa-solid fa-hourglass-start"></i> أهمية الوقت</h4>
+        <p>إن الصلاة كانت على المؤمنين كتاباً موقوتاً. التأخر عن الصلاة يحرمك من بركة تكبيرة الإحرام، فكن دائماً سبّاقاً لنداء "الله أكبر".</p>
+    </div>
+    <div class="info-card" style="border-bottom-color: var(--neon-green);">
+        <h4><i class="fa-solid fa-shield-halved"></i> حصن المسلم</h4>
+        <p>الأذكار بعد الصلاة هي الحصن الذي يحميك طوال يومك. لا تعجل بالخروج، فالمتوضئ في صلاة ما انتظر الصلاة، والملائكة تستغفر لك.</p>
     </div>
 </div>
 
-<div class="info-container">
-    <h2 class="section-header">دليل الطهارة الرقمي</h2>
+<div class="wudu-wrapper">
+    <h2 class="section-header ruqaa-font">بوابة الطهارة</h2>
     <div class="wudu-scroll">
-        <div class="wudu-step"><div class="step-id">01</div><p>النية وغسل الكفين</p></div>
-        <div class="wudu-step"><div class="step-id">02</div><p>المضمضة والاستنشاق</p></div>
-        <div class="wudu-step"><div class="step-id">03</div><p>غسل الوجه بالكامل</p></div>
-        <div class="wudu-step"><div class="step-id">04</div><p>غسل اليدين للمرفقين</p></div>
-        <div class="wudu-step"><div class="step-id">05</div><p>مسح الرأس والأذنين</p></div>
-        <div class="wudu-step"><div class="step-id">06</div><p>غسل الرجلين للكعبين</p></div>
+        <div class="wudu-step"><div class="step-id">١</div><p>النية بالقلب ثم التسمية وغسل الكفين</p></div>
+        <div class="wudu-step"><div class="step-id">٢</div><p>المضمضة والاستنشاق باليد اليمنى</p></div>
+        <div class="wudu-step"><div class="step-id">٣</div><p>غسل الوجه كاملاً من الأذن للأذن</p></div>
+        <div class="wudu-step"><div class="step-id">٤</div><p>غسل اليدين إلى المرفقين (اليمنى أولاً)</p></div>
+        <div class="wudu-step"><div class="step-id">٥</div><p>مسح الرأس مرة واحدة مع الأذنين</p></div>
+        <div class="wudu-step"><div class="step-id">٦</div><p>غسل الرجلين إلى الكعبين وتخليل الأصابع</p></div>
     </div>
 </div>
 
-<footer>SYSTEM VERSION 2.0.26 // DEVELOPED FOR ETERNAL SUCCESS</footer>
+<footer>نظام نبض الصلاة // إصدار 2026 // طُور بكل حب</footer>
 
-<div id="toast" class="toast">تم نسخ الرابط بنجاح!</div>
+<div id="toast" class="toast">تم نسخ رابط الخير بنجاح!</div>
 
 <script>
-    // 1. Sidebar Control
+    // 1. القائمة والوضع النهاري
     const menuBtn = document.getElementById('menuBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
+    const themeBtn = document.getElementById('themeBtn');
 
     menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); }
     overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); }
 
-    // 2. Theme Control
     function toggleTheme() {
         const body = document.body;
-        const current = body.getAttribute('data-theme');
-        body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        const isDark = body.getAttribute('data-theme') === 'dark';
+        body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        themeBtn.innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
     }
 
-    // 3. Share Function
+    // 2. مشاركة الموقع
     function shareSite() {
         const url = window.location.href;
         if (navigator.share) {
-            navigator.share({ title: 'Pulse Pray', url: url });
+            navigator.share({ title: 'نبض الصلاة', url: url });
         } else {
             navigator.clipboard.writeText(url);
             const toast = document.getElementById('toast');
             toast.style.display = 'block';
-            setTimeout(() => toast.style.display = 'none', 2500);
+            setTimeout(() => toast.style.display = 'none', 3000);
         }
     }
 
-    // 4. Image Slider Engine
+    // 3. معرض الصور النيوني
     const images = [
         'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=2070',
         'https://images.unsplash.com/photo-1542810634-71277d95dcbb?q=80&w=2070',
+        'https://images.unsplash.com/photo-1564121211835-e88c852648ab?q=80&w=2070',
         'https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=2070'
     ];
     let imgIdx = 0;
@@ -350,44 +364,53 @@
             imgIdx = (imgIdx + 1) % images.length;
             imgElement.src = images[imgIdx];
             imgElement.style.opacity = '1';
-        }, 800);
-    }, 5000);
+        }, 1000);
+    }, 6000);
 
-    // 5. Prayer Times Engine (API & Countdown)
+    // 4. نظام المواقيت والعد التنازلي
     const prayerNamesAr = {
         Fajr: "الفجر", Sunrise: "الشروق", Dhuhr: "الظهر",
         Asr: "العصر", Maghrib: "المغرب", Isha: "العشاء"
     };
+    
+    const tips = [
+        "رأس الأمر الإسلام، وعموده الصلاة",
+        "أقرب ما يكون العبد من ربه وهو ساجد",
+        "بشر المشائين في الظلم إلى المساجد بالنور التام",
+        "الصلاة تجلب الرزق وتحفظ الصحة",
+        "اجعل لبيتك نصيباً من صلاتك (النوافل)"
+    ];
+
     let times = {};
 
-    function getLocation() {
+    function initLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                p => fetchTimes(p.coords.latitude, p.coords.longitude),
-                e => fetchTimes(30.0444, 31.2357) // القاهرة كافتراضي
+                p => fetchPrayerTimes(p.coords.latitude, p.coords.longitude),
+                e => fetchPrayerTimes(30.0444, 31.2357) // القاهرة كافتراضي
             );
         }
     }
 
-    async function fetchTimes(lat, lon) {
+    async function fetchPrayerTimes(lat, lon) {
         try {
             const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=4`);
             const data = await res.json();
             times = data.data.timings;
-            document.getElementById('location-display').innerText = `تم الربط: ${data.data.meta.timezone}`;
-            renderCards();
-            startTimer();
+            document.getElementById('location-display').innerText = `الموقع: ${data.data.meta.timezone} (متصل)`;
+            buildCards();
+            runCountdown();
         } catch (error) {
-            document.getElementById('location-display').innerText = "خطأ في الاتصال بالسيرفر";
+            document.getElementById('location-display').innerText = "حدث خطأ في جلب المواقيت";
         }
     }
 
-    function renderCards() {
+    function buildCards() {
         const grid = document.getElementById('prayer-cards');
         grid.innerHTML = '';
         Object.keys(prayerNamesAr).forEach(key => {
             grid.innerHTML += `
-                <div class="prayer-card" id="p-${key}">
+                <div class="prayer-card" id="card-${key}">
                     <h3>${prayerNamesAr[key]}</h3>
                     <p>${times[key]}</p>
                 </div>
@@ -395,10 +418,10 @@
         });
     }
 
-    function startTimer() {
+    function runCountdown() {
         setInterval(() => {
             const now = new Date();
-            let next = null;
+            let nextKey = null;
             let minDiff = Infinity;
 
             Object.keys(prayerNamesAr).forEach(key => {
@@ -412,15 +435,15 @@
                 const diff = pDate - now;
                 if (diff < minDiff) { 
                     minDiff = diff; 
-                    next = key; 
+                    nextKey = key; 
                 }
                 
-                const card = document.getElementById(`p-${key}`);
+                const card = document.getElementById(`card-${key}`);
                 if(card) card.classList.remove('active');
             });
 
-            document.getElementById('next-prayer-title').innerText = `الصلاة القادمة: ${prayerNamesAr[next]}`;
-            const activeCard = document.getElementById(`p-${next}`);
+            document.getElementById('next-prayer-title').innerText = `صلاة ${prayerNamesAr[nextKey]} بعد:`;
+            const activeCard = document.getElementById(`card-${nextKey}`);
             if(activeCard) activeCard.classList.add('active');
 
             const h = Math.floor(minDiff / 3600000);
@@ -428,10 +451,15 @@
             const s = Math.floor((minDiff % 60000) / 1000);
             document.getElementById('timer').innerText = 
                 `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            
+            // تغيير النصيحة كل دقيقة
+            if(s === 0) {
+                document.getElementById('tip-text').innerText = tips[Math.floor(Math.random() * tips.length)];
+            }
         }, 1000);
     }
 
-    getLocation();
+    initLocation();
 </script>
 </body>
 </html>
