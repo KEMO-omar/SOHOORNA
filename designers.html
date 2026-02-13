@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>فريق العمل | سحورنا 2026</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -13,176 +13,381 @@
             --bg: #030508;
             --surface: #0f141e;
             --gold: #D4AF37;
+            --gold-light: #f1d279;
             --text-main: #f8f9fa;
             --text-dim: #94a3b8;
+            --sidebar-width: 280px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         [data-theme="light"] {
             --bg: #f0f2f5;
             --surface: #ffffff;
             --gold: #a37e00;
+            --gold-light: #c09a00;
             --text-main: #1e293b;
             --text-dim: #64748b;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Cairo', sans-serif;
-            margin: 0; padding: 20px;
-            text-align: center;
+            margin: 0;
+            overflow-x: hidden;
+            transition: var(--transition);
         }
 
+        /* --- Sidebar Styles --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: calc(-1 * var(--sidebar-width));
+            width: var(--sidebar-width);
+            height: 100%;
+            background: var(--surface);
+            z-index: 1000;
+            transition: var(--transition);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            padding-top: 60px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) transparent;
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--text-main);
+            text-decoration: none;
+            gap: 15px;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            border-right: 3px solid transparent;
+        }
+
+        .sidebar-item i {
+            width: 25px;
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-right-color: var(--gold);
+            padding-right: 35px;
+        }
+
+        .sidebar-item.active {
+            background: rgba(212, 175, 55, 0.15);
+            border-right-color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* --- Overlay --- */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            z-index: 999;
+            backdrop-filter: blur(4px);
+        }
+
+        .overlay.active { display: block; }
+
+        /* --- Main Content --- */
+        .main-wrapper {
+            transition: var(--transition);
+            padding: 20px;
+        }
+
+        /* --- Navbar / Controls --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 5%;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 900;
+        }
+
+        .menu-btn, .theme-toggle {
+            background: var(--surface);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .menu-btn:hover { background: var(--gold); color: white; }
+
+        /* --- Header Section --- */
         .header-section {
-            padding: 40px 0;
-            margin-bottom: 20px;
+            padding: 60px 0 40px;
+            text-align: center;
         }
 
         .header-section h1 {
             font-family: 'Amiri', serif;
-            font-size: 40px;
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
             color: var(--gold);
-            margin-bottom: 5px;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .header-section p {
             color: var(--text-dim);
-            font-size: 16px;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 15px auto;
         }
 
+        /* --- Team Grid --- */
         .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
         .member-card {
             background: var(--surface);
-            padding: 25px 15px;
-            border-radius: 25px;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            transition: 0.3s ease;
+            padding: 40px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: var(--transition);
             text-decoration: none;
             color: inherit;
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
+        .member-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .member-card:hover::before { transform: translateX(100%); }
+
         .member-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
             border-color: var(--gold);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .img-container {
+            position: relative;
+            margin-bottom: 20px;
         }
 
         .member-img {
-            width: 100px;
-            height: 100px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
-            margin-bottom: 15px;
             object-fit: cover;
-            border: 2px solid var(--gold);
-            background: var(--bg); /* لضمان شكل جمالي لو الصورة متأخرة */
+            border: 3px solid var(--gold);
+            padding: 5px;
+            background: var(--bg);
         }
 
         .member-name {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 1.3rem;
+            font-weight: 900;
             color: var(--text-main);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
         }
 
         .quote {
-            font-size: 13px;
+            font-size: 0.95rem;
             color: var(--text-dim);
-            line-height: 1.4;
+            line-height: 1.6;
+            font-style: italic;
             margin: 0;
         }
 
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
+        .social-link {
+            margin-top: 15px;
+            font-size: 0.8rem;
             color: var(--gold);
-            text-decoration: none;
+            text-transform: uppercase;
             font-weight: bold;
-            font-size: 14px;
         }
 
-        @media (max-width: 500px) {
-            .team-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
-            .member-img { width: 80px; height: 80px; }
-            .member-name { font-size: 15px; }
-            .quote { font-size: 11px; }
+        footer {
+            margin-top: 80px;
+            padding: 40px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+        @media (max-width: 768px) {
+            .team-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
+            .member-img { width: 100px; height: 100px; }
+            .member-name { font-size: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .team-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body data-theme="dark">
 
-    <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</a>
-<a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
-    <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
-    <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
-    <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-check-double"></i> متابعة الختمة</a>
-    <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-rosary"></i> أذكار المسلم</a>
-    <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-circle-dot"></i> المسبحة الإلكترونية</a>
-    <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-dollar"></i> حاسبة الزكاة</a>
-    <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-utensils"></i> وصفات الفطور</a>
-    <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-bread-slice"></i> وجبات السحور</a>
-    <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-list-check"></i> متبع العادات</a>
-    <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-heart"></i> أعمال الخير</a>
-    <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-notes-medical"></i> صحتك في رمضان</a>
-    <a href="series.html" class="sidebar-item"><i class="fa-solid fa-tv"></i> المسلسلات والبرامج</a>
-    <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-circle-question"></i> فتاوى الصيام</a>
-    <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book"></i> المكتبة الرمضانية</a>
-    <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-users"></i> فريق العمل</a>
-</nav>
-    <div class="header-section">
-        <h1>فريق العمل</h1>
-        <p>نخبة اجتمعت لتقديم الأفضل في رمضان 2026</p>
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="KAREEM_OMAR.png" style="width: 60px; border-radius: 50%; border: 2px solid var(--gold);">
+            <h3 style="color: var(--gold); margin: 10px 0 0; font-size: 1.2rem;">سحورنا 2026</h3>
+        </div>
+        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
+        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
+        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
+        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> المسبحة الإلكترونية</a>
+        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> حاسبة الزكاة</a>
+        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
+        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الدينية</a>
+        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> وصفات الفطور</a>
+        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> نصائح السحور</a>
+        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
+        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
+        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
+        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
+        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> ركن الأطفال</a>
+        <a href="designers.html" class="sidebar-item active"><i class="fa-solid fa-code"></i> فريق العمل</a>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="top-nav">
+            <button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars-staggered"></i></button>
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
+        </div>
+
+        <div class="header-section">
+            <h1>فريق العمل</h1>
+            <p>نخبة اجتمعت لتقديم تجربة رقمية فريدة تليق بالشهر الفضيل لعام 2026</p>
+        </div>
+
+        <div class="team-grid">
+            <a href="https://kemo-omar.github.io/Kareem/" target="_blank" class="member-card">
+                <div class="img-container">
+                    <img src="KAREEM_OMAR.png" alt="KAREEM OMAR" class="member-img">
+                </div>
+                <span class="member-name">KAREEM OMAR</span>
+                <p class="quote">"نسعى دائماً لترك أثر رقمي يُفيد الأمة ويواكب تطلعات المستقبل."</p>
+                <span class="social-link">عرض الملف الشخصي <i class="fa-solid fa-arrow-left"></i></span>
+            </a>
+
+            <div class="member-card">
+                <div class="img-container">
+                    <img src="MOSTAFA_MOHAMED.png" alt="MOSTAFA MOHAMED" class="member-img">
+                </div>
+                <span class="member-name">MOSTAFA MOHAMED</span>
+                <p class="quote">"الإبداع لا حدود له عندما تجتمع العقول على هدف واحد سامٍ."</p>
+            </div>
+
+            <div class="member-card">
+                <div class="img-container">
+                    <img src="YOUSSEF_MOSTAFA.png" alt="YOUSSEF MOSTAFA" class="member-img">
+                </div>
+                <span class="member-name">YOUSSEF MOSTAFA</span>
+                <p class="quote">"الجمال يكمن في بساطة التفاصيل ودقة التنفيذ."</p>
+            </div>
+
+            <div class="member-card">
+                <div class="img-container">
+                    <img src="YOUSSIF_AWES.png" alt="YOUSSIF AWES" class="member-img">
+                </div>
+                <span class="member-name">YOUSSIF AWES</span>
+                <p class="quote">"خلف كل واجهة ناجحة، نظام متين مبني بشغف وإتقان."</p>
+            </div>
+
+            <div class="member-card">
+                <div class="img-container">
+                    <img src="MOHAMED_BARAKAT.png" alt="MOHAMED BARAKAT" class="member-img">
+                </div>
+                <span class="member-name">MOHAMED BARAKAT</span>
+                <p class="quote">"رمضان يجمعنا دائماً على دروب الخير والإبداع التقني."</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>سحورنا 2026 © جميع الحقوق محفوظة</p>
+            <div style="margin-top: 10px; color: var(--gold);">
+                صنع بكل حب لخدمة الصائمين
+            </div>
+        </footer>
     </div>
-
-    <div class="team-grid">
-        <a href="https://kemo-omar.github.io/Kareem/" target="_blank" class="member-card">
-            <img src="KAREEM_OMAR.png" alt="KAREEM OMAR" class="member-img">
-            <span class="member-name">KAREEM OMAR</span>
-            <p class="quote">"نسعى دائماً لترك أثر رقمي يُفيد الأمة."</p>
-        </a>
-
-        <div class="member-card">
-            <img src="MOSTAFA_MOHAMED.png" alt="MOSTAFA MOHAMED" class="member-img">
-            <span class="member-name">MOSTAFA MOHAMED</span>
-            <p class="quote">"الإبداع لا حدود له عندما تجتمع العقول."</p>
-        </div>
-
-        <div class="member-card">
-            <img src="YOUSSEF_MOSTAFA.png" alt="YOUSSEF MOSTAFA" class="member-img">
-            <span class="member-name">YOUSSEF MOSTAFA</span>
-            <p class="quote">"الجمال يكمن في بساطة التفاصيل."</p>
-        </div>
-
-        <div class="member-card">
-            <img src="YOUSSIF_AWES.png" alt="YOUSSIF AWES" class="member-img">
-            <span class="member-name">YOUSSIF AWES</span>
-            <p class="quote">"خلف كل واجهة ناجحة، نظام متين."</p>
-        </div>
-
-        <div class="member-card">
-            <img src="MOHAMED_BARAKAT.png" alt="MOHAMED BARAKAT" class="member-img">
-            <span class="member-name">MOHAMED BARAKAT</span>
-            <p class="quote">"رمضان يجمعنا على الخير والإتقان."</p>
-        </div>
-    </div>
-
-    <p style="margin-top: 40px; color: var(--text-dim); font-size: 12px;">سحورنا 2026 © جميع الحقوق محفوظة</p>
 
     <script>
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.body.setAttribute('data-theme', savedTheme);
+        // Sidebar Logic
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        // Theme Logic
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            const icon = document.querySelector('.theme-toggle i');
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            icon.className = newTheme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+        }
+
+        // Apply saved theme on load
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = savedTheme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+        };
     </script>
 </body>
 </html>
