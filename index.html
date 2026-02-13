@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سحورنا 2026 | SOHOORNA</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* النمط الليلي الافتراضي */
+            --bg: #05070a;
+            --surface: #0d121b;
+            --gold: #D4AF37;
+            --gold-light: #f3cf58;
+            --text-main: #ffffff;
+            --text-dim: #a0aec0;
+            --nav-bg: rgba(13, 18, 27, 0.95);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --gold: #b38b00;
+            --gold-light: #d4af37;
+            --text-main: #1a202c;
+            --text-dim: #4a5568;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        * { box-sizing: border-box; transition: background 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Cairo', sans-serif;
+            margin: 0; padding-bottom: 110px;
+            overflow-x: hidden;
+        }
+
+        /* زخرفة الخلفية */
+        .bg-pattern {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/islamic-art.png');
+            opacity: 0.05; pointer-events: none; z-index: -1;
+        }
+
+        /* زر التبديل بين الأوضاع */
+        .theme-switch {
+            position: fixed; top: 20px; left: 20px; z-index: 1001;
+            background: var(--surface); border: 1px solid var(--gold);
+            color: var(--gold); width: 45px; height: 45px; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* الهيدر والزينة */
+        .header {
+            height: 220px; background: linear-gradient(to bottom, rgba(212,175,55,0.2), transparent);
+            text-align: center; padding-top: 40px; position: relative;
+        }
+
+        .header h1 { font-family: 'Amiri', serif; font-size: 45px; margin: 0; color: var(--gold); }
+        .header p { font-size: 16px; color: var(--text-dim); margin: 5px 0; }
+
+        /* الفوانيس المتحركة */
+        .lantern-box { position: absolute; top: 0; width: 100%; display: flex; justify-content: space-around; }
+        .lan { font-size: 25px; color: var(--gold); animation: swing 3s infinite ease-in-out; transform-origin: top; }
+        @keyframes swing { 0%, 100% { transform: rotate(15deg); } 50% { transform: rotate(-15deg); } }
+
+        /* بطاقة العداد الذكي */
+        .timer-container {
+            margin: -60px 20px 30px; background: var(--surface);
+            border-radius: 30px; padding: 25px; border: 1px solid rgba(212,175,55,0.2);
+            box-shadow: var(--card-shadow); text-align: center;
+        }
+
+        .next-label { font-size: 14px; color: var(--text-dim); margin-bottom: 15px; display: block; }
+        .countdown-row { display: flex; justify-content: center; gap: 15px; }
+        .c-item { background: rgba(212, 175, 55, 0.08); padding: 15px; border-radius: 18px; min-width: 80px; }
+        .c-item span { display: block; font-size: 32px; font-weight: 900; color: var(--gold); font-family: 'Amiri', serif; }
+        .c-item label { font-size: 11px; color: var(--text-dim); }
+
+        /* تصنيف الأيقونات */
+        .group-name { padding: 10px 25px; font-weight: 900; color: var(--gold); font-size: 17px; display: flex; align-items: center; gap: 10px; }
+        
+        /* شبكة الأيقونات 16 صفحة */
+        .main-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0 15px 30px;
+        }
+
+        .card {
+            background: var(--surface); border-radius: 20px; padding: 15px 5px;
+            text-decoration: none; color: var(--text-main); text-align: center;
+            border: 1px solid rgba(255,255,255,0.03); box-shadow: var(--card-shadow);
+            transition: 0.2s;
+        }
+        .card:active { transform: scale(0.9); }
+        .card i { font-size: 24px; margin-bottom: 8px; display: block; color: var(--gold); }
+        .card span { font-size: 11px; font-weight: 700; display: block; }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: var(--nav-bg);
+            display: flex; justify-content: space-around; padding: 15px 0 30px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); z-index: 1000;
+        }
+        .nav-btn { color: var(--text-dim); text-decoration: none; text-align: center; flex: 1; font-size: 20px; }
+        .nav-btn.active { color: var(--gold); }
+        .nav-btn span { display: block; font-size: 10px; margin-top: 4px; font-weight: bold; }
+
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="bg-pattern"></div>
+    
+    <button class="theme-switch" onclick="toggleTheme()">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+    </button>
+
+    <div class="header">
+        <div class="lantern-box">
+            <i class="fa-solid fa-fan lan"></i>
+            <i class="fa-solid fa-mosque lan"></i>
+            <i class="fa-solid fa-moon lan"></i>
+        </div>
+        <h1>سحورنا 2026</h1>
+        <p id="hijri-date">تحميل التقويم...</p>
+    </div>
+
+    <div class="timer-container">
+        <span class="next-label" id="next-event-title">باقي على الإفطار</span>
+        <div class="countdown-row">
+            <div class="c-item"><span id="h">00</span><label>ساعة</label></div>
+            <div class="c-item"><span id="m">00</span><label>دقيقة</label></div>
+            <div class="c-item"><span id="s">00</span><label>ثانية</label></div>
+        </div>
+    </div>
+
+    <div class="group-name"><i class="fa-solid fa-kaaba"></i> الخدمات الدينية</div>
+    <div class="main-grid">
+        <a href="prayers.html" class="card"><i class="fa-solid fa-clock"></i><span>المواقيت</span></a>
+        <a href="quran.html" class="card"><i class="fa-solid fa-book-quran"></i><span>المصحف</span></a>
+        <a href="khatma.html" class="card"><i class="fa-solid fa-file-signature"></i><span>الختمة</span></a>
+        <a href="azkar.html" class="card"><i class="fa-solid fa-person-praying"></i><span>الأذكار</span></a>
+        <a href="tasbih.html" class="card"><i class="fa-solid fa-toggle-on"></i><span>المسبحة</span></a>
+        <a href="zakat.html" class="card"><i class="fa-solid fa-coins"></i><span>الزكاة</span></a>
+        <a href="faq.html" class="card"><i class="fa-solid fa-clipboard-question"></i><span>فتاوى</span></a>
+        <a href="library.html" class="card"><i class="fa-solid fa-book-open"></i><span>المكتبة</span></a>
+    </div>
+
+    <div class="group-name"><i class="fa-solid fa-heart-pulse"></i> الحياة اليومية</div>
+    <div class="main-grid">
+        <a href="recipes.html" class="card"><i class="fa-solid fa-plate-wheat"></i><span>وصفات</span></a>
+        <a href="suhoor.html" class="card"><i class="fa-solid fa-faucet-drip"></i><span>السحور</span></a>
+        <a href="health-tips.html" class="card"><i class="fa-solid fa-staff-snake"></i><span>صحتك</span></a>
+        <a href="habits.html" class="card"><i class="fa-solid fa-calendar-check"></i><span>عاداتي</span></a>
+        <a href="ehsan.html" class="card"><i class="fa-solid fa-hand-holding-heart"></i><span>إحسان</span></a>
+        <a href="series.html" class="card"><i class="fa-solid fa-film"></i><span>مسلسلات</span></a>
+        <a href="kids.html" class="card"><i class="fa-solid fa-child-reaching"></i><span>للأطفال</span></a>
+        <a href="designers.html" class="card"><i class="fa-solid fa-code"></i><span>الفريق</span></a>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-btn active"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+        <a href="quran.html" class="nav-btn"><i class="fa-solid fa-book-open"></i><span>المصحف</span></a>
+        <a href="tasbih.html" class="nav-btn"><i class="fa-solid fa-circle-dot"></i><span>المسبحة</span></a>
+        <a href="prayers.html" class="nav-btn"><i class="fa-solid fa-clock"></i><span>المواقيت</span></a>
+        <a href="designers.html" class="nav-btn"><i class="fa-solid fa-palette"></i><span>المصممين</span></a>
+    </nav>
+
+    <script>
+        // إمساكية رمضان 2026 كاملة (تبدأ 18 فبراير تقريبًا)
+        // d: اليوم الميلادي، m: الشهر (0=يناير، 1=فبراير)، f: الفجر، g: المغرب
+        const RAMADAN_2026 = [
+            {day:1, d:18, m:1, f:"05:04", g:"17:43"}, {day:2, d:19, m:1, f:"05:03", g:"17:44"},
+            {day:3, d:20, m:1, f:"05:02", g:"17:45"}, {day:4, d:21, m:1, f:"05:01", g:"17:45"},
+            {day:5, d:22, m:1, f:"05:00", g:"17:46"}, {day:6, d:23, m:1, f:"04:59", g:"17:47"},
+            {day:7, d:24, m:1, f:"04:58", g:"17:48"}, {day:8, d:25, m:1, f:"04:57", g:"17:48"},
+            {day:9, d:26, m:1, f:"04:56", g:"17:49"}, {day:10, d:27, m:1, f:"04:55", g:"17:50"},
+            {day:11, d:28, m:1, f:"04:54", g:"17:51"}, {day:12, d:1, m:2, f:"04:53", g:"17:51"},
+            {day:13, d:2, m:2, f:"04:52", g:"17:52"}, {day:14, d:3, m:2, f:"04:51", g:"17:53"},
+            {day:15, d:4, m:2, f:"04:49", g:"17:53"}, {day:16, d:5, m:2, f:"04:48", g:"17:54"},
+            {day:17, d:6, m:2, f:"04:47", g:"17:55"}, {day:18, d:7, m:2, f:"04:46", g:"17:55"},
+            {day:19, d:8, m:2, f:"04:45", g:"17:56"}, {day:20, d:9, m:2, f:"04:43", g:"17:57"},
+            {day:21, d:10, m:2, f:"04:42", g:"17:57"}, {day:22, d:11, m:2, f:"04:41", g:"17:58"},
+            {day:23, d:12, m:2, f:"04:40", g:"17:59"}, {day:24, d:13, m:2, f:"04:38", g:"17:59"},
+            {day:25, d:14, m:2, f:"04:37", g:"18:00"}, {day:26, d:15, m:2, f:"04:36", g:"18:01"},
+            {day:27, d:16, m:2, f:"04:35", g:"18:01"}, {day:28, d:17, m:2, f:"04:33", g:"18:02"},
+            {day:29, d:18, m:2, f:"04:32", g:"18:03"}, {day:30, d:19, m:2, f:"04:31", g:"18:03"}
+        ];
+
+        function toggleTheme() {
+            const current = document.body.getAttribute('data-theme');
+            document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        }
+
+        function updateApp() {
+            const now = new Date();
+            const date = now.getDate();
+            const month = now.getMonth();
+            
+            let todayData = RAMADAN_2026.find(x => x.d === date && x.m === month);
+            
+            if (!todayData) {
+                document.getElementById('hijri-date').innerText = "رمضان لم يبدأ بعد";
+                return;
+            }
+
+            document.getElementById('hijri-date').innerText = `اليوم ${todayData.day} رمضان 1447هـ`;
+
+            const fTime = new Date(now.toDateString() + " " + todayData.f);
+            const gTime = new Date(now.toDateString() + " " + todayData.g);
+            
+            let target, label;
+
+            if (now < fTime) {
+                target = fTime; label = "باقي على الإمساك (الفجر)";
+            } else if (now < gTime) {
+                target = gTime; label = "باقي على الإفطار (المغرب)";
+            } else {
+                let tomorrow = RAMADAN_2026.find(x => x.day === todayData.day + 1);
+                if (tomorrow) {
+                    target = new Date(new Date(now.getTime() + 86400000).toDateString() + " " + tomorrow.f);
+                    label = "باقي على سحور الغد";
+                }
+            }
+
+            const diff = target - now;
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+
+            document.getElementById('h').innerText = h.toString().padStart(2, '0');
+            document.getElementById('m').innerText = m.toString().padStart(2, '0');
+            document.getElementById('s').innerText = s.toString().padStart(2, '0');
+            document.getElementById('next-event-title').innerText = label;
+        }
+
+        setInterval(updateApp, 1000);
+        updateApp();
+    </script>
+</body>
+</html>
