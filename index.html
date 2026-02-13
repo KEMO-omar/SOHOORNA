@@ -21,7 +21,6 @@
             --nav-bg: rgba(15, 20, 30, 0.96);
             --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
             --sidebar-bg: #080c14;
-            --decoration-opacity: 0.6;
         }
 
         [data-theme="light"] {
@@ -34,13 +33,12 @@
             --nav-bg: rgba(255, 255, 255, 0.96);
             --card-shadow: 0 10px 25px rgba(0,0,0,0.05);
             --sidebar-bg: #ffffff;
-            --decoration-opacity: 0.3;
         }
 
         * { 
             box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent;
-            transition: background 0.2s, color 0.2s, transform 0.1s;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         body {
@@ -49,104 +47,154 @@
             font-family: 'Cairo', sans-serif;
             margin: 0; padding-bottom: 100px;
             overflow-x: hidden;
-            user-select: none;
         }
 
-        /* الفانوس المطلوب antern.png */
-        .lantern-img {
-            position: absolute; top: 0; left: 15px;
-            width: 70px; z-index: 1002;
-            filter: drop-shadow(0 0 10px var(--gold));
+        /* صورة الفانوس antern.png - المرة الأولى */
+        .lantern-right {
+            position: absolute; top: 0; right: 10px;
+            width: 65px; z-index: 1002;
+            filter: drop-shadow(0 0 8px var(--gold));
             animation: swing 3s ease-in-out infinite alternate;
             transform-origin: top center;
         }
 
-        @keyframes swing {
-            from { transform: rotate(-3deg); }
-            to { transform: rotate(3deg); }
+        /* صورة الفانوس antern.png - المرة الثانية */
+        .lantern-left {
+            position: absolute; top: 0; left: 10px;
+            width: 65px; z-index: 1002;
+            filter: drop-shadow(0 0 8px var(--gold));
+            animation: swing 3.5s ease-in-out infinite alternate-reverse;
+            transform-origin: top center;
         }
 
-        /* صورة الواجهة sohoorna.png */
-        .brand-logo {
-            width: 140px; height: auto;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        @keyframes swing {
+            from { transform: rotate(-5deg); }
+            to { transform: rotate(5deg); }
         }
 
         .header {
-            height: 280px; text-align: center; padding-top: 60px;
-            background: linear-gradient(to bottom, rgba(212,175,55,0.12), transparent);
+            height: 320px; text-align: center; padding-top: 70px;
+            background: radial-gradient(circle at top, rgba(212,175,55,0.15), transparent 70%);
+            position: relative;
         }
 
+        /* تعديل المربع منحني الحواف للصورة الرئيسية */
+        .logo-container {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 15px;
+            background: var(--surface);
+            border: 2px solid var(--gold);
+            border-radius: 30px; /* انحناء الحواف */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .brand-logo {
+            width: 90%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .top-controls {
+            position: fixed; top: 20px; left: 0; right: 0;
+            padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center; z-index: 2000;
+        }
+
+        .top-btn {
+            background: var(--surface); border: 1.5px solid var(--gold);
+            color: var(--gold); width: 45px; height: 45px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .top-btn:active { transform: scale(0.9); }
+
+        .timer-container {
+            margin: -40px 20px 25px; background: var(--surface);
+            border-radius: 25px; padding: 25px 15px; border: 1px solid rgba(212,175,55,0.3);
+            box-shadow: var(--card-shadow); text-align: center; position: relative; z-index: 10;
+        }
+
+        .countdown-row { display: flex; justify-content: center; gap: 12px; }
+        .c-item { 
+            background: rgba(212, 175, 55, 0.1); 
+            padding: 12px; border-radius: 18px; min-width: 80px;
+            border: 1px solid rgba(212,175,55,0.1);
+        }
+        .c-item span { display: block; font-size: 30px; font-weight: 900; color: var(--gold); font-family: 'Amiri'; }
+        .c-item label { font-size: 12px; color: var(--text-dim); font-weight: 600; }
+
+        .group-name { 
+            padding: 20px 25px 10px; font-weight: 900; color: var(--gold); 
+            font-size: 18px; display: flex; align-items: center; gap: 10px; 
+        }
+
+        .main-grid { 
+            display: grid; grid-template-columns: repeat(4, 1fr); 
+            gap: 12px; padding: 10px 20px 30px; 
+        }
+
+        .card {
+            background: var(--surface); border-radius: 20px; padding: 18px 5px;
+            text-decoration: none; color: var(--text-main); text-align: center;
+            border: 1px solid rgba(212,175,55,0.05); box-shadow: var(--card-shadow);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+        }
+
+        .card:active { transform: translateY(3px); filter: brightness(1.2); }
+        .card i { font-size: 22px; color: var(--gold); }
+        .card span { font-size: 11px; font-weight: 700; }
+
         .sidebar {
-            position: fixed; top: 0; right: -285px; width: 280px; height: 100%;
-            background: var(--sidebar-bg); z-index: 3000;
-            box-shadow: -10px 0 40px rgba(0,0,0,0.8);
-            overflow-y: auto; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed; top: 0; right: -300px; width: 290px; height: 100%;
+            background: var(--sidebar-bg); z-index: 4000;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding-top: 20px;
         }
         .sidebar.active { right: 0; }
         .sidebar-item {
             display: flex; align-items: center; gap: 15px; color: var(--text-main);
-            text-decoration: none; padding: 14px 20px; font-weight: 600;
+            text-decoration: none; padding: 16px 25px; font-weight: 600;
             border-bottom: 1px solid rgba(212,175,55,0.05);
         }
-        .sidebar-item:active { background: var(--gold); color: #000; }
-
+        .sidebar-item i { color: var(--gold); width: 25px; }
+        
         .overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-            display: none; z-index: 2500; backdrop-filter: blur(4px);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            display: none; z-index: 3500; backdrop-filter: blur(5px);
         }
         .overlay.active { display: block; }
 
-        .top-controls {
-            position: fixed; top: 15px; left: 15px; right: 15px;
-            display: flex; justify-content: space-between; align-items: center; z-index: 1001;
-        }
-        .top-btn {
-            background: var(--surface); border: 1px solid var(--gold);
-            color: var(--gold); width: 44px; height: 44px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-
-        .timer-container {
-            margin: -30px 15px 25px; background: var(--surface);
-            border-radius: 25px; padding: 25px 10px; border: 1px solid rgba(212,175,55,0.2);
-            box-shadow: var(--card-shadow); text-align: center; position: relative; z-index: 5;
-        }
-        .countdown-row { display: flex; justify-content: center; gap: 8px; }
-        .c-item { background: rgba(212, 175, 55, 0.08); padding: 10px; border-radius: 15px; min-width: 75px; }
-        .c-item span { display: block; font-size: 28px; font-weight: 900; color: var(--gold); font-family: 'Amiri'; }
-        
-        .group-name { padding: 15px 20px 5px; font-weight: 900; color: var(--gold); font-size: 16px; display: flex; align-items: center; gap: 8px; }
-        .main-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 10px 15px 30px; }
-        .card {
-            background: var(--surface); border-radius: 18px; padding: 15px 5px;
-            text-decoration: none; color: var(--text-main); text-align: center;
-            border: 1px solid rgba(255,255,255,0.03); box-shadow: var(--card-shadow);
-        }
-        .card:active { transform: scale(0.92); }
-        .card i { font-size: 20px; margin-bottom: 6px; display: block; color: var(--gold); }
-        .card span { font-size: 10.5px; font-weight: 700; display: block; }
-
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; background: var(--nav-bg);
-            display: flex; justify-content: space-around; padding: 10px 0 25px;
-            border-top: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); z-index: 1000;
+            display: flex; justify-content: space-around; padding: 12px 0 30px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); backdrop-filter: blur(15px); z-index: 3000;
         }
-        .nav-btn { color: var(--text-dim); text-decoration: none; text-align: center; flex: 1; }
-        .nav-btn.active { color: var(--gold); }
-        
-        #location-status { font-size: 11px; color: var(--gold); margin-top: 5px; display: block; }
+        .nav-btn { color: var(--text-dim); text-decoration: none; font-size: 20px; transition: 0.3s; }
+        .nav-btn.active { color: var(--gold); transform: translateY(-5px); }
+
+        #location-status { font-size: 12px; color: var(--gold-light); margin-top: 8px; font-weight: bold; }
     </style>
 </head>
 <body data-theme="dark">
 
-    <img src="antern.png" alt="Fanoos" class="lantern-img" onerror="this.style.display='none'">
+    <img src="antern.png" alt="Fanoos Right" class="lantern-right" onerror="this.style.display='none'">
+    <img src="antern.png" alt="Fanoos Left" class="lantern-left" onerror="this.style.display='none'">
+
     <div class="overlay" id="overlay"></div>
 
     <nav class="sidebar" id="sidebar">
-        <div style="padding: 25px; text-align: center; border-bottom: 1px solid var(--gold);">
-            <img src="sohoorna.png" style="width: 80px;" alt="Logo">
+        <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid var(--gold);">
+            <div class="logo-container" style="width: 80px; height: 80px; border-radius: 15px; margin-bottom: 10px;">
+                <img src="sohoorna.png" style="width: 80%;" alt="Logo">
+            </div>
+            <h3 style="color:var(--gold); margin:0; font-size: 18px;">القائمة الرئيسية</h3>
         </div>
         <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
         <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
@@ -168,30 +216,32 @@
     </nav>
 
     <div class="top-controls">
-        <div style="display:flex; gap:10px;">
-            <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
-            <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        <div style="display:flex; gap:12px;">
+            <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
+            <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         </div>
-        <img src="sohoorna.png" class="brand-logo" alt="SOHOORNA 2026">
         <button class="top-btn" onclick="shareApp()"><i class="fa-solid fa-share-nodes"></i></button>
     </div>
 
     <div class="header">
-        <h1 style="font-family:'Amiri'; font-size: 40px; color: var(--gold); margin-top:20px;">سحورنا 2026</h1>
-        <p id="hijri-date">جاري تحديد موقعك...</p>
-        <span id="location-status">لم يتم تحديد الموقع</span>
+        <div class="logo-container">
+            <img src="sohoorna.png" class="brand-logo" alt="SOHOORNA 2026">
+        </div>
+        <h1 style="font-family:'Amiri'; font-size: 32px; color: var(--gold); margin:0;">سحورنا 2026</h1>
+        <p id="hijri-date" style="font-size: 16px; margin: 5px 0; opacity: 0.9;">رمضان كريم</p>
+        <span id="location-status"><i class="fa-solid fa-location-dot"></i> جاري تحديد الموقع...</span>
     </div>
 
     <div class="timer-container">
-        <span id="next-event-title" style="color:var(--gold); font-weight:700; font-size:14px; display:block; margin-bottom:10px;">حساب التوقيت...</span>
+        <span id="next-event-title" style="color:var(--gold); font-weight:700; font-size:16px; display:block; margin-bottom:15px;">انتظر قليلاً...</span>
         <div class="countdown-row">
-            <div class="c-item"><span id="h">00</span><label style="font-size:10px; color:var(--text-dim);">ساعة</label></div>
-            <div class="c-item"><span id="m">00</span><label style="font-size:10px; color:var(--text-dim);">دقيقة</label></div>
-            <div class="c-item"><span id="s">00</span><label style="font-size:10px; color:var(--text-dim);">ثانية</label></div>
+            <div class="c-item"><span id="h">00</span><label>ساعة</label></div>
+            <div class="c-item"><span id="m">00</span><label>دقيقة</label></div>
+            <div class="c-item"><span id="s">00</span><label>ثانية</label></div>
         </div>
     </div>
 
-    <div class="group-name"><i class="fa-solid fa-kaaba"></i> الخدمات الدينية</div>
+    <div class="group-name"><i class="fa-solid fa-star-and-crescent"></i> الخدمات الدينية</div>
     <div class="main-grid">
         <a href="prayers.html" class="card"><i class="fa-solid fa-clock"></i><span>المواقيت</span></a>
         <a href="quran.html" class="card"><i class="fa-solid fa-book-quran"></i><span>المصحف</span></a>
@@ -203,7 +253,7 @@
         <a href="library.html" class="card"><i class="fa-solid fa-book-open"></i><span>المكتبة</span></a>
     </div>
 
-    <div class="group-name"><i class="fa-solid fa-heart-pulse"></i> لايف ستايل</div>
+    <div class="group-name"><i class="fa-solid fa-heart"></i> جودة الحياة</div>
     <div class="main-grid">
         <a href="recipes.html" class="card"><i class="fa-solid fa-plate-wheat"></i><span>وصفات</span></a>
         <a href="suhoor.html" class="card"><i class="fa-solid fa-faucet-drip"></i><span>السحور</span></a>
@@ -224,59 +274,50 @@
 
     <script>
         let userCoords = null;
-        const RAMADAN_START = new Date("2026-02-18"); // التاريخ المتوقع لرمضان 2026
-
-        // طلب الموقع الجغرافي
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (pos) => {
                         userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                        document.getElementById('location-status').innerText = "تم تحديد موقعك بدقة ✅";
+                        document.getElementById('location-status').innerHTML = '<i class="fa-solid fa-check-circle"></i> تم تحديد موقعك بنجاح';
                         updateTimes();
                     },
-                    () => { document.getElementById('location-status').innerText = "الموقع: القاهرة (افتراضي) 📍"; }
+                    () => { 
+                        document.getElementById('location-status').innerHTML = '<i class="fa-solid fa-map-pin"></i> الموقع: القاهرة (افتراضي)';
+                        updateTimes(); 
+                    }
                 );
             }
         }
 
         async function updateTimes() {
             const now = new Date();
-            let lat = userCoords ? userCoords.lat : 30.0444; // القاهرة كافتراضي
+            let lat = userCoords ? userCoords.lat : 30.0444;
             let lng = userCoords ? userCoords.lng : 31.2357;
-
-            // جلب المواقيت من API خارجي لضمان الدقة الجغرافية
             try {
                 const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(now.getTime()/1000)}?latitude=${lat}&longitude=${lng}&method=4`);
                 const data = await res.json();
                 const times = data.data.timings;
-
-                // تحويل المواعيد لتوقيتات حقيقية
                 const fajr = new Date(now.toDateString() + " " + times.Fajr);
                 const maghrib = new Date(now.toDateString() + " " + times.Maghrib);
-                
                 let target, label;
-                if (now < fajr) { target = fajr; label = "باقي على الإمساك"; }
-                else if (now < maghrib) { target = maghrib; label = "باقي على الإفطار"; }
+                if (now < fajr) { target = fajr; label = "باقي على مدفع الإمساك"; }
+                else if (now < maghrib) { target = maghrib; label = "باقي على آذان المغرب"; }
                 else {
                     target = new Date(fajr.getTime() + 86400000);
                     label = "باقي على سحور الغد";
                 }
-
                 const diff = target - now;
                 document.getElementById('h').innerText = Math.floor(diff/3600000).toString().padStart(2,'0');
                 document.getElementById('m').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
                 document.getElementById('s').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
                 document.getElementById('next-event-title').innerText = label;
-                
-                // تحديث التاريخ الهجري من الـ API
                 document.getElementById('hijri-date').innerText = `${data.data.date.hijri.day} ${data.data.date.hijri.month.ar} ${data.data.date.hijri.year}هـ`;
             } catch (e) {
-                console.log("خطأ في جلب المواقيت");
+                document.getElementById('next-event-title').innerText = "خطأ في الاتصال بالشبكة";
             }
         }
 
-        // Sidebar logic
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
@@ -284,16 +325,32 @@
 
         function toggleTheme() {
             const body = document.body;
-            const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            body.setAttribute('data-theme', newTheme);
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                icon.className = 'fa-solid fa-sun';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'fa-solid fa-moon';
+            }
         }
 
         function shareApp() {
-            if (navigator.share) navigator.share({ title: 'سحورنا 2026', url: window.location.href });
+            if (navigator.share) {
+                navigator.share({
+                    title: 'تطبيق سحورنا 2026',
+                    text: 'حمل تطبيق سحورنا لمعرفة مواقيت الصلاة والخدمات الرمضانية',
+                    url: window.location.href
+                });
+            } else {
+                alert("رابط التطبيق: " + window.location.href);
+            }
         }
 
-        getLocation();
-        setInterval(updateTimes, 1000);
+        window.onload = () => {
+            getLocation();
+            setInterval(updateTimes, 1000);
+        };
     </script>
 </body>
 </html>
