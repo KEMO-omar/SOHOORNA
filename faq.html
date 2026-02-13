@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOHOORNA | 100 سؤال وجواب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* الوضع الليلي الافتراضي */
+            --bg: #05070a;
+            --surface: rgba(13, 18, 27, 0.96);
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --card: #0d121b;
+            --text-main: #e0e0e0;
+            --muted: #8892b0;
+            --border: rgba(212, 175, 55, 0.2);
+            --sidebar-bg: #010409;
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f7f6;
+            --surface: #ffffff;
+            --gold: #b8860b;
+            --gold-glow: rgba(184, 134, 11, 0.2);
+            --card: #ffffff;
+            --text-main: #2d3436;
+            --muted: #636e72;
+            --border: rgba(0,0,0,0.1);
+            --sidebar-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Cairo', sans-serif;
+            margin: 0; padding: 0;
+            background-image: radial-gradient(circle at 50% -20%, var(--gold-glow) 0%, transparent 40%);
+            background-attachment: fixed;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar & Overlay */
+        .sidebar {
+            position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
+            background: var(--sidebar-bg); z-index: 4000;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px; overflow-y: auto; box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+        }
+        .sidebar.active { right: 0; }
+        .sidebar-header { border-bottom: 1px solid var(--gold); padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 15px; color: var(--text-main);
+            text-decoration: none; padding: 12px; border-radius: 12px; margin-bottom: 5px; font-size: 14px;
+        }
+        .sidebar-item:hover { background: var(--gold); color: #000; }
+        .sidebar-item i { width: 25px; text-align: center; color: var(--gold); }
+        .sidebar-item:hover i { color: #000; }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; z-index: 3500;
+        }
+        .overlay.active { display: block; }
+
+        /* Navigation Controls */
+        .nav-controls {
+            position: fixed; top: 15px; left: 15px; right: 15px;
+            display: flex; justify-content: space-between; z-index: 2000;
+        }
+        .control-group { display: flex; gap: 10px; }
+        .top-btn {
+            background: var(--card); border: 1px solid var(--gold);
+            color: var(--gold); width: 45px; height: 45px; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .share-site-btn {
+            background: var(--gold); color: #000; padding: 0 15px;
+            height: 45px; border-radius: 12px; display: flex; align-items: center;
+            font-weight: 700; font-size: 13px; cursor: pointer; border: none;
+        }
+
+        .container { max-width: 600px; margin: 80px auto 0; padding: 20px 20px 120px 20px; }
+
+        .page-header { text-align: center; margin-bottom: 30px; }
+        .page-header h1 { 
+            font-size: 32px; font-weight: 900; margin: 0;
+            background: linear-gradient(to bottom, var(--text-main) 30%, var(--gold));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .page-header p { color: var(--muted); font-size: 14px; }
+
+        .search-wrapper { position: sticky; top: 75px; z-index: 1000; margin-bottom: 30px; }
+        .search-bar {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 18px; padding: 14px 20px;
+            display: flex; align-items: center; backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .search-bar i { color: var(--gold); margin-left: 15px; font-size: 18px; }
+        .search-bar input {
+            background: none; border: none; color: var(--text-main); width: 100%;
+            font-family: 'Cairo'; font-size: 16px; outline: none;
+        }
+
+        .category-group { margin-bottom: 35px; }
+        .category-label {
+            display: flex; align-items: center; color: var(--gold);
+            font-weight: 900; font-size: 18px; margin-bottom: 15px;
+            padding-right: 10px; border-right: 4px solid var(--gold);
+        }
+
+        .faq-card {
+            background: var(--card); border-radius: 18px; margin-bottom: 12px;
+            border: 1px solid var(--border); overflow: hidden;
+        }
+
+        .faq-trigger {
+            padding: 18px 20px; cursor: pointer; display: flex;
+            justify-content: space-between; align-items: flex-start; gap: 15px;
+        }
+        .faq-q-text { font-size: 15px; font-weight: 700; color: var(--text-main); flex: 1; }
+        .faq-icon { 
+            width: 24px; height: 24px; background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: var(--gold); font-size: 10px; transition: 0.3s;
+        }
+
+        .faq-content { max-height: 0; overflow: hidden; transition: all 0.4s ease; }
+        .faq-answer-body {
+            padding: 0 20px 20px 20px; color: var(--muted);
+            font-size: 14.5px; border-top: 1px solid var(--border); padding-top: 15px;
+        }
+
+        .share-q-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-top: 15px; padding: 8px 15px;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid var(--gold); border-radius: 10px;
+            color: var(--gold); font-size: 11px; font-weight: bold; cursor: pointer;
+        }
+        .share-q-btn:hover { background: var(--gold); color: #000; }
+
+        .faq-card.active { border-color: var(--gold); box-shadow: 0 0 15px var(--gold-glow); }
+        .faq-card.active .faq-icon { transform: rotate(180deg); background: var(--gold); color: #000; }
+        .faq-card.active .faq-content { max-height: 1000px; }
+
+        .copy-toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: var(--gold); color: #000; padding: 10px 25px;
+            border-radius: 50px; font-size: 13px; font-weight: bold;
+            display: none; z-index: 5000; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--surface); backdrop-filter: blur(15px);
+            display: flex; justify-content: space-around;
+            padding: 12px 0; border-top: 1px solid var(--border); z-index: 2000;
+        }
+        .nav-link { text-decoration: none; color: var(--muted); text-align: center; flex: 1; }
+        .nav-link i { display: block; font-size: 20px; margin-bottom: 4px; }
+        .nav-link span { font-size: 10px; }
+        .nav-link.active { color: var(--gold); }
+    </style>
+</head>
+<body data-theme="dark">
+
+<div class="overlay" id="overlay"></div>
+
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2 style="font-family: 'Cairo'; color: var(--gold); margin:0">سحورنا 2026</h2>
+    </div>
+    <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+    <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+    <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
+    <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-check-double"></i> متابعة الختمة</a>
+    <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-rosary"></i> أذكار المسلم</a>
+    <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-circle-dot"></i> المسبحة الإلكترونية</a>
+    <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-dollar"></i> حاسبة الزكاة</a>
+    <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-utensils"></i> وصفات الفطور</a>
+    <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-bread-slice"></i> وجبات السحور</a>
+    <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-list-check"></i> متبع العادات</a>
+    <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-heart"></i> أعمال الخير</a>
+    <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-notes-medical"></i> صحتك في رمضان</a>
+    <a href="series.html" class="sidebar-item"><i class="fa-solid fa-tv"></i> المسلسلات والبرامج</a>
+    <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-circle-question"></i> فتاوى الصيام</a>
+    <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book"></i> المكتبة الرمضانية</a>
+    <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-users"></i> فريق العمل</a>
+</nav>
+
+<div class="nav-controls">
+    <div class="control-group">
+        <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+        <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    </div>
+    <button class="share-site-btn" onclick="shareSite()">
+        <i class="fa-solid fa-share-nodes" style="margin-left: 8px;"></i> مشاركة الموقع
+    </button>
+</div>
+
+<div class="container">
+    <header class="page-header">
+        <h1>١٠٠ سؤال في رمضان 🌙</h1>
+        <p>موسوعة الفتاوى الشاملة - ٢٠٢٦</p>
+    </header>
+
+    <div class="search-wrapper">
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="mainSearch" placeholder="ابحث عن فتوى..." onkeyup="smartSearch()">
+        </div>
+    </div>
+
+    <div id="faqMasterList"></div>
+</div>
+
+<div id="toast" class="copy-toast">تم النسخ بنجاح!</div>
+
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+    <a href="habits.html" class="nav-link"><i class="fa-solid fa-bolt"></i><span>العادات</span></a>
+    <a href="faq.html" class="nav-link active"><i class="fa-solid fa-book-open"></i><span>الأسئلة</span></a>
+    <a href="suhoor.html" class="nav-link"><i class="fa-solid fa-utensils"></i><span>السحور</span></a>
+</nav>
+
+<script>
+    // Sidebar & Theme Logic
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menuBtn');
+
+    menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+    overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+
+    function toggleTheme() {
+        const body = document.body;
+        const current = body.getAttribute('data-theme');
+        body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+
+    function shareSite() {
+        const text = "🌙 موسوعة ١٠٠ سؤال وجواب في أحكام رمضان ٢٠٢٦ - دليلك الشامل للصيام:";
+        const url = window.location.href;
+        if (navigator.share) {
+            navigator.share({ title: 'سحورنا 2026', text: text, url: url });
+        } else {
+            navigator.clipboard.writeText(text + " " + url);
+            showToast("تم نسخ رابط الموقع!");
+        }
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 2000);
+    }
+
+    const faqDataset = [
+        // القسم 1: المفطرات (20 سؤال)
+        { c: "أحكام الصيام والمفطرات", q: "هل قطرة العين أو الأذن تفطر؟", a: "لا تفطر حتى لو وجد طعماً في الحلق لأن العين والأذن ليستا منفذاً مفتوحاً للمعدة." },
+        { c: "أحكام الصيام والمفطرات", q: "هل بخاخ الربو يبطل الصيام؟", a: "لا يفطر لأنه غاز مضغوط يذهب للرئة وليس طعاماً." },
+        { c: "أحكام الصيام والمفطرات", q: "ما حكم معجون الأسنان؟", a: "لا يفطر بشرط عدم بلع شيء منه، والأفضل استخدامه قبل السحور." },
+        { c: "أحكام الصيام والمفطرات", q: "هل حقن الفيتامينات تفطر؟", a: "الحقن العلاجية (عضل/وريد) لا تفطر، أما حقن التغذية (الجلوكوز) فهي تفطر." },
+        { c: "أحكام الصيام والمفطرات", q: "حكم بلع الريق للصائم؟", a: "لا يفطر إجماعاً." },
+        { c: "أحكام الصيام والمفطرات", q: "هل القيء غير المتعمد يبطل الصوم؟", a: "لا يبطل، أما من استقاء عمداً فعليه القضاء." },
+        { c: "أحكام الصيام والمفطرات", q: "ما حكم من أكل أو شرب ناسياً؟", a: "صومه صحيح ويتمه، فإنما أطعمه الله وسقاه." },
+        { c: "أحكام الصيام والمفطرات", q: "هل التدخين يفطر؟", a: "نعم يفطر لأن الدخان له جرم يصل للمعدة." },
+        { c: "أحكام الصيام والمفطرات", q: "حكم العطور والروائح؟", a: "لا تفطر الصائم." },
+        { c: "أحكام الصيام والمفطرات", q: "هل تحليل الدم يفسد الصيام؟", a: "لا يفسد الصيام." },
+        { c: "أحكام الصيام والمفطرات", q: "حكم تذوق الطعام باللسان؟", a: "يجوز للحاجة بشرط عدم البلع ومجه فوراً." },
+        { c: "أحكام الصيام والمفطرات", q: "هل الاحتلام في النهار يفطر؟", a: "لا يفطر لأنه بغير إرادة." },
+        { c: "أحكام الصيام والمفطرات", q: "تأخير غسل الجنابة لما بعد الفجر؟", a: "الصوم صحيح، ويغتسل للصلاة." },
+        { c: "أحكام الصيام والمفطرات", q: "هل المكياج يفطر؟", a: "لا يفطر." },
+        { c: "أحكام الصيام والمفطرات", q: "حكم استخدام الفازلين والزيوت؟", a: "لا تفطر لأنها تمتص عبر الجلد." },
+        { c: "أحكام الصيام والمفطرات", q: "هل الحجامة تفطر؟", a: "الراجح أنها لا تفطر لكنها مكروهة للمن يضعف بسببها." },
+        { c: "أحكام الصيام والمفطرات", q: "هل الفطر بسبب الامتحانات جائز؟", a: "لا يجوز، الامتحانات ليست عذراً شرعياً." },
+        { c: "أحكام الصيام والمفطرات", q: "هل بنج الأسنان يفطر؟", a: "لا يفطر بشرط عدم بلع السوائل." },
+        { c: "أحكام الصيام والمفطرات", q: "حكم اللبوس (التحاميل)؟", a: "لا تفطر." },
+        { c: "أحكام الصيام والمفطرات", q: "هل منظار المعدة يفطر؟", a: "يفطر إذا كان عليه مواد مغذية." },
+
+        // القسم 2: الرخص (10 أسئلة)
+        { c: "الرخص والأعذار", q: "حكم صيام الحامل والمرضع؟", a: "يفطرن إذا خفن على النفس أو الجنين وعليهن القضاء." },
+        { c: "الرخص والأعذار", q: "هل الحامل عليها إطعام أم قضاء؟", a: "القضاء هو الواجب." },
+        { c: "الرخص والأعذار", q: "من أفطرت للحيض ولم تقضِ سنة كاملة؟", a: "تقضي وتطعم مسكيناً عن كل يوم تأخير بدون عذر." },
+        { c: "الرخص والأعذار", q: "حكم حبوب تأخير الدورة؟", a: "جائزة بشرط عدم الضرر الطبي." },
+        { c: "الرخص والأعذار", q: "مسافة السفر المبيحة للفطر؟", a: "حوالي 81 كم." },
+        { c: "الرخص والأعذار", q: "هل يفطر المسافر في الطائرة؟", a: "نعم يجوز له الفطر." },
+        { c: "الرخص والأعذار", q: "كبار السن الذين لا يطيقون الصوم؟", a: "يفطرون ويطعمون مسكيناً عن كل يوم." },
+        { c: "الرخص والأعذار", q: "مقدار الفدية للمريض؟", a: "إطعام مسكين وجبة مشبعة." },
+        { c: "الرخص والأعذار", q: "هل يفطر أصحاب المهن الشاقة؟", a: "يجب الصوم، فإذا خشي الهلاك أفطر وقضى." },
+        { c: "الرخص والأعذار", q: "من مات وعليه صيام؟", a: "يصوم عنه وليه أو يطعم عنه." },
+
+        // القسم 3: الصلاة (10 أسئلة)
+        { c: "الصلاة والعبادات", q: "عدد ركعات التراويح؟", a: "الأمر واسع، 8 أو 20 وكلاهما صحيح." },
+        { c: "الصلاة والعبادات", q: "هل تصلى التراويح في البيت؟", a: "نعم تجوز." },
+        { c: "الصلاة والعبادات", q: "حكم من يصوم ولا يصلي؟", a: "صيامه صحيح كأداء لكنه آثم بترك الصلاة." },
+        { c: "الصلاة والعبادات", q: "القراءة من المصحف في التراويح؟", a: "جائزة للإمام والمنفرد." },
+        { c: "الصلاة والعبادات", q: "أفضل وقت للتهجد؟", a: "ثلث الليل الأخير." },
+        { c: "الصلاة والعبادات", q: "كيفية صلاة الوتر؟", a: "ركعة واحدة أو ثلاث." },
+        { c: "الصلاة والعبادات", q: "هل التراويح تغني عن قيام الليل؟", a: "نعم هي قيام الليل في رمضان." },
+        { c: "الصلاة والعبادات", q: "حكم ترك الجماعة في المسجد؟", a: "يفوته أجر كبير لكن صلاته في البيت صحيحة." },
+        { c: "الصلاة والعبادات", q: "الجمع بين نية القضاء والست من شوال؟", a: "لا يصح، كل نية مستقلة." },
+        { c: "الصلاة والعبادات", q: "هل هناك سور معينة للتراويح؟", a: "لا، يقرأ ما تيسر." },
+
+        // القسم 4: ليلة القدر (10 أسئلة)
+        { c: "ليلة القدر والعشر الأواخر", q: "متى تبدأ العشر الأواخر؟", a: "من ليلة 21 رمضان." },
+        { c: "ليلة القدر والعشر الأواخر", q: "علامات ليلة القدر؟", a: "شمس صبيحتها بلا شعاع، ليلة ساكنة." },
+        { c: "ليلة القدر والعشر الأواخر", q: "هل ليلة القدر ثابتة؟", a: "لا، متنقلة في أوتار العشر الأواخر." },
+        { c: "ليلة القدر والعشر الأواخر", q: "أفضل دعاء في ليلة القدر؟", a: "اللهم إنك عفو تحب العفو فاعف عني." },
+        { c: "ليلة القدر والعشر الأواخر", q: "كيفية إحياء ليلة القدر؟", a: "بالصلاة والقرآن والذكر." },
+        { c: "ليلة القدر والعشر الأواخر", q: "شروط الاعتكاف؟", a: "المكوث بالمسجد بنية العبادة." },
+        { c: "ليلة القدر والعشر الأواخر", q: "الاعتكاف ليلة واحدة؟", a: "جائز عند بعض العلماء." },
+        { c: "ليلة القدر والعشر الأواخر", q: "فضل العمل فيها؟", a: "خير من ألف شهر (83 سنة)." },
+        { c: "ليلة القدر والعشر الأواخر", q: "خطأ يقع فيه الناس في العشر؟", a: "الانشغال بالأسواق وترك العبادة." },
+        { c: "ليلة القدر والعشر الأواخر", q: "هل يشترط رؤية نور؟", a: "لا، العبرة بالقيام والقبول." },
+
+        // القسم 5: الزكاة (10 أسئلة)
+        { c: "زكاة الفطر والصدقة", q: "موعد إخراج زكاة الفطر؟", a: "من أول رمضان حتى قبل صلاة العيد." },
+        { c: "زكاة الفطر والصدقة", q: "هل تخرج نقداً؟", a: "نعم يجوز لمصلحة الفقير." },
+        { c: "زكاة الفطر والصدقة", q: "مقدار زكاة الفطر؟", a: "صاع (حوالي 2.5 كيلو جرام)." },
+        { c: "زكاة الفطر والصدقة", q: "هل تخرج عن الجنين؟", a: "مستحبة وليست واجبة." },
+        { c: "زكاة الفطر والصدقة", q: "لمن تعطى الزكاة؟", a: "للفقراء والمساكين." },
+        { c: "زكاة الفطر والصدقة", q: "إرسال الزكاة لبلد آخر؟", a: "يجوز للحاجة الشديدة." },
+        { c: "زكاة الفطر والصدقة", q: "الفرق بين زكاة الفطر والمال؟", a: "الفطر للبدن والمال للثروة." },
+        { c: "زكاة الفطر والصدقة", q: "هل تسقط عمن لا يملك القوت؟", a: "نعم تسقط." },
+        { c: "زكاة الفطر والصدقة", q: "فضل تفطير صائم؟", a: "له مثل أجره." },
+        { c: "زكاة الفطر والصدقة", q: "هل الصدقة تغني عن زكاة الفطر؟", a: "لا." },
+
+        // القسم 6: السحور والإفطار (10 أسئلة)
+        { c: "السحور والإفطار", q: "وقت الإمساك؟", a: "عند أذان الفجر الصادق." },
+        { c: "السحور والإفطار", q: "الأكل مع الأذان؟", a: "يجب التوقف فوراً." },
+        { c: "السحور والإفطار", q: "سنة الإفطار؟", a: "البدء بالتمر والماء." },
+        { c: "السحور والإفطار", q: "دعاء الإفطار؟", a: "ذهب الظمأ وابتلت العروق وثبت الأجر." },
+        { c: "السحور والإفطار", q: "هل السحور واجب؟", a: "سنة مؤكدة وليس واجباً." },
+        { c: "السحور والإفطار", q: "من نام عن السحور؟", a: "يكمل صومه وصيامه صحيح." },
+        { c: "السحور والإفطار", q: "وقت المغرب؟", a: "بمغيب كامل قرص الشمس." },
+        { c: "السحور والإفطار", q: "الإفطار على الراديو؟", a: "جائز إذا كان التوقيت دقيقاً لمدينتك." },
+        { c: "السحور والإفطار", q: "تأخير السحور؟", a: "سنة نبوية مستحبة." },
+        { c: "السحور والإفطار", q: "المضمضة المبالغ فيها؟", a: "مكروهة للصائم." },
+
+        // القسم 7: اجتماعية (10 أسئلة)
+        { c: "اجتماعية وأسرية", q: "المسلسلات في رمضان؟", a: "لا تبطل الصوم لكنها تنقص الأجر." },
+        { c: "اجتماعية وأسرية", q: "الغيبة والنميمة؟", a: "تؤثر على كمال الصوم وأجره." },
+        { c: "اجتماعية وأسرية", q: "الجماع في الليل؟", a: "حلال وجائز." },
+        { c: "اجتماعية وأسرية", q: "كفارة الجماع نهاراً؟", a: "صيام شهرين متتابعين." },
+        { c: "اجتماعية وأسرية", q: "صيام الأطفال؟", a: "يدربون عليه للتعود." },
+        { c: "اجتماعية وأسرية", q: "تبادل الطعام مع الجار غير المسلم؟", a: "جائز ومن الإحسان." },
+        { c: "اجتماعية وأسرية", q: "طبخ المرأة وهي صائمة؟", a: "تؤجر عليه وصيامها صحيح." },
+        { c: "اجتماعية وأسرية", q: "الخصام في رمضان? ", a: "يجب تجنبه لقوله 'إني صائم'." },
+        { c: "اجتماعية وأسرية", q: "الأفراح في رمضان؟", a: "جائزة ليلاً." },
+        { c: "اجتماعية وأسرية", q: "آداب المجالس؟", a: "الذكر والبعد عن اللغو." },
+
+        // القسم 8: القرآن (10 أسئلة)
+        { c: "القرآن والذكر", q: "عدد ختمات القرآن؟", a: "المستحب مرة على الأقل." },
+        { c: "القرآن والذكر", q: "الختم من الجوال؟", a: "جائز وله نفس الأجر." },
+        { c: "القرآن والذكر", q: "فضل القرآن في رمضان؟", a: "الحرف بعشر حسنات ويشفع لصاحبه." },
+        { c: "القرآن والذكر", q: "الصيام بلا قرآن؟", a: "صحيح لكنه محروم من فضل كبير." },
+        { c: "القرآن والذكر", q: "أفضل الأذكار؟", a: "التسبيح والاستغفار والدعاء." },
+        { c: "القرآن والذكر", q: "سماع القرآن في العمل؟", a: "جائز ومأجور." },
+        { c: "القرآن والذكر", q: "قراءة الحائض للقرآن؟", a: "جائزة من الجوال بدون مس المصحف." },
+        { c: "القرآن والذكر", q: "القراءة الجماعية؟", a: "جائزة للمدارسة." },
+        { c: "القرآن والذكر", q: "الفرق بين التراويح والتهجد؟", a: "التراويح أول الليل والتهجد آخره." },
+        { c: "القرآن والذكر", q: "التركيز في الصلاة؟", a: "بتدبر الآيات والهدوء." },
+
+        // القسم 9: عامة (10 أسئلة)
+        { c: "أسئلة عامة", q: "سبب تسمية رمضان؟", a: "من الرمض وهو شدة الحر." },
+        { c: "أسئلة عامة", q: "متى فرض الصيام؟", a: "في السنة الثانية للهجرة." },
+        { c: "أسئلة عامة", q: "غزوات رمضان؟", a: "بدر وفتح مكة." },
+        { c: "أسئلة عامة", q: "كم رمضان صام النبي؟", a: "9 رمضانات." },
+        { c: "أسئلة عامة", q: "ترتيب رمضان؟", a: "الشهر التاسع هجرياً." },
+        { c: "أسئلة عامة", q: "تغير موعد رمضان؟", a: "لأن السنة الهجرية أقصر من الميلادية." },
+        { c: "أسئلة عامة", q: "ثبوت الشهر؟", a: "برؤية الهلال." },
+        { c: "أسئلة عامة", q: "قول رمضان كريم؟", a: "عبارة دعائية والأفضل رمضان مبارك." },
+        { c: "أسئلة عامة", q: "موعد العيد؟", a: "1 شوال." },
+        { c: "أسئلة عامة", q: "أجر الصيام؟", a: "عند الله (إلا الصوم فإنه لي)." }
+    ];
+
+    function buildFAQ() {
+        const list = document.getElementById('faqMasterList');
+        let currentCat = "";
+        let html = "";
+
+        faqDataset.forEach((item, index) => {
+            if(item.c !== currentCat) {
+                currentCat = item.c;
+                html += `<div class="category-group"><div class="category-label">${currentCat}</div>`;
+            }
+
+            html += `
+                <div class="faq-card">
+                    <div class="faq-trigger" onclick="toggleCard(this)">
+                        <span class="faq-q-text">${item.q}</span>
+                        <div class="faq-icon"><i class="fa-solid fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-content">
+                        <div class="faq-answer-body">
+                            ${item.a}
+                            <br>
+                            <button class="share-q-btn" onclick="shareQuestion('${item.q}', '${item.a}')">
+                                <i class="fa-solid fa-share-nodes"></i> مشاركة الفتوى والرابط
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            if(faqDataset[index+1] && faqDataset[index+1].c !== currentCat) html += `</div>`;
+        });
+        list.innerHTML = html;
+    }
+
+    function toggleCard(el) {
+        el.parentElement.classList.toggle('active');
+    }
+
+    async function shareQuestion(q, a) {
+        const url = window.location.href;
+        const text = `🌙 سؤال في رمضان:\n❓ ${q}\n✅ الإجابة: ${a}\n📍 لمعرفة المزيد زوروا موقع سحورنا 2026 عبر الرابط:\n${url}`;
+        if (navigator.share) {
+            await navigator.share({ title: 'فتوى رمضانية', text: text });
+        } else {
+            navigator.clipboard.writeText(text);
+            showToast("تم نسخ الفتوى والرابط!");
+        }
+    }
+
+    function smartSearch() {
+        const val = document.getElementById('mainSearch').value.toLowerCase();
+        document.querySelectorAll('.faq-card').forEach(card => {
+            card.style.display = card.innerText.toLowerCase().includes(val) ? "block" : "none";
+        });
+        document.querySelectorAll('.category-group').forEach(g => {
+            const hasVisible = Array.from(g.querySelectorAll('.faq-card')).some(c => c.style.display !== "none");
+            g.style.display = hasVisible ? "block" : "none";
+        });
+    }
+
+    window.onload = buildFAQ;
+</script>
+</body>
+  </html>
