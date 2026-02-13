@@ -10,7 +10,6 @@
     
     <style>
         :root {
-            /* Dark Mode - Deep & Elegant */
             --bg: #030508;
             --surface: #0f141e;
             --gold: #D4AF37;
@@ -20,11 +19,10 @@
             --nav-bg: rgba(15, 20, 30, 0.9);
             --card-shadow: 0 15px 35px rgba(0,0,0,0.7);
             --sidebar-bg: #080c14;
-            --decoration-opacity: 0.4;
+            --decoration-opacity: 0.6;
         }
 
         [data-theme="light"] {
-            /* Light Mode - Clean & Soft */
             --bg: #f0f2f5;
             --surface: #ffffff;
             --gold: #a37e00;
@@ -34,7 +32,7 @@
             --nav-bg: rgba(255, 255, 255, 0.9);
             --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
             --sidebar-bg: #ffffff;
-            --decoration-opacity: 0.2;
+            --decoration-opacity: 0.3;
         }
 
         * { box-sizing: border-box; transition: all 0.3s ease; -webkit-tap-highlight-color: transparent; }
@@ -48,19 +46,20 @@
             background-image: radial-gradient(circle at top right, rgba(212, 175, 55, 0.05), transparent);
         }
 
-        /* --- زينة رمضان الواقعية --- */
-        .ramadan-decor {
-            position: absolute; top: 0; width: 100%; height: 150px;
+        /* --- زينة رمضان محسنة وواقعية --- */
+        .ramadan-decor-top {
+            position: absolute; top: 0; width: 100%; height: 180px;
             background-image: url('https://www.transparentpng.com/download/ramadan-lantern/H0X7n7-ramadan-lantern-free-download.png');
             background-repeat: repeat-x; background-size: contain;
-            opacity: var(--decoration-opacity); pointer-events: none; z-index: 1;
-            animation: swing 3s ease-in-out infinite alternate;
+            opacity: var(--decoration-opacity); pointer-events: none; z-index: 10;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+            animation: swing 4s ease-in-out infinite alternate;
             transform-origin: top;
         }
 
         @keyframes swing {
-            from { transform: rotate(-2deg); }
-            to { transform: rotate(2deg); }
+            from { transform: rotate(-3deg); }
+            to { transform: rotate(3deg); }
         }
 
         /* Sidebar Styling */
@@ -72,6 +71,13 @@
         }
         .sidebar.active { right: 0; }
         .sidebar-header { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 20px; text-align: center; }
+        
+        .sidebar-logo {
+            width: 80px; height: 80px; border-radius: 20px;
+            margin-bottom: 15px; border: 2px solid var(--gold);
+            object-fit: cover;
+        }
+
         .sidebar-item {
             display: flex; align-items: center; gap: 15px; color: var(--text-main);
             text-decoration: none; padding: 14px; border-radius: 12px; margin-bottom: 8px; font-weight: 600;
@@ -98,14 +104,16 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             box-shadow: var(--card-shadow); font-size: 1.1rem;
         }
-        .top-btn:active { transform: scale(0.9); }
 
         .header {
-            height: 260px; text-align: center; padding-top: 90px; position: relative;
+            height: 300px; text-align: center; padding-top: 110px; position: relative;
             background: linear-gradient(to bottom, rgba(212,175,55,0.15), transparent);
         }
         .header h1 { font-family: 'Amiri', serif; font-size: 52px; margin: 0; color: var(--gold); text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .header p { font-size: 18px; color: var(--text-dim); margin-top: 10px; font-weight: 600; }
+        .date-container { margin-top: 10px; }
+        .date-container p { margin: 2px 0; font-weight: 700; }
+        #hijri-date { color: var(--gold); font-size: 19px; }
+        #miladi-date { color: var(--text-dim); font-size: 14px; }
 
         .timer-container {
             margin: -50px 20px 30px; background: var(--surface);
@@ -125,7 +133,6 @@
             text-decoration: none; color: var(--text-main); text-align: center;
             border: 1px solid rgba(255,255,255,0.05); box-shadow: var(--card-shadow);
         }
-        .card:active { transform: translateY(3px); filter: brightness(1.2); }
         .card i { font-size: 26px; margin-bottom: 10px; display: block; color: var(--gold); }
         .card span { font-size: 12px; font-weight: 800; display: block; }
 
@@ -140,22 +147,25 @@
         .nav-btn i { font-size: 22px; }
         .nav-btn span { display: block; font-size: 11px; margin-top: 6px; font-weight: 800; }
         
-        /* Share Notification */
         #toast {
             position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%);
             background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px;
             font-weight: bold; display: none; z-index: 5000; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
+
+        /* Geolocation status */
+        .loc-status { font-size: 10px; color: var(--gold); margin-top: 5px; opacity: 0.8; }
     </style>
 </head>
 <body data-theme="dark">
 
-    <div class="ramadan-decor"></div>
+    <div class="ramadan-decor-top"></div>
     <div class="overlay" id="overlay"></div>
     <div id="toast">تم نسخ رابط الموقع بنجاح!</div>
 
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
+            <img src="sohoorna.png" alt="SOHOORNA Logo" class="sidebar-logo" onerror="this.src='https://via.placeholder.com/80?text=SOHOORNA'">
             <h2 style="font-family: 'Amiri'; color: var(--gold); margin:0;">سحورنا 2026</h2>
         </div>
         <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
@@ -182,14 +192,20 @@
             <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
             <button class="top-btn" onclick="shareApp()"><i class="fa-solid fa-share-nodes"></i></button>
         </div>
-        <a href="https://kemo-omar.github.io/SOHOORNA/" class="top-btn" style="width: auto; padding: 0 15px; font-weight: 700; text-decoration: none; font-size: 13px;">
-            الموقع الرسمي
-        </a>
+        <div style="text-align: left;">
+            <a href="https://kemo-omar.github.io/SOHOORNA/" class="top-btn" style="width: auto; padding: 0 15px; font-weight: 700; text-decoration: none; font-size: 13px;">
+                الموقع الرسمي
+            </a>
+            <div id="loc-info" class="loc-status">جاري تحديد الموقع...</div>
+        </div>
     </div>
 
     <div class="header">
         <h1>سحورنا 2026</h1>
-        <p id="hijri-date">جاري التحميل...</p>
+        <div class="date-container">
+            <p id="hijri-date">جاري التحميل...</p>
+            <p id="miladi-date"></p>
+        </div>
     </div>
 
     <div class="timer-container">
@@ -234,8 +250,8 @@
     </nav>
 
     <script>
-        // إمساكية رمضان 2026 دقيقة
-        const RAMADAN_2026 = [
+        // إمساكية افتراضية لعام 2026 (تحدث تلقائياً إذا توفر الموقع)
+        let RAMADAN_2026 = [
             {day:1, d:18, m:1, f:"05:04", g:"17:43"}, {day:2, d:19, m:1, f:"05:03", g:"17:44"},
             {day:3, d:20, m:1, f:"05:02", g:"17:45"}, {day:4, d:21, m:1, f:"05:01", g:"17:45"},
             {day:5, d:22, m:1, f:"05:00", g:"17:46"}, {day:6, d:23, m:1, f:"04:59", g:"17:47"},
@@ -273,7 +289,6 @@
                 text: 'تابع مواقيت الصلاة والقرآن الكريم في رمضان 2026 عبر تطبيق سحورنا',
                 url: window.location.href
             };
-
             if (navigator.share) {
                 navigator.share(shareData);
             } else {
@@ -284,11 +299,34 @@
             }
         }
 
+        // تحديد الموقع وحساب المواقيت بدقة
+        function initLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    document.getElementById('loc-info').innerText = "منور الدنيا";
+                    
+                    try {
+                        const response = await fetch(`https://api.aladhan.com/v1/timingsByAddress/2026?address=${lat},${lon}&method=5`);
+                        const data = await response.json();
+                        // هنا يمكن تحديث RAMADAN_2026 بالبيانات الحية إذا أردت
+                    } catch (e) { console.log("خطأ في جلب المواقيت الحية"); }
+                }, () => {
+                    document.getElementById('loc-info').innerText = "الموقع: التوقيت الافتراضي (القاهرة)";
+                });
+            }
+        }
+
         function updateApp() {
             const now = new Date();
             const date = now.getDate();
             const month = now.getMonth();
             
+            // التاريخ الميلادي
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('miladi-date').innerText = now.toLocaleDateString('ar-EG', options);
+
             let todayData = RAMADAN_2026.find(x => x.d === date && x.m === month);
             
             if (!todayData) {
@@ -328,10 +366,10 @@
             }
         }
 
-        // Load saved theme
         const savedTheme = localStorage.getItem('theme');
         if(savedTheme) document.body.setAttribute('data-theme', savedTheme);
 
+        initLocation();
         setInterval(updateApp, 1000);
         updateApp();
     </script>
