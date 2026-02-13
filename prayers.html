@@ -3,339 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق التسبيح الشامل</title>
+    <title>PULSE PRAY | مواقيت الصلاة الاحترافية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --egyptian-wood: #3e2723; /* لون خشب مصري أصيل داكن */
-            --wood-grain: #2d1b0e;
-            --digital-bg: #222;
-            --gold: #d4af37;
+            --bg: #050505;
+            --surface: #0f0f0f;
+            --neon-green: #39FF14;
+            --neon-red: #FF3131;
+            --neon-gold: #FFD700;
+            --accent-glow: rgba(255, 215, 0, 0.3);
+            --text-main: #ffffff;
+            --text-gray: #b0b0b0;
+            --glass: rgba(255, 255, 255, 0.03);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        body, html {
+        [data-theme="light"] {
+            --bg: #f8f9fa;
+            --surface: #ffffff;
+            --neon-green: #2ecc71;
+            --neon-red: #e74c3c;
+            --neon-gold: #b8860b;
+            --text-main: #1a1a1a;
+            --text-gray: #555555;
+            --glass: rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Cairo', sans-serif;
             margin: 0;
-            padding: 0;
-            height: 100%;
-            background: #000;
-            color: white;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* صفحة الاختيار - البداية */
-        #selectionPage {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: radial-gradient(circle, #1a1a1a, #000);
-            text-align: center;
-        }
-
-        .choice-card {
-            background: #111;
-            border: 2px solid #333;
-            padding: 30px;
-            margin: 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            width: 280px;
-            transition: 0.3s;
-        }
-
-        .choice-card:hover {
-            border-color: var(--gold);
-            transform: translateY(-5px);
-            background: #1a1a1a;
-        }
-
-        .choice-card h2 { color: var(--gold); margin: 0; }
-        .choice-card p { color: #888; font-size: 0.9rem; }
-
-        /* شاشة السبحة */
-        #rosaryApp { display: none; height: 100vh; }
-
+        /* --- القائمة الجانبية (Sidebar) --- */
         .sidebar {
-            width: 260px;
-            background: #0a0a0a;
-            border-left: 1px solid #222;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
+            position: fixed; top: 0; right: -320px; width: 320px; height: 100%;
+            background: var(--surface); z-index: 5000; padding: 30px 20px;
+            border-left: 2px solid var(--neon-gold);
+            box-shadow: -15px 0 40px rgba(0,0,0,0.8);
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+        .sidebar.active { right: 0; }
+        .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--glass); padding-bottom: 20px; }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 15px; color: var(--text-main);
+            text-decoration: none; padding: 14px 18px; border-radius: 15px; margin-bottom: 8px;
+            font-weight: 600; border: 1px solid transparent; transition: var(--transition);
+        }
+        .sidebar-item:hover { 
+            background: var(--glass); border-color: var(--neon-gold); color: var(--neon-gold);
+            transform: translateX(-10px);
+        }
+        .sidebar-item i { font-size: 1.1rem; }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; z-index: 4500; backdrop-filter: blur(8px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- أدوات التحكم (Controls) --- */
+        .nav-controls {
+            position: fixed; top: 20px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between; z-index: 3000;
+        }
+        .btn-circle {
+            background: var(--surface); border: 1px solid var(--neon-gold);
+            color: var(--neon-gold); width: 50px; height: 50px; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .btn-circle:hover { background: var(--neon-gold); color: #000; transform: scale(1.1) rotate(90deg); }
+        
+        .share-pill {
+            background: var(--neon-gold); color: #000; padding: 0 25px;
+            border-radius: 12px; font-weight: 900; border: none; cursor: pointer;
+            display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 20px var(--accent-glow);
         }
 
-        .main-stage {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+        /* --- الهيدر (Header) --- */
+        header {
+            padding: 120px 20px 60px; text-align: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, var(--bg) 100%);
+        }
+        header h1 {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 10vw, 5.5rem);
+            margin: 0; color: var(--neon-gold); text-shadow: 0 0 30px var(--accent-glow);
+            letter-spacing: 5px;
+        }
+        .status-badge {
+            display: inline-block; padding: 8px 20px; border-radius: 50px;
+            background: rgba(57, 255, 20, 0.1); border: 1px solid var(--neon-green);
+            color: var(--neon-green); font-weight: 900; margin-top: 15px; font-size: 0.9rem;
         }
 
-        /* --- تصميم السبحة المصرية (تصحيح المظهر) --- */
-        .rosary-wood-container {
-            position: relative;
-            width: 300px;
-            height: 450px;
-            transform-style: preserve-3d;
-            perspective: 1500px;
-            display: none;
+        /* --- محرك الوقت (Timer Engine) --- */
+        .countdown-section { display: flex; flex-direction: column; align-items: center; padding: 0 20px 60px; }
+        .timer-card {
+            background: var(--surface); border: 2px solid var(--neon-red);
+            padding: 40px; border-radius: 30px; text-align: center;
+            width: 100%; max-width: 700px; position: relative;
+            box-shadow: 0 0 50px rgba(255, 49, 49, 0.15);
+        }
+        .timer-card::before {
+            content: "NEXT PRAYER SCAN"; position: absolute; top: -12px; left: 50%;
+            transform: translateX(-50%); background: var(--neon-red); color: #fff;
+            padding: 2px 15px; font-size: 0.7rem; font-weight: 900; border-radius: 5px;
+        }
+        #timer {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(3.5rem, 15vw, 5.5rem);
+            color: var(--neon-red); text-shadow: 0 0 20px var(--neon-red); direction: ltr;
         }
 
-        .bead-wood {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            left: 50%;
-            top: 50%;
-            margin: -50px;
-            border-radius: 50%;
-            /* تدرج لوني كروي واقعي */
-            background: radial-gradient(circle at 35% 35%, #8d6e63 0%, var(--egyptian-wood) 60%, #1b110b 100%);
-            box-shadow: 10px 15px 25px rgba(), inset -5px -5px 15px rgba(0,0,0,0.5);
-            /* ملمس الخشب المصري */
-            background-image: 
-                radial-gradient(circle at 30% 30%, rgba(158, 112, 72) 0%, transparent 50%),
-                repeating-linear-gradient(45deg, rgba(158, 112, 72) 0px, rgba(158, 112, 72) 1px, transparent 1px, transparent 3px);
-            backface-visibility: hidden;
+        /* --- شبكة المواقيت (Prayer Grid) --- */
+        .prayer-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px; padding: 0 5%; margin-bottom: 80px;
+        }
+        .prayer-card {
+            background: var(--surface); border: 1px solid var(--glass);
+            padding: 30px 20px; border-radius: 25px; text-align: center;
+            transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .prayer-card::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
+            background: transparent; transition: 0.3s;
+        }
+        .prayer-card.active {
+            border-color: var(--neon-gold); transform: translateY(-10px);
+            background: rgba(255, 215, 0, 0.05);
+        }
+        .prayer-card.active::after { background: var(--neon-gold); box-shadow: 0 0 15px var(--neon-gold); }
+        .prayer-card h3 { color: var(--text-gray); font-size: 1.1rem; margin-bottom: 15px; }
+        .prayer-card p { font-family: 'Orbitron'; font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-main); }
+
+        /* --- شريط الصور (Neon Slider) --- */
+        .neon-slider-container { max-width: 900px; margin: 40px auto; padding: 15px; position: relative; }
+        .frame-outer {
+            border: 4px solid var(--neon-red); border-radius: 35px; padding: 10px;
+            box-shadow: 0 0 30px var(--neon-red), inset 0 0 20px var(--neon-red);
+            background: #000;
+        }
+        .frame-inner {
+            border: 4px solid var(--neon-gold); border-radius: 22px; overflow: hidden;
+            aspect-ratio: 16/9; position: relative;
+        }
+        .faith-img { width: 100%; height: 100%; object-fit: cover; transition: 1s; }
+        .scanline {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 50%);
+            background-size: 100% 4px; pointer-events: none;
         }
 
-        /* --- تصميم السبحة الإلكترونية (تحسين كامل) --- */
-        #digitalRosary {
-            width: 280px;
-            height: 380px;
-            background: #333;
-            border-radius: 50px 50px 120px 120px;
-            border: 8px solid #222;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-around;
-            padding: 20px;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.05);
-            transition: background 0.3s;
+        /* --- أقسام المعلومات (Info) --- */
+        .info-container { width: 90%; max-width: 1100px; margin: 60px auto; }
+        .section-header {
+            font-size: 2rem; font-weight: 900; color: var(--neon-green);
+            border-right: 6px solid var(--neon-green); padding-right: 20px;
+            margin-bottom: 40px; text-transform: uppercase;
+        }
+        .info-flex { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .info-card {
+            background: var(--surface); padding: 35px; border-radius: 25px;
+            border: 1px solid var(--glass); transition: 0.3s;
+        }
+        .info-card:hover { border-color: var(--neon-gold); }
+        .info-card h4 { color: var(--neon-gold); font-size: 1.4rem; margin-top: 0; }
+        .info-card p { color: var(--text-gray); line-height: 1.8; }
+
+        /* --- خطوات الوضوء --- */
+        .wudu-scroll {
+            display: flex; overflow-x: auto; gap: 20px; padding: 20px 0;
+            scroll-snap-type: x mandatory;
+        }
+        .wudu-step {
+            min-width: 220px; background: var(--surface); padding: 30px;
+            border-radius: 20px; text-align: center; border-bottom: 4px solid var(--neon-green);
+            scroll-snap-align: center;
+        }
+        .step-id {
+            width: 40px; height: 40px; background: var(--neon-green); color: #000;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; margin: 0 auto 15px; font-family: 'Orbitron';
         }
 
-        .screen {
-            width: 85%;
-            height: 90px;
-            background: #90a490;
-            border: 5px solid #111;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 0 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 3.2rem;
-            color: #1a1a1a;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
+        footer {
+            text-align: center; padding: 80px 20px; border-top: 1px solid var(--glass);
+            color: var(--text-gray); font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 2px;
         }
 
-        .push-btn {
-            width: 110px;
-            height: 110px;
-            background: #444;
-            border-radius: 50%;
-            border: 4px solid #111;
-            cursor: pointer;
-            box-shadow: 0 6px 0 #111;
-            transition: 0.1s;
+        .toast {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: var(--neon-gold); color: #000; padding: 12px 30px;
+            border-radius: 50px; font-weight: 900; display: none; z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .push-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #111;
-        }
-
-        /* زر الحذف الصغير جداً على اليسار */
-        .reset-btn {
-            position: absolute;
-            left: 20px;
-            top: 55%;
-            width: 20px;
-            height: 20px;
-            background: #555;
-            border: 2px solid #111;
-            border-radius: 50%;
-            cursor: pointer;
-            opacity: 0.8;
-        }
-
-        /* تنسيقات عامة */
-        .btn-back { position: absolute; top: 20px; right: 20px; background: #222; color: #888; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-        .save-section { margin-top: auto; }
-        input { width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: white; margin-bottom: 10px; }
-        .save-btn { width: 100%; padding: 12px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; color: black; }
-        .dhikr-opt { background: #1a1a1a; padding: 10px; margin: 5px 0; border-radius: 5px; cursor: pointer; text-align: center; }
-        .dhikr-opt.active { background: var(--gold); color: black; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-gold); border-radius: 10px; }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <div id="selectionPage">
-        <h1 style="color: var(--gold); margin-bottom: 40px;">مرحباً بك.. اختر مسبحتك</h1>
-        <div style="display: flex;">
-            <div class="choice-card" onclick="initApp('wood')">
-                <h2>سبحة مصرية</h2>
-                <p>خشب طبيعي - ملمس مصري أصيل</p>
-            </div>
-            <div class="choice-card" onclick="initApp('digital')">
-                <h2>سبحة إلكترونية</h2>
-                <p>ألوان متغيرة - تصميم عصري</p>
-            </div>
-        </div>
+<div class="overlay" id="overlay"></div>
+
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2 style="font-family: 'Orbitron'; color: var(--neon-gold); letter-spacing: 2px;">PULSE PRAY</h2>
+    </div>
+    <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+    <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+    <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
+    <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-check-double"></i> متابعة الختمة</a>
+    <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-rosary"></i> أذكار المسلم</a>
+    <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-circle-dot"></i> المسبحة الإلكترونية</a>
+    <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-dollar"></i> حاسبة الزكاة</a>
+    <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-utensils"></i> وصفات الفطور</a>
+    <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-bread-slice"></i> وجبات السحور</a>
+    <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-list-check"></i> متبع العادات</a>
+    <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-heart"></i> أعمال الخير</a>
+    <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-notes-medical"></i> صحتك في رمضان</a>
+    <a href="series.html" class="sidebar-item"><i class="fa-solid fa-tv"></i> المسلسلات والبرامج</a>
+    <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-circle-question"></i> فتاوى الصيام</a>
+    <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book"></i> المكتبة الرمضانية</a>
+    <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-users"></i> فريق العمل</a>
+</nav>
+
+<div class="nav-controls">
+    <div style="display: flex; gap: 15px;">
+        <button class="btn-circle" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
+        <button class="btn-circle" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    </div>
+    <button class="share-pill" onclick="shareSite()">
+        <i class="fa-solid fa-share-nodes"></i> مشاركة التطبيق
+    </button>
+</div>
+
+<header>
+    <h1>PULSE PRAY</h1>
+    <div id="location-display" class="status-badge">جاري تحديد الموقع الجغرافي...</div>
+</header>
+
+<div class="countdown-section">
+    <div class="timer-card">
+        <h2 id="next-prayer-title" style="color: var(--neon-gold); font-family: 'Cairo'; margin-bottom: 5px;">تحميل البيانات...</h2>
+        <div id="timer">00:00:00</div>
+    </div>
+</div>
+
+<div class="prayer-grid" id="prayer-cards">
     </div>
 
-    <div id="rosaryApp" style="display: flex;">
-        <div class="sidebar">
-            <h2>الذكر المختار</h2>
-            <div class="dhikr-opt active" onclick="setD(this, 'سبحان الله')">سبحان الله</div>
-            <div class="dhikr-opt" onclick="setD(this, 'الحمد لله')">الحمد لله</div>
-            <div class="dhikr-opt" onclick="setD(this, 'لا إله إلا الله')">لا إله إلا الله</div>
-            <div class="dhikr-opt" onclick="setD(this, 'الله أكبر')">الله أكبر</div>
-            
-            <div class="save-section">
-                <input type="text" id="pName" placeholder="اسمك للحفظ">
-                <button class="save-btn" onclick="saveData()">حفظ في سجل الأبطال</button>
-                <div id="logPanel" style="font-size: 0.8rem; margin-top:10px; color:#888;"></div>
-            </div>
+<div class="neon-slider-container">
+    <div class="frame-outer">
+        <div class="frame-inner">
+            <img id="faith-img" src="" class="faith-img" alt="Islamic Art">
+            <div class="scanline"></div>
         </div>
+    </div>
+</div>
 
-        <div class="main-stage">
-            <button class="btn-back" onclick="goBack()">رجوع للرئيسية</button>
-            <div id="countText" style="font-size: 5rem; color: var(--gold); margin-bottom: 10px; display: none;">0</div>
+<div class="info-container">
+    <h2 class="section-header">نور العبادات</h2>
+    <div class="info-flex">
+        <div class="info-card">
+            <h4><i class="fa-solid fa-sun" style="margin-left:10px"></i> صلاة الفجر</h4>
+            <p>بداية العهد مع الله، وبوابة الرزق الواسع. من صلى الفجر في جماعة فهو في ذمة الله حتى يُمسي.</p>
+        </div>
+        <div class="info-card">
+            <h4><i class="fa-solid fa-cloud-moon" style="margin-left:10px"></i> السكينة الليلية</h4>
+            <p>صلاة المغرب والعشاء هما ختام يومك بالصلة. اجعل عشاءك انطلاقة لمناجاة الخالق قبل النوم.</p>
+        </div>
+    </div>
+</div>
 
-            <div class="rosary-wood-container" id="woodRosary" onclick="tasbihWood()">
-                <div style="position: absolute; width: 4px; height: 100%; background: linear-gradient(to right, #111, #333, #111); left: 50%; transform: translateX(-50%); z-index: 1;"></div>
-                <div id="beadWheel" style="width:100%; height:100%; transform-style:preserve-3d; transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);">
+<div class="info-container">
+    <h2 class="section-header">دليل الطهارة الرقمي</h2>
+    <div class="wudu-scroll">
+        <div class="wudu-step"><div class="step-id">01</div><p>النية وغسل الكفين</p></div>
+        <div class="wudu-step"><div class="step-id">02</div><p>المضمضة والاستنشاق</p></div>
+        <div class="wudu-step"><div class="step-id">03</div><p>غسل الوجه بالكامل</p></div>
+        <div class="wudu-step"><div class="step-id">04</div><p>غسل اليدين للمرفقين</p></div>
+        <div class="wudu-step"><div class="step-id">05</div><p>مسح الرأس والأذنين</p></div>
+        <div class="wudu-step"><div class="step-id">06</div><p>غسل الرجلين للكعبين</p></div>
+    </div>
+</div>
+
+<footer>SYSTEM VERSION 2.0.26 // DEVELOPED FOR ETERNAL SUCCESS</footer>
+
+<div id="toast" class="toast">تم نسخ الرابط بنجاح!</div>
+
+<script>
+    // 1. Sidebar Control
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); }
+    overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); }
+
+    // 2. Theme Control
+    function toggleTheme() {
+        const body = document.body;
+        const current = body.getAttribute('data-theme');
+        body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+
+    // 3. Share Function
+    function shareSite() {
+        const url = window.location.href;
+        if (navigator.share) {
+            navigator.share({ title: 'Pulse Pray', url: url });
+        } else {
+            navigator.clipboard.writeText(url);
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 2500);
+        }
+    }
+
+    // 4. Image Slider Engine
+    const images = [
+        'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=2070',
+        'https://images.unsplash.com/photo-1542810634-71277d95dcbb?q=80&w=2070',
+        'https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=2070'
+    ];
+    let imgIdx = 0;
+    const imgElement = document.getElementById('faith-img');
+    imgElement.src = images[0];
+
+    setInterval(() => {
+        imgElement.style.opacity = '0';
+        setTimeout(() => {
+            imgIdx = (imgIdx + 1) % images.length;
+            imgElement.src = images[imgIdx];
+            imgElement.style.opacity = '1';
+        }, 800);
+    }, 5000);
+
+    // 5. Prayer Times Engine (API & Countdown)
+    const prayerNamesAr = {
+        Fajr: "الفجر", Sunrise: "الشروق", Dhuhr: "الظهر",
+        Asr: "العصر", Maghrib: "المغرب", Isha: "العشاء"
+    };
+    let times = {};
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                p => fetchTimes(p.coords.latitude, p.coords.longitude),
+                e => fetchTimes(30.0444, 31.2357) // القاهرة كافتراضي
+            );
+        }
+    }
+
+    async function fetchTimes(lat, lon) {
+        try {
+            const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=4`);
+            const data = await res.json();
+            times = data.data.timings;
+            document.getElementById('location-display').innerText = `تم الربط: ${data.data.meta.timezone}`;
+            renderCards();
+            startTimer();
+        } catch (error) {
+            document.getElementById('location-display').innerText = "خطأ في الاتصال بالسيرفر";
+        }
+    }
+
+    function renderCards() {
+        const grid = document.getElementById('prayer-cards');
+        grid.innerHTML = '';
+        Object.keys(prayerNamesAr).forEach(key => {
+            grid.innerHTML += `
+                <div class="prayer-card" id="p-${key}">
+                    <h3>${prayerNamesAr[key]}</h3>
+                    <p>${times[key]}</p>
                 </div>
-            </div>
+            `;
+        });
+    }
 
-            <div id="digitalRosary">
-                <div class="screen" id="digitalScreen">0000</div>
-                <div class="reset-btn" onclick="resetDigital()" title="تصفير"></div>
-                <div class="push-btn" onclick="tasbihDigital()"></div>
-                <div style="color: #666; font-size: 0.7rem; margin-top:10px;">اضغط للتسبيح</div>
-            </div>
-        </div>
-    </div>
+    function startTimer() {
+        setInterval(() => {
+            const now = new Date();
+            let next = null;
+            let minDiff = Infinity;
 
-    <script>
-        let mode = '';
-        let count = 0;
-        let rotX = 0;
-        let activeD = "سبحان الله";
-        const totalBeads = 12;
+            Object.keys(prayerNamesAr).forEach(key => {
+                if(key === 'Sunrise') return;
+                const [h, m] = times[key].split(':');
+                const pDate = new Date();
+                pDate.setHours(parseInt(h), parseInt(m), 0);
+                
+                if (pDate < now) pDate.setDate(pDate.getDate() + 1);
+                
+                const diff = pDate - now;
+                if (diff < minDiff) { 
+                    minDiff = diff; 
+                    next = key; 
+                }
+                
+                const card = document.getElementById(`p-${key}`);
+                if(card) card.classList.remove('active');
+            });
 
-        function initApp(type) {
-            mode = type;
-            document.getElementById('selectionPage').style.display = 'none';
-            document.getElementById('rosaryApp').style.display = 'flex';
-            
-            if (type === 'wood') {
-                document.getElementById('woodRosary').style.display = 'block';
-                document.getElementById('digitalRosary').style.display = 'none';
-                document.getElementById('countText').style.display = 'block';
-                buildWoodBeads();
-            } else {
-                document.getElementById('woodRosary').style.display = 'none';
-                document.getElementById('digitalRosary').style.display = 'flex';
-                document.getElementById('countText').style.display = 'none';
-            }
-            count = 0;
-            updateDisplay();
-        }
+            document.getElementById('next-prayer-title').innerText = `الصلاة القادمة: ${prayerNamesAr[next]}`;
+            const activeCard = document.getElementById(`p-${next}`);
+            if(activeCard) activeCard.classList.add('active');
 
-        function buildWoodBeads() {
-            const wheel = document.getElementById('beadWheel');
-            wheel.innerHTML = '';
-            for (let i = 0; i < totalBeads; i++) {
-                const b = document.createElement('div');
-                b.className = 'bead-wood';
-                // تصحيح زاوية التوزيع لضمان الدائرة الكاملة
-                const angle = (i / totalBeads) * 360;
-                b.style.transform = `rotateX(${angle}deg) translateZ(200px)`;
-                wheel.appendChild(b);
-            }
-        }
+            const h = Math.floor(minDiff / 3600000);
+            const m = Math.floor((minDiff % 3600000) / 60000);
+            const s = Math.floor((minDiff % 60000) / 1000);
+            document.getElementById('timer').innerText = 
+                `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        }, 1000);
+    }
 
-        function tasbihWood() {
-            count++;
-            rotX -= (360 / totalBeads);
-            document.getElementById('beadWheel').style.transform = `rotateX(${rotX}deg)`;
-            updateDisplay();
-            playClick();
-        }
-
-        function tasbihDigital() {
-            count++;
-            updateDisplay();
-            const colors = ['#2e7d32', '#1565c0', '#c62828', '#6a1b9a', '#ef6c00', '#37474f', '#222'];
-            const randomColor = colors[count % colors.length];
-            document.getElementById('digitalRosary').style.backgroundColor = randomColor;
-            playClick();
-        }
-
-        // إضافة دالة التصفير للسبحة الإلكترونية
-        function resetDigital() {
-            count = 0;
-            updateDisplay();
-            document.getElementById('digitalRosary').style.backgroundColor = "#333";
-        }
-
-        function updateDisplay() {
-            document.getElementById('countText').innerText = count;
-            document.getElementById('digitalScreen').innerText = count.toString().padStart(4, '0');
-        }
-
-        function setD(el, txt) {
-            document.querySelectorAll('.dhikr-opt').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            activeD = txt;
-        }
-
-        function saveData() {
-            const name = document.getElementById('pName').value || "مسبّح";
-            if (count === 0) return;
-            let logs = JSON.parse(localStorage.getItem('rosary_logs') || '[]');
-            logs.unshift({name, count, activeD, mode: (mode==='wood'?'مصرية':'إلكترونية')});
-            localStorage.setItem('rosary_logs', JSON.stringify(logs.slice(0, 5)));
-            count = 0; rotX = 0;
-            if(mode === 'wood') document.getElementById('beadWheel').style.transform = `rotateX(0deg)`;
-            updateDisplay();
-            showLogs();
-        }
-
-        function showLogs() {
-            const logs = JSON.parse(localStorage.getItem('rosary_logs') || '[]');
-            document.getElementById('logPanel').innerHTML = logs.map(l => 
-                `<div style="border-bottom:1px solid #222; padding:3px;">${l.name} - ${l.count} (${l.mode})</div>`
-            ).join('');
-        }
-
-        function goBack() {
-            document.getElementById('selectionPage').style.display = 'flex';
-            document.getElementById('rosaryApp').style.display = 'none';
-        }
-
-        function playClick() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const g = ctx.createGain();
-                osc.frequency.setValueAtTime(150, ctx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.1);
-                osc.connect(g); g.connect(ctx.destination);
-                osc.start(); osc.stop(ctx.currentTime + 0.1);
-            } catch(e) {}
-        }
-
-        showLogs();
-    </script>
+    getLocation();
+</script>
 </body>
 </html>
