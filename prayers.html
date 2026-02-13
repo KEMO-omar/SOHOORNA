@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PULSE PRAY | النبض الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0f0f0f;
+            --neon-green: #39FF14;
+            --neon-red: #FF3131;
+            --neon-gold: #FFD700;
+            --text-main: #ffffff;
+            --text-gray: #b0b0b0;
+            --sidebar-bg: rgba(5, 5, 5, 0.98);
+        }
+
+        [data-theme="light"] {
+            --bg: #f0f0f0;
+            --surface: #ffffff;
+            --neon-green: #28a745;
+            --neon-red: #d9534f;
+            --neon-gold: #b8860b;
+            --text-main: #1a1a1a;
+            --text-gray: #4a4a4a;
+            --sidebar-bg: rgba(255, 255, 255, 0.98);
+        }
+
+        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar System */
+        .sidebar {
+            position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
+            background: var(--sidebar-bg); z-index: 4000;
+            padding: 20px; overflow-y: auto; 
+            border-left: 2px solid var(--neon-gold);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        }
+        .sidebar.active { right: 0; }
+        .sidebar-header { border-bottom: 1px solid var(--neon-gold); padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 15px; color: var(--text-main);
+            text-decoration: none; padding: 12px; border-radius: 12px; margin-bottom: 5px; font-size: 14px;
+        }
+        .sidebar-item:hover { background: var(--neon-gold); color: #000; }
+        .sidebar-item i { width: 25px; color: var(--neon-gold); }
+        .sidebar-item:hover i { color: #000; }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; z-index: 3500; backdrop-filter: blur(5px);
+        }
+        .overlay.active { display: block; }
+
+        /* Navigation Controls */
+        .nav-controls {
+            position: fixed; top: 20px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between; z-index: 2000;
+        }
+        .control-group { display: flex; gap: 12px; }
+        .top-btn {
+            background: var(--surface); border: 1px solid var(--neon-gold);
+            color: var(--neon-gold); width: 45px; height: 45px; border-radius: 10px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+        .share-site-btn {
+            background: var(--neon-gold); color: #000; padding: 0 15px;
+            height: 45px; border-radius: 10px; display: flex; align-items: center;
+            font-weight: 900; font-size: 13px; cursor: pointer; border: none;
+            box-shadow: 0 0 15px var(--neon-gold);
+        }
+
+        /* Header Section */
+        header {
+            padding: 80px 20px 40px; text-align: center;
+            background: radial-gradient(circle at center, var(--surface) 0%, var(--bg) 100%);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 4rem); margin: 0;
+            color: var(--neon-gold); text-shadow: 0 0 20px var(--neon-gold);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .status-bar {
+            color: var(--neon-green); font-weight: bold; margin-top: 10px;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* Countdown Engine */
+        .engine-room { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+
+        .countdown-box {
+            background: rgba(255, 49, 49, 0.05); border: 2px solid var(--neon-red);
+            padding: 30px; border-radius: 25px; text-align: center;
+            width: 100%; max-width: 500px;
+            box-shadow: 0 0 40px rgba(255, 49, 49, 0.2); margin-bottom: 40px;
+        }
+
+        #timer {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(2.5rem, 12vw, 4rem);
+            color: var(--neon-red); text-shadow: 0 0 15px var(--neon-red); direction: ltr;
+        }
+
+        /* Prayer Grid */
+        .prayer-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px; width: 100%; max-width: 1000px; margin-bottom: 40px;
+        }
+
+        .prayer-card {
+            background: var(--surface); border: 1px solid #333;
+            padding: 20px; border-radius: 15px; text-align: center;
+        }
+
+        .prayer-card.active {
+            border-color: var(--neon-gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .prayer-card h3 { color: var(--neon-gold); margin: 0 0 10px 0; font-size: 1rem; }
+        .prayer-card p { font-size: 1.5rem; font-weight: 900; margin: 0; }
+
+        /* Slider */
+        .neon-red-glow-frame {
+            max-width: 800px; margin: 20px auto; padding: 10px;
+            background: #000; border: 3px solid var(--neon-red);
+            border-radius: 20px; box-shadow: 0 0 20px var(--neon-red);
+        }
+        .neon-gold-inner-frame {
+            position: relative; border: 4px solid var(--neon-gold);
+            border-radius: 15px; overflow: hidden; aspect-ratio: 16 / 9;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .faith-img {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .faith-img.active { opacity: 1; }
+
+        /* Info Sections */
+        .info-section { width: 90%; max-width: 1000px; margin: 40px auto; }
+        h2.section-title {
+            color: var(--neon-green); border-right: 5px solid var(--neon-green);
+            padding-right: 15px; margin-bottom: 25px; text-shadow: 0 0 10px var(--neon-green);
+        }
+        .info-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .info-card {
+            background: var(--surface); padding: 25px; border-radius: 15px;
+            border-left: 4px solid var(--neon-gold);
+        }
+        .info-card h4 { color: var(--neon-gold); margin: 0 0 10px 0; }
+        .info-card p { color: var(--text-gray); font-size: 0.9rem; margin: 0; }
+
+        /* Wudu Flow */
+        .wudu-flow {
+            display: flex; overflow-x: auto; gap: 15px; padding: 15px 0;
+            scrollbar-width: none;
+        }
+        .step-circle {
+            min-width: 160px; background: var(--surface); padding: 20px;
+            border-radius: 15px; border-top: 3px solid var(--neon-green); text-align: center;
+        }
+        .step-num {
+            display: inline-block; width: 30px; height: 30px;
+            background: var(--neon-green); color: black;
+            border-radius: 50%; font-weight: bold; margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center; padding: 40px; border-top: 1px solid #333;
+            color: var(--text-gray); font-family: 'Orbitron', sans-serif; font-size: 0.8rem;
+        }
+
+        .copy-toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--neon-gold); color: #000; padding: 10px 20px;
+            border-radius: 50px; font-weight: bold; display: none; z-index: 5000;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+<div class="overlay" id="overlay"></div>
+
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2 style="font-family: 'Orbitron'; color: var(--neon-gold); margin:0; font-size: 1.2rem;">PULSE PRAY</h2>
+    </div>
+    <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+    <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+    <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
+    <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-check-double"></i> متابعة الختمة</a>
+    <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-rosary"></i> أذكار المسلم</a>
+    <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-circle-dot"></i> المسبحة الإلكترونية</a>
+    <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-dollar"></i> حاسبة الزكاة</a>
+    <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-utensils"></i> وصفات الفطور</a>
+    <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-bread-slice"></i> وجبات السحور</a>
+    <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-list-check"></i> متبع العادات</a>
+    <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-heart"></i> أعمال الخير</a>
+    <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-notes-medical"></i> صحتك في رمضان</a>
+    <a href="series.html" class="sidebar-item"><i class="fa-solid fa-tv"></i> المسلسلات والبرامج</a>
+    <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-circle-question"></i> فتاوى الصيام</a>
+    <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book"></i> المكتبة الرمضانية</a>
+    <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-users"></i> فريق العمل</a>
+</nav>
+
+<div class="nav-controls">
+    <div class="control-group">
+        <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
+        <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    </div>
+    <button class="share-site-btn" onclick="shareSite()">
+        <i class="fa-solid fa-share-nodes" style="margin-left: 8px;"></i> مشاركة
+    </button>
+</div>
+
+<header>
+    <h1>PULSE PRAY</h1>
+    <div id="location-display" class="status-bar">جاري تحديد الإحداثيات...</div>
+</header>
+
+<div class="engine-room">
+    <div class="countdown-box">
+        <div id="next-prayer-title" style="font-weight:bold; margin-bottom:10px; color: var(--text-main);">تحليل البيانات...</div>
+        <div id="timer">00:00:00</div>
+    </div>
+
+    <div class="prayer-grid" id="prayer-cards"></div>
+</div>
+
+<div class="neon-red-glow-frame">
+    <div class="neon-gold-inner-frame">
+        <img id="faith-slider-img" src="" alt="Islamic Faith" class="faith-img">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.1) 50%); background-size: 100% 4px; pointer-events: none;"></div>
+    </div>
+</div>
+
+<section class="info-section">
+    <h2 class="section-title">أهمية الصلاة</h2>
+    <div class="info-grid">
+        <div class="info-card">
+            <h4>صلاة الفجر</h4>
+            <p>ذمة الله وحفظه، هي اختبار الصدق وبداية الطاقة الروحية.</p>
+        </div>
+        <div class="info-card">
+            <h4>الظهر والعصر</h4>
+            <p>بركة الرزق والسكينة وسط ضجيج العمل والتوازن النفسي.</p>
+        </div>
+        <div class="info-card">
+            <h4>المغرب والعشاء</h4>
+            <p>ختام اليوم بالصلة، وتطهير الروح من عناء النهار.</p>
+        </div>
+    </div>
+</section>
+
+<section class="info-section">
+    <h2 class="section-title">دليل الوضوء</h2>
+    <div class="wudu-flow">
+        <div class="step-circle"><div class="step-num">1</div><p>النية والكفين</p></div>
+        <div class="step-circle"><div class="step-num">2</div><p>المضمضة</p></div>
+        <div class="step-circle"><div class="step-num">3</div><p>الوجه</p></div>
+        <div class="step-circle"><div class="step-num">4</div><p>اليدين</p></div>
+        <div class="step-circle"><div class="step-num">5</div><p>الرأس</p></div>
+        <div class="step-circle"><div class="step-num">6</div><p>الرجلين</p></div>
+    </div>
+</section>
+
+<footer>TERMINAL PRAYER INTERFACE // 2026</footer>
+
+<div id="toast" class="copy-toast">تم النسخ بنجاح!</div>
+
+<script>
+    // Theme & Sidebar Logic
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menuBtn');
+
+    menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+    overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+
+    function toggleTheme() {
+        const body = document.body;
+        const current = body.getAttribute('data-theme');
+        body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+
+    function shareSite() {
+        const text = "🌙 اكتشف مواقيت الصلاة بدقة النيون مع PULSE PRAY 2026:";
+        const url = window.location.href;
+        if (navigator.share) {
+            navigator.share({ title: 'PULSE PRAY', text: text, url: url });
+        } else {
+            navigator.clipboard.writeText(text + " " + url);
+            const t = document.getElementById('toast');
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 2000);
+        }
+    }
+
+    // Slider Logic
+    const images = [
+        'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=2070&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1564121211835-e88c852648ab?q=80&w=2070&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1542810634-71277d95dcbb?q=80&w=2070&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=2070&auto=format&fit=crop'
+    ];
+    let imgIdx = 0;
+    const imgEl = document.getElementById('faith-slider-img');
+    imgEl.src = images[0];
+    imgEl.classList.add('active');
+
+    setInterval(() => {
+        imgEl.style.opacity = '0';
+        setTimeout(() => {
+            imgIdx = (imgIdx + 1) % images.length;
+            imgEl.src = images[imgIdx];
+            imgEl.style.opacity = '1';
+        }, 1000);
+    }, 4000);
+
+    // Prayer Logic
+    let prayerTimes = {};
+    const prayerNamesAr = { Fajr: "الفجر", Sunrise: "الشروق", Dhuhr: "الظهر", Asr: "العصر", Maghrib: "المغرب", Isha: "العشاء" };
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            fetchPrayers(pos.coords.latitude, pos.coords.longitude);
+        }, () => fetchPrayers(30.0444, 31.2357));
+    } else {
+        fetchPrayers(30.0444, 31.2357);
+    }
+
+    async function fetchPrayers(lat, lon) {
+        try {
+            const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=4`);
+            const data = await res.json();
+            prayerTimes = data.data.timings;
+            document.getElementById('location-display').innerText = `النظام متصل: ${data.data.meta.timezone}`;
+            renderCards();
+            startCountdown();
+        } catch (e) {
+            document.getElementById('location-display').innerText = "خطأ في الاتصال بالخادم";
+        }
+    }
+
+    function renderCards() {
+        const container = document.getElementById('prayer-cards');
+        container.innerHTML = '';
+        Object.keys(prayerNamesAr).forEach(key => {
+            container.innerHTML += `
+                <div class="prayer-card" id="card-${key}">
+                    <h3>${prayerNamesAr[key]}</h3>
+                    <p>${prayerTimes[key]}</p>
+                </div>`;
+        });
+    }
+
+    function startCountdown() {
+        setInterval(() => {
+            const now = new Date();
+            let nextKey = null;
+            let minDiff = Infinity;
+
+            Object.keys(prayerNamesAr).forEach(key => {
+                if(key === 'Sunrise') return;
+                const [h, m] = prayerTimes[key].split(':');
+                const pDate = new Date();
+                pDate.setHours(h, m, 0);
+                if (pDate < now) pDate.setDate(pDate.getDate() + 1);
+                
+                const diff = pDate - now;
+                if (diff < minDiff) { minDiff = diff; nextKey = key; }
+                const card = document.getElementById(`card-${key}`);
+                if(card) card.classList.remove('active');
+            });
+
+            document.getElementById('next-prayer-title').innerText = `النبض التالي: ${prayerNamesAr[nextKey]}`;
+            const activeCard = document.getElementById(`card-${nextKey}`);
+            if(activeCard) activeCard.classList.add('active');
+
+            const hrs = Math.floor(minDiff / 3600000);
+            const mins = Math.floor((minDiff % 3600000) / 60000);
+            const secs = Math.floor((minDiff % 60000) / 1000);
+            document.getElementById('timer').innerText = 
+                `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+        }, 1000);
+    }
+</script>
+</body>
+  </html>
