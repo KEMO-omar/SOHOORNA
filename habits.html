@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOHOORNA Ultra | متتبع العادات الاحترافي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* الوضع الليلي (الافتراضي) */
+            --bg: #07090d;
+            --surface: rgba(15, 20, 28, 0.7);
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --text-main: #ffffff;
+            --text-p: #b0b8c4;
+            --border: rgba(255,255,255,0.05);
+            --sidebar-bg: #010409;
+            --danger: #ff4d4d;
+            --success: #00ff88;
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f7f6;
+            --surface: #ffffff;
+            --gold: #b8860b;
+            --gold-glow: rgba(184, 134, 11, 0.2);
+            --text-main: #2d3436;
+            --text-p: #636e72;
+            --border: rgba(0,0,0,0.1);
+            --sidebar-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Cairo', sans-serif;
+            margin: 0; padding: 20px;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
+            background: var(--sidebar-bg); z-index: 3000;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px; overflow-y: auto; box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+        }
+        .sidebar.active { right: 0; }
+        .sidebar-header { border-bottom: 1px solid var(--gold); padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 15px; color: var(--text-main);
+            text-decoration: none; padding: 12px; border-radius: 12px; margin-bottom: 5px;
+        }
+        .sidebar-item:hover { background: var(--gold); color: #000; }
+        .sidebar-item i { width: 25px; text-align: center; color: var(--gold); }
+        .sidebar-item:hover i { color: #000; }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; z-index: 2500;
+        }
+        .overlay.active { display: block; }
+
+        /* Top Controls */
+        .nav-controls {
+            position: fixed; top: 15px; left: 15px; right: 15px;
+            display: flex; justify-content: space-between; z-index: 1001;
+        }
+        .control-group { display: flex; gap: 10px; }
+        .top-btn {
+            background: var(--surface); border: 1px solid var(--gold);
+            color: var(--gold); width: 45px; height: 45px; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .share-link-btn {
+            background: var(--gold); color: #000; padding: 0 15px;
+            height: 45px; border-radius: 12px; display: flex; align-items: center;
+            font-weight: 700; font-size: 13px; text-decoration: none; cursor: pointer; border: none;
+        }
+
+        .container { max-width: 480px; margin: 60px auto 0; }
+
+        .header { text-align: center; margin-bottom: 35px; }
+        .header h1 { 
+            font-weight: 900; font-size: 38px; margin: 0;
+            background: linear-gradient(to bottom, var(--text-main), var(--gold));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .header span { color: var(--gold); font-size: 14px; opacity: 0.8; letter-spacing: 2px; }
+
+        /* Modern Input Card */
+        .add-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(15px);
+            border-radius: 28px; padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .input-box {
+            background: rgba(128,128,128,0.05);
+            border: 1px solid var(--border);
+            border-radius: 15px; padding: 12px 15px; margin-bottom: 15px;
+            display: flex; align-items: center;
+        }
+        .input-box i { color: var(--gold); margin-left: 12px; }
+        .input-box input, .input-box select {
+            background: none; border: none; color: var(--text-main); width: 100%; outline: none; font-family: 'Cairo';
+        }
+
+        .btn-add {
+            width: 100%; padding: 16px; background: var(--gold); border: none;
+            border-radius: 15px; color: #000; font-weight: 900; cursor: pointer;
+            font-size: 16px; box-shadow: 0 10px 20px var(--gold-glow);
+        }
+
+        /* Habit Card Styling */
+        .habit-card {
+            background: var(--surface);
+            border-radius: 28px; padding: 25px; margin-bottom: 25px;
+            position: relative; border: 1px solid var(--border);
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
+
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-header h3 { margin: 0; font-size: 22px; color: var(--text-main); }
+        
+        .tag { font-size: 11px; padding: 4px 12px; border-radius: 10px; font-weight: bold; }
+        .tag-bad { background: rgba(255, 77, 77, 0.15); color: var(--danger); }
+        .tag-good { background: rgba(0, 255, 136, 0.15); color: var(--success); }
+
+        .progress-container { height: 6px; background: rgba(128,128,128,0.1); border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        .progress-bar { height: 100%; width: 2%; background: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
+
+        .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+        .timer-item { text-align: center; background: rgba(128,128,128,0.05); padding: 10px; border-radius: 15px; }
+        .time-num { display: block; font-family: 'JetBrains Mono'; font-size: 22px; font-weight: 700; color: var(--text-main); }
+        .time-label { font-size: 10px; color: var(--text-p); }
+
+        .quote-text { font-size: 13px; color: var(--text-p); text-align: center; min-height: 40px; margin-top: 10px; font-style: italic; }
+
+        .actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-reset { flex: 2; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: none; color: var(--text-main); cursor: pointer; font-family: 'Cairo'; font-weight: bold; }
+        .btn-reset:hover { border-color: var(--gold); }
+
+        .del-btn { width: 45px; height: 45px; border-radius: 12px; background: rgba(255,77,77,0.1); border: none; color: var(--danger); cursor: pointer; }
+        
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px;
+            font-weight: bold; font-size: 14px; visibility: hidden; z-index: 1000;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 style="font-family: 'Cairo'; color: var(--gold); margin:0">سحورنا 2026</h2>
+        </div>
+        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
+        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-check-double"></i> متابعة الختمة</a>
+        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
+        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-circle-dot"></i> المسبحة الإلكترونية</a>
+        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-list-check"></i> متبع العادات</a>
+        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-tv"></i> المسلسلات</a>
+        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-users"></i> فريق العمل</a>
+    </nav>
+
+    <div class="nav-controls">
+        <div class="control-group">
+            <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+            <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        </div>
+        <button class="share-link-btn" onclick="shareSite()">
+            <i class="fa-solid fa-share-nodes" style="margin-left: 8px;"></i> مشاركة الموقع
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <span>HABIT TRACKER PRO</span>
+            <h1>سُحورنا</h1>
+        </div>
+
+        <div class="add-card">
+            <div class="input-box">
+                <i class="fa-solid fa-pen-nib"></i>
+                <input type="text" id="habitInput" placeholder="اسم التحدي (مثلاً: الصلاة في وقتها)">
+            </div>
+            <div class="input-box">
+                <i class="fa-solid fa-layer-group"></i>
+                <select id="typeInput">
+                    <option value="good">بناء عادة حميدة</option>
+                    <option value="bad">الإقلاع عن عادة سيئة</option>
+                </select>
+            </div>
+            <button class="btn-add" onclick="addHabit()">ابدأ الرحلة الآن</button>
+        </div>
+
+        <div id="habitsList"></div>
+    </div>
+
+    <div id="toast">تم التحديث بنجاح!</div>
+
+    <script>
+        // Sidebar Logic
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuBtn = document.getElementById('menuBtn');
+
+        menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+        overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+
+        // Theme Logic
+        function toggleTheme() {
+            const body = document.body;
+            const current = body.getAttribute('data-theme');
+            body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        }
+
+        // Share Logic
+        function shareSite() {
+            const text = "🌙 انضم إلي في تحدي العادات الرمضانية عبر موقع سحورنا 2026! متتبع احترافي لصلواتك وعاداتك:";
+            const url = "https://kemo-omar.github.io/SOHOORNA/";
+            if (navigator.share) {
+                navigator.share({ title: 'سحورنا 2026', text: text, url: url });
+            } else {
+                navigator.clipboard.writeText(text + " " + url);
+                showToast("تم نسخ رابط المشاركة!");
+            }
+        }
+
+        // Habit Tracker Core Logic
+        let habits = JSON.parse(localStorage.getItem('sohoorna_pro_v1')) || [];
+        const motivationalQuotes = {
+            good: ["أنت تبني مستقبلك الآن.", "الاستمرار هو سر النجاح.", "خطوة بخطوة تصل للقمة.", "عظيم! استمر في التقدم."],
+            bad: ["قوة إرادتك هي سلاحك.", "أنت حر، لا تجعل العادة تقيدك.", "كل ثانية هي انتصار جديد.", "تذكر لماذا بدأت."]
+        };
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.visibility = 'visible';
+            setTimeout(() => t.style.visibility = 'hidden', 3000);
+        }
+
+        function addHabit() {
+            const name = document.getElementById('habitInput').value;
+            const type = document.getElementById('typeInput').value;
+            if(!name) return;
+
+            habits.unshift({
+                id: Date.now(),
+                name: name,
+                type: type,
+                startTime: Date.now(),
+                relapses: 0,
+                quote: motivationalQuotes[type][Math.floor(Math.random()*4)]
+            });
+
+            save();
+            document.getElementById('habitInput').value = '';
+            showToast("تم إضافة التحدي بنجاح!");
+        }
+
+        function reset(id) {
+            const h = habits.find(x => x.id === id);
+            h.startTime = Date.now();
+            if(h.type === 'bad') h.relapses++;
+            h.quote = motivationalQuotes[h.type][Math.floor(Math.random()*4)];
+            save();
+            showToast(h.type === 'bad' ? "بداية جديدة أقوى!" : "تم تصفير العداد.");
+        }
+
+        function remove(id) {
+            if(confirm("هل تريد حذف هذا التحدي؟")) {
+                habits = habits.filter(x => x.id !== id);
+                save();
+            }
+        }
+
+        function save() {
+            localStorage.setItem('sohoorna_pro_v1', JSON.stringify(habits));
+            render();
+        }
+
+        function render() {
+            const list = document.getElementById('habitsList');
+            list.innerHTML = habits.map(h => `
+                <div class="habit-card">
+                    <div class="card-header">
+                        <h3>${h.name}</h3>
+                        <span class="tag ${h.type === 'bad' ? 'tag-bad' : 'tag-good'}">
+                            ${h.type === 'bad' ? 'إقلاع' : 'بناء'}
+                        </span>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-bar" id="bar-${h.id}"></div>
+                    </div>
+
+                    <div class="timer-grid" id="time-${h.id}">
+                        <div class="timer-item"><span class="time-num d">00</span><span class="time-label">يوم</span></div>
+                        <div class="timer-item"><span class="time-num h">00</span><span class="time-label">ساعة</span></div>
+                        <div class="timer-item"><span class="time-num m">00</span><span class="time-label">دقيقة</span></div>
+                        <div class="timer-item"><span class="time-num s">00</span><span class="time-label">ثانية</span></div>
+                    </div>
+
+                    <div class="quote-text">"${h.quote}"</div>
+                    
+                    ${h.type === 'bad' ? `<div style="text-align:center; font-size:12px; color:var(--danger); margin-top:10px;">مرات التعثر: ${h.relapses}</div>` : ''}
+
+                    <div class="actions">
+                        <button class="btn-reset" onclick="reset(${h.id})">
+                            <i class="fa-solid fa-arrows-rotate"></i> ${h.type === 'bad' ? 'تعثرتُ اليوم' : 'تصفير'}
+                        </button>
+                        <button class="del-btn" onclick="remove(${h.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            update();
+        }
+
+        function update() {
+            const now = Date.now();
+            habits.forEach(h => {
+                const diff = now - h.startTime;
+                const d = Math.floor(diff / 86400000);
+                const hrs = Math.floor((diff % 86400000) / 3600000);
+                const mins = Math.floor((diff % 3600000) / 60000);
+                const secs = Math.floor((diff % 60000) / 1000);
+
+                const container = document.getElementById(`time-${h.id}`);
+                if(container) {
+                    container.querySelector('.d').innerText = d.toString().padStart(2, '0');
+                    container.querySelector('.h').innerText = hrs.toString().padStart(2, '0');
+                    container.querySelector('.m').innerText = mins.toString().padStart(2, '0');
+                    container.querySelector('.s').innerText = secs.toString().padStart(2, '0');
+                }
+
+                const progress = Math.min((d / 30) * 100, 100);
+                const bar = document.getElementById(`bar-${h.id}`);
+                if(bar) bar.style.width = Math.max(2, progress) + '%';
+            });
+        }
+
+        setInterval(update, 1000);
+        render();
+    </script>
+</body>
+</html>
