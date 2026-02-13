@@ -47,24 +47,26 @@
             font-family: 'Cairo', sans-serif;
             margin: 0; padding-bottom: 100px;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* صورة الفانوس antern.png - المرة الأولى */
+        /* تعديل الفوانيس لتكون ثابتة عند النزول */
         .lantern-right {
-            position: absolute; top: 0; right: 10px;
-            width: 65px; z-index: 1002;
+            position: fixed; top: 0; right: 10px;
+            width: 65px; z-index: 5000; /* أعلى من كل شيء */
             filter: drop-shadow(0 0 8px var(--gold));
             animation: swing 3s ease-in-out infinite alternate;
             transform-origin: top center;
+            pointer-events: none; /* لكي لا تعيق الضغط على الأزرار */
         }
 
-        /* صورة الفانوس antern.png - المرة الثانية */
         .lantern-left {
-            position: absolute; top: 0; left: 10px;
-            width: 65px; z-index: 1002;
+            position: fixed; top: 0; left: 10px;
+            width: 65px; z-index: 5000;
             filter: drop-shadow(0 0 8px var(--gold));
             animation: swing 3.5s ease-in-out infinite alternate-reverse;
             transform-origin: top center;
+            pointer-events: none;
         }
 
         @keyframes swing {
@@ -78,25 +80,25 @@
             position: relative;
         }
 
-        /* تعديل المربع منحني الحواف للصورة الرئيسية */
+        /* تعديل المربع لملء الصورة بالكامل */
         .logo-container {
             width: 130px;
             height: 130px;
             margin: 0 auto 15px;
             background: var(--surface);
             border: 2px solid var(--gold);
-            border-radius: 30px; /* انحناء الحواف */
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: var(--card-shadow);
-            overflow: hidden;
+            overflow: hidden; /* ضروري لقص الصورة الزائدة */
         }
 
         .brand-logo {
-            width: 90%;
-            height: auto;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* تجعل الصورة تملأ المربع بالكامل */
         }
 
         .top-controls {
@@ -145,17 +147,20 @@
             text-decoration: none; color: var(--text-main); text-align: center;
             border: 1px solid rgba(212,175,55,0.05); box-shadow: var(--card-shadow);
             display: flex; flex-direction: column; align-items: center; gap: 8px;
+            transition: 0.3s;
         }
 
-        .card:active { transform: translateY(3px); filter: brightness(1.2); }
+        .card:hover { border-color: var(--gold); transform: translateY(-3px); }
+        .card:active { transform: scale(0.95); }
         .card i { font-size: 22px; color: var(--gold); }
         .card span { font-size: 11px; font-weight: 700; }
 
         .sidebar {
             position: fixed; top: 0; right: -300px; width: 290px; height: 100%;
-            background: var(--sidebar-bg); z-index: 4000;
+            background: var(--sidebar-bg); z-index: 6000;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             padding-top: 20px;
+            overflow-y: auto; /* للسماح بالتمرير داخل القائمة */
         }
         .sidebar.active { right: 0; }
         .sidebar-item {
@@ -163,18 +168,19 @@
             text-decoration: none; padding: 16px 25px; font-weight: 600;
             border-bottom: 1px solid rgba(212,175,55,0.05);
         }
+        .sidebar-item:active { background: rgba(212,175,55,0.1); }
         .sidebar-item i { color: var(--gold); width: 25px; }
         
         .overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-            display: none; z-index: 3500; backdrop-filter: blur(5px);
+            display: none; z-index: 5500; backdrop-filter: blur(5px);
         }
         .overlay.active { display: block; }
 
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; background: var(--nav-bg);
             display: flex; justify-content: space-around; padding: 12px 0 30px;
-            border-top: 1px solid rgba(212, 175, 55, 0.3); backdrop-filter: blur(15px); z-index: 3000;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); backdrop-filter: blur(15px); z-index: 4000;
         }
         .nav-btn { color: var(--text-dim); text-decoration: none; font-size: 20px; transition: 0.3s; }
         .nav-btn.active { color: var(--gold); transform: translateY(-5px); }
@@ -184,15 +190,15 @@
 </head>
 <body data-theme="dark">
 
-    <img src="antern.png" alt="Fanoos Right" class="lantern-right" onerror="this.style.display='none'">
-    <img src="antern.png" alt="Fanoos Left" class="lantern-left" onerror="this.style.display='none'">
+    <img src="antern.png" alt="Fanoos Right" class="lantern-right">
+    <img src="antern.png" alt="Fanoos Left" class="lantern-left">
 
     <div class="overlay" id="overlay"></div>
 
     <nav class="sidebar" id="sidebar">
         <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid var(--gold);">
             <div class="logo-container" style="width: 80px; height: 80px; border-radius: 15px; margin-bottom: 10px;">
-                <img src="sohoorna.png" style="width: 80%;" alt="Logo">
+                <img src="sohoorna.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Logo">
             </div>
             <h3 style="color:var(--gold); margin:0; font-size: 18px;">القائمة الرئيسية</h3>
         </div>
@@ -273,6 +279,7 @@
     </nav>
 
     <script>
+        // كود تحديد الموقع وحساب التوقيت (نفس المنطق القوي السابق)
         let userCoords = null;
         function getLocation() {
             if (navigator.geolocation) {
@@ -298,8 +305,11 @@
                 const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(now.getTime()/1000)}?latitude=${lat}&longitude=${lng}&method=4`);
                 const data = await res.json();
                 const times = data.data.timings;
+                
+                // تحويل الوقت لنظام التاريخ
                 const fajr = new Date(now.toDateString() + " " + times.Fajr);
                 const maghrib = new Date(now.toDateString() + " " + times.Maghrib);
+                
                 let target, label;
                 if (now < fajr) { target = fajr; label = "باقي على مدفع الإمساك"; }
                 else if (now < maghrib) { target = maghrib; label = "باقي على آذان المغرب"; }
@@ -307,6 +317,7 @@
                     target = new Date(fajr.getTime() + 86400000);
                     label = "باقي على سحور الغد";
                 }
+
                 const diff = target - now;
                 document.getElementById('h').innerText = Math.floor(diff/3600000).toString().padStart(2,'0');
                 document.getElementById('m').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
@@ -314,15 +325,23 @@
                 document.getElementById('next-event-title').innerText = label;
                 document.getElementById('hijri-date').innerText = `${data.data.date.hijri.day} ${data.data.date.hijri.month.ar} ${data.data.date.hijri.year}هـ`;
             } catch (e) {
-                document.getElementById('next-event-title').innerText = "خطأ في الاتصال بالشبكة";
+                document.getElementById('next-event-title').innerText = "حدث خطأ في البيانات";
             }
         }
 
+        // تحكم القائمة الجانبية
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
-        document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
-        overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+        document.getElementById('menuBtn').onclick = () => { 
+            sidebar.classList.add('active'); 
+            overlay.classList.add('active'); 
+        };
+        overlay.onclick = () => { 
+            sidebar.classList.remove('active'); 
+            overlay.classList.remove('active'); 
+        };
 
+        // وضع الليل والنهار
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
@@ -335,15 +354,14 @@
             }
         }
 
+        // مشاركة التطبيق
         function shareApp() {
             if (navigator.share) {
                 navigator.share({
-                    title: 'تطبيق سحورنا 2026',
-                    text: 'حمل تطبيق سحورنا لمعرفة مواقيت الصلاة والخدمات الرمضانية',
+                    title: 'سحورنا 2026',
+                    text: 'رفيقك في شهر الخير - مواقيت، أذكار، ومحتوى رمضاني متكامل',
                     url: window.location.href
                 });
-            } else {
-                alert("رابط التطبيق: " + window.location.href);
             }
         }
 
