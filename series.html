@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOHOORNA | سحورنا - دليل رمضان 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --deep-space: #080c10;
+            --card-bg: #121a24;
+            --ramadan-gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --lunar-white: #e0e0e0;
+            --muted-slate: #94a3b8;
+            --accent-blue: #1e293b;
+            --glass: rgba(18, 26, 36, 0.85);
+            --success-green: #27ae60;
+        }
+
+        /* الوضع الليلي التلقائي - سيتم تفعيله عبر JS */
+        body.night-mode {
+            --gold-glow: rgba(212, 175, 55, 0.8);
+            background-color: #05070a;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--deep-space); }
+        ::-webkit-scrollbar-thumb { background: var(--ramadan-gold); border-radius: 10px; }
+
+        body {
+            background-color: var(--deep-space);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 40%);
+            color: var(--lunar-white);
+            font-family: 'Cairo', sans-serif;
+            margin: 0; padding: 0; line-height: 1.6;
+            transition: background 1s ease;
+        }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; min-height: 100vh; }
+
+        header { text-align: center; padding: 40px 0 20px; animation: fadeInDown 0.8s ease; }
+        header h1 {
+            color: var(--ramadan-gold);
+            font-size: 45px; font-weight: 900; margin: 0;
+            letter-spacing: 4px; text-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        .lunar-icon { font-size: 24px; color: var(--ramadan-gold); margin-bottom: 10px; }
+
+        .sticky-wrapper {
+            position: sticky; top: 15px; z-index: 1000;
+            background: var(--glass); backdrop-filter: blur(12px);
+            padding: 10px; border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .search-box {
+            width: 100%; padding: 15px 45px 15px 20px;
+            border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05); color: white;
+            font-family: 'Cairo'; font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-box:focus { outline: none; border-color: var(--ramadan-gold); background: rgba(212, 175, 55, 0.05); }
+
+        .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--ramadan-gold); }
+
+        .filter-chips { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0 5px; scrollbar-width: none; }
+        .filter-chips::-webkit-scrollbar { display: none; }
+
+        .chip {
+            padding: 6px 15px; background: var(--accent-blue);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer;
+        }
+
+        .chip.active { background: var(--ramadan-gold); color: var(--deep-space); font-weight: 700; }
+
+        .religious-note {
+            background: linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent);
+            border-right: 4px solid var(--ramadan-gold);
+            border-radius: 12px; padding: 20px; text-align: center; font-size: 14px; margin-bottom: 25px;
+        }
+
+        .series-grid { display: grid; gap: 18px; }
+
+        .series-card {
+            background: var(--card-bg); border-radius: 24px; padding: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative; transition: all 0.4s ease;
+            opacity: 0; transform: translateY(20px);
+        }
+
+        .series-card.show { opacity: 1; transform: translateY(0); }
+        .series-card:hover { border-color: var(--ramadan-gold); transform: translateY(-5px); }
+
+        .series-name { margin: 0; font-size: 20px; color: var(--ramadan-gold); font-weight: 800; }
+
+        .badge {
+            background: rgba(212, 175, 55, 0.12); color: var(--ramadan-gold);
+            padding: 4px 12px; border-radius: 10px; font-size: 11px; font-weight: 600;
+        }
+
+        .cast { font-size: 14px; margin: 10px 0; color: #ccc; display: flex; align-items: center; }
+        .cast i { color: var(--ramadan-gold); margin-left: 8px; }
+
+        .notes {
+            font-size: 13px; color: var(--muted-slate);
+            background: rgba(0,0,0,0.3); padding: 12px;
+            border-radius: 15px; border-right: 3px solid var(--ramadan-gold);
+        }
+
+        /* تتبع المشاهدة */
+        .watch-tracker {
+            display: flex; align-items: center; gap: 10px; margin-top: 15px;
+            padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .episode-btn {
+            background: var(--accent-blue); border: none; color: white;
+            padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px;
+        }
+
+        .episode-count { color: var(--ramadan-gold); font-weight: bold; font-size: 14px; }
+
+        /* أزرار التحكم بالبطاقة */
+        .card-actions {
+            display: flex; justify-content: flex-start; gap: 15px; margin-top: 15px;
+        }
+
+        .action-btn {
+            background: none; border: none; cursor: pointer; font-size: 18px; transition: 0.3s;
+            color: #444; padding: 5px;
+        }
+
+        .action-btn.fav.active { color: #ff4757; }
+        .action-btn.share { color: var(--success-green); }
+        .action-btn.share:hover { transform: scale(1.2); }
+
+        .results-info { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 12px; }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+        footer { text-align: center; padding: 40px 0; opacity: 0.6; font-size: 12px; border-top: 1px solid rgba(212, 175, 55, 0.1); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="lunar-icon"><i class="fa-solid fa-moon"></i></div>
+        <h1>SOHOORNA</h1>
+        <p style="color: var(--ramadan-gold); font-size: 14px; letter-spacing: 3px; font-weight: 600;">سحورنا 2026</p>
+    </header>
+
+    <div class="religious-note">
+        <i class="fa-solid fa-kaaba" style="display: block; font-size: 24px; margin-bottom: 10px; color: var(--ramadan-gold);"></i>
+        <strong>تذكرة رمضانية</strong><br>
+        صلاتك، قيامك، ووردك القرآني هم كنوزك الحقيقية.. لا تجعل المسلسلات تسرق بركة وقتك.
+    </div>
+
+    <div class="sticky-wrapper">
+        <div class="search-container" style="position: relative;">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن مسلسل، ممثل، أو قناة...">
+        </div>
+        <div class="filter-chips" id="filterChips">
+            <div class="chip active" data-filter="all">الكل</div>
+            <div class="chip" data-filter="كوميديا">كوميديا</div>
+            <div class="chip" data-filter="دراما">دراما</div>
+            <div class="chip" data-filter="أكشن">أكشن</div>
+            <div class="chip" data-filter="رومانسية">رومانسية</div>
+            <div class="chip" data-filter="تشويق">تشويق</div>
+        </div>
+    </div>
+
+    <div class="results-info">
+        <span id="countText">جاري التحميل...</span>
+        <div id="favToggle" style="cursor:pointer; color: var(--ramadan-gold)">
+            <i class="fa-solid fa-heart"></i> المفضلة
+        </div>
+    </div>
+
+    <div id="noResults" style="display: none; text-align: center; padding: 40px; color: var(--muted-slate);">
+        <i class="fa-solid fa-ghost" style="font-size: 40px; margin-bottom: 15px;"></i>
+        <p>لم نجد ما تبحث عنه..</p>
+    </div>
+
+    <div class="series-grid" id="seriesContainer"></div>
+
+    <footer>
+        <p>&copy; 2026 SOHOORNA GUIDE</p>
+        <p>جميع الحقوق محفوظة - دليل مسلسلات رمضان</p>
+    </footer>
+</div>
+
+<script>
+const seriesData = [
+    { name: "رامز ليفل الوحش", stars: "رامز جلال", channels: "mbc مصر", notes: "برنامج مقالب" },
+    { name: "اتنين غيرنا", stars: "آسر ياسين، دينا الشربيني", channels: "ON", notes: "رومانسية اجتماعية (15 حلقة)." },
+    { name: "اسأل روحك", stars: "ياسمين رئيس، أحمد فهمي", channels: "النهار", notes: "رومانسية وتشويق." },
+    { name: "إفراج", stars: "عمرو سعد، تارا عماد، حاتم صلاح", channels: "MBC مصر، شاهد", notes: "دراما شعبية أكشن؛ صراع عباس الريس." },
+    { name: "أولاد الراعي", stars: "ماجد المصري، خالد الصاوي", channels: "CBC", notes: "صراعات القوة والمال في عائلة ثرية." },
+    { name: "بابا وماما جيران", stars: "إياد نصار، ريهام عبد الغفور", channels: "شاهد", notes: "دراما اجتماعية تركز على العلاقات الأسرية." },
+    { name: "بيبو", stars: "كزبرة، هالة صدقي، سيد رجب", channels: "CBC، ON", notes: "كوميديا عن شاب يكتشف جذوره الصعيدية." },
+    { name: "توابع", stars: "ريهام حجاج، أسماء أبو اليزيد", channels: "CBC", notes: "دراما نفسية حول حياة الـ Influencer." },
+    { name: "حكاية نرجس", stars: "ريهام عبد الغفور", channels: "dmc، الحياة", notes: "قضايا المرأة والتربية." },
+    { name: "حد أقصى", stars: "روجينا، محمد القس", channels: "CBC", notes: "غسيل أموال وضغوط نفسية (15 حلقة)." },
+    { name: "درش", stars: "مصطفى شعبان، سهر الصايغ", channels: "dmc، ON، Watch It", notes: "دراما شعبية (تاجر عطارة)." },
+    { name: "رأس الأفعى", stars: "أمير كرارة، شريف منير", channels: "dmc، ON", notes: "دراما وطنية وبوليسية (30 حلقة)." },
+    { name: "روج أسود", stars: "رانيا يوسف، مي سليم", channels: "النهار", notes: "قصص من واقع محاكم الأسرة." },
+    { name: "الست موناليزا", stars: "مي عمر، أحمد مجدي", channels: "MBC مصر، شاهد", notes: "دراما نفسية؛ رحلة انتقام (15 حلقة)." },
+    { name: "صحاب الأرض", stars: "إياد نصار، منة شلبي", channels: "dmc، الحياة", notes: "عمل وطني عن القضية الفلسطينية (15 حلقة)." },
+    { name: "على قد الحب", stars: "نيللي كريم، شريف سلامة", channels: "CBC", notes: "دراما اجتماعية رومانسية." },
+    { name: "على كلاي", stars: "أحمد العوضي، درة", channels: "dmc", notes: "أكشن ودراما شعبية (30 حلقة)." },
+    { name: "عين سحرية", stars: "عصام عمر، باسم سمرة", channels: "ON", notes: "تشويق (فني كاميرات وجريمة قتل)." },
+    { name: "عرض وطلب", stars: "سلمى أبو ضيف، علي صبحي", channels: "ON", notes: "قضايا اجتماعية وإنسانية حساسة." },
+    { name: "فخر الدلتا", stars: "أحمد رمزي، انتصار", channels: "dmc، الحياة", notes: "دراما ريفية بلمسة كوميدية." },
+    { name: "فن الحرب", stars: "يوسف الشريف، ريم مصطفى", channels: "CBC", notes: "عودة يوسف الشريف (أكشن وتشويق)." },
+    { name: "قطر صغنطوط", stars: "محمد رجب", channels: "الحياة، النهار", notes: "أكشن وغموض (للكبار والأطفال)." },
+    { name: "كلهم بيحبوا مودي", stars: "ياسر جلال، بيومي فؤاد", channels: "ON", notes: "كوميديا ساخرة حول شخصية مودي." },
+    { name: "الكينج", stars: "محمد إمام، حنان مطاوع", channels: "MBC مصر", notes: "صراعات مع عصابات مافيا دولية." },
+    { name: "المداح 6", stars: "حمادة هلال، خالد الصاوي", channels: "MBC مصر، شاهد", notes: "أسطورة النهاية؛ مواجهة ملك الجن." },
+    { name: "المصيدة", stars: "حنان مطاوع، خالد سليم", channels: "النهار", notes: "دراما سريعة ومثيرة." },
+    { name: "مولانا", stars: "تيم حسن، نور علي", channels: "شاهد، MBC مصر", notes: "قضايا الهوية والاعتقاد." },
+    { name: "ن النسوة", stars: "مي كساب، هبة مجدي", channels: "MBC مصر", notes: "قضايا نسائية متنوعة." },
+    { name: "النص 2", stars: "أحمد أمين، أسماء أبو اليزيد", channels: "dmc، ON", notes: "جاسوسية في الحرب العالمية الثانية." },
+    { name: "ننسى اللي كان", stars: "ياسمين عبد العزيز، كريم فهمي", channels: "MBC مصر، شاهد", notes: "رومانسية بين ممثلة وحارسها." },
+    { name: "سوا سوا", stars: "أحمد مالك، هدى المفتي", channels: "mbc", notes: "قصة حب شعبية بين هيما وأحلام." },
+    { name: "هي كيميا", stars: "دياب، مصطفى غريب", channels: "mbc", notes: "تشويق عن صديقين يتورطان في أعمال مشبوهة." },
+    { name: "المتر سمير", stars: "كريم محمود عبد العزيز", channels: "mbc", notes: "كوميديا اجتماعية حول محامٍ شاب." },
+    { name: "الهيبة: الأصول", stars: "تيم حسن", channels: "شاهد", notes: "بداية عائلة شيخ الجبل (Prequel)." }
+];
+
+let favorites = JSON.parse(localStorage.getItem('sohoorna_favs')) || [];
+let watchedData = JSON.parse(localStorage.getItem('sohoorna_watched')) || {};
+
+const container = document.getElementById('seriesContainer');
+const searchInput = document.getElementById('searchInput');
+const countText = document.getElementById('countText');
+
+// 1. الوضع الليلي التلقائي (من 6 مساءً لـ 5 صباحاً)
+function applyAutoDarkMode() {
+    const hour = new Date().getHours();
+    if (hour >= 18 || hour <= 5) {
+        document.body.classList.add('night-mode');
+    } else {
+        document.body.classList.remove('night-mode');
+    }
+}
+
+// 2. تتبع المشاهدة
+function updateWatch(name, change) {
+    if (!watchedData[name]) watchedData[name] = 0;
+    watchedData[name] = Math.max(0, watchedData[name] + change);
+    localStorage.setItem('sohoorna_watched', JSON.stringify(watchedData));
+    document.getElementById(`watch-count-${name}`).innerText = watchedData[name];
+}
+
+// 3. المشاركة الذكية
+function shareSeries(name, stars, channel) {
+    const text = `شفت مسلسل (${name})؟ بطولة (${stars}) وهيجي على قناة (${channel}). تابع تفاصيل أكتر على سحورنا! 🌙✨\nرابط الموقع: https://kemo-omar.github.io/SOHOORNA/`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function renderSeries(data) {
+    container.innerHTML = '';
+    countText.innerText = `المعروض: ${data.length} مسلسل`;
+    
+    data.forEach((item, index) => {
+        const isFav = favorites.includes(item.name);
+        const episodes = watchedData[item.name] || 0;
+        const card = document.createElement('div');
+        card.className = 'series-card';
+        
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between;">
+                <h3 class="series-name">${item.name}</h3>
+                <span class="badge">${item.channels}</span>
+            </div>
+            <div class="cast"><i class="fa-solid fa-star"></i>${item.stars}</div>
+            <div class="notes">${item.notes}</div>
+            
+            <div class="watch-tracker">
+                <span style="font-size:12px">الحلقات:</span>
+                <button class="episode-btn" onclick="updateWatch('${item.name}', -1)">-</button>
+                <span class="episode-count" id="watch-count-${item.name}">${episodes}</span>
+                <button class="episode-btn" onclick="updateWatch('${item.name}', 1)">+</button>
+            </div>
+
+            <div class="card-actions">
+                <button class="action-btn fav ${isFav ? 'active' : ''}" onclick="toggleFav('${item.name}', this)">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <button class="action-btn share" onclick="shareSeries('${item.name}', '${item.stars}', '${item.channels}')">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(card);
+        setTimeout(() => card.classList.add('show'), index * 30);
+    });
+}
+
+function toggleFav(name, btn) {
+    if (favorites.includes(name)) {
+        favorites = favorites.filter(f => f !== name);
+        btn.classList.remove('active');
+    } else {
+        favorites.push(name);
+        btn.classList.add('active');
+    }
+    localStorage.setItem('sohoorna_favs', JSON.stringify(favorites));
+}
+
+function applyFilters() {
+    const term = searchInput.value.toLowerCase();
+    const activeChip = document.querySelector('.chip.active').dataset.filter;
+    const filtered = seriesData.filter(s => {
+        const matchesSearch = s.name.includes(term) || s.stars.includes(term);
+        const matchesChip = activeChip === 'all' || s.notes.includes(activeChip);
+        return matchesSearch && matchesChip;
+    });
+    renderSeries(filtered);
+}
+
+// Events
+searchInput.addEventListener('input', applyFilters);
+document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        applyFilters();
+    });
+});
+
+document.getElementById('favToggle').addEventListener('click', () => {
+    const favData = seriesData.filter(s => favorites.includes(s.name));
+    renderSeries(favData);
+});
+
+// Run
+applyAutoDarkMode();
+renderSeries(seriesData);
+</script>
+
+</body>
+</html>
