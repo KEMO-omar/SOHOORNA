@@ -50,14 +50,13 @@
             scroll-behavior: smooth;
         }
 
-        /* تعديل الفوانيس لتكون ثابتة عند النزول */
         .lantern-right {
             position: fixed; top: 0; right: 10px;
-            width: 65px; z-index: 5000; /* أعلى من كل شيء */
+            width: 65px; z-index: 5000;
             filter: drop-shadow(0 0 8px var(--gold));
             animation: swing 3s ease-in-out infinite alternate;
             transform-origin: top center;
-            pointer-events: none; /* لكي لا تعيق الضغط على الأزرار */
+            pointer-events: none;
         }
 
         .lantern-left {
@@ -80,7 +79,6 @@
             position: relative;
         }
 
-        /* تعديل المربع لملء الصورة بالكامل */
         .logo-container {
             width: 130px;
             height: 130px;
@@ -92,13 +90,13 @@
             align-items: center;
             justify-content: center;
             box-shadow: var(--card-shadow);
-            overflow: hidden; /* ضروري لقص الصورة الزائدة */
+            overflow: hidden;
         }
 
         .brand-logo {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* تجعل الصورة تملأ المربع بالكامل */
+            object-fit: cover;
         }
 
         .top-controls {
@@ -160,7 +158,7 @@
             background: var(--sidebar-bg); z-index: 6000;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             padding-top: 20px;
-            overflow-y: auto; /* للسماح بالتمرير داخل القائمة */
+            overflow-y: auto;
         }
         .sidebar.active { right: 0; }
         .sidebar-item {
@@ -186,6 +184,13 @@
         .nav-btn.active { color: var(--gold); transform: translateY(-5px); }
 
         #location-status { font-size: 12px; color: var(--gold-light); margin-top: 8px; font-weight: bold; }
+
+        /* ستايل عداد الزوار */
+        .visitor-stats {
+            display: flex; justify-content: center; gap: 20px; 
+            margin: 10px 0; font-size: 12px; color: var(--gold-light);
+            background: rgba(212, 175, 55, 0.05); padding: 8px; border-radius: 10px;
+        }
     </style>
 </head>
 <body data-theme="dark">
@@ -235,6 +240,10 @@
         </div>
         <h1 style="font-family:'Amiri'; font-size: 32px; color: var(--gold); margin:0;">سحورنا 2026</h1>
         <p id="hijri-date" style="font-size: 16px; margin: 5px 0; opacity: 0.9;">رمضان كريم</p>
+        <div class="visitor-stats">
+            <span><i class="fa-solid fa-users"></i> متصل الآن: <span id="online-count">0</span></span>
+            <span><i class="fa-solid fa-eye"></i> الزيارات: <span id="total-count">0</span></span>
+        </div>
         <span id="location-status"><i class="fa-solid fa-location-dot"></i> جاري تحديد الموقع...</span>
     </div>
 
@@ -278,8 +287,53 @@
         <a href="prayers.html" class="nav-btn"><i class="fa-solid fa-clock"></i></a>
     </nav>
 
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <script>
-        // كود تحديد الموقع وحساب التوقيت (نفس المنطق القوي السابق)
+        // --- إعداد Firebase ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyC0WJ11PvTUAWxLMlPBqXA-2QrcXM2uHg0",
+            authDomain: "sohoorna.firebaseapp.com",
+            databaseURL: "https://sohoorna-default-rtdb.firebaseio.com",
+            projectId: "sohoorna",
+            storageBucket: "sohoorna.firebasestorage.app",
+            messagingSenderId: "433150559884",
+            appId: "1:433150559884:web:62932d2ba01f19f3ec5da9",
+            measurementId: "G-J99367TN0Z"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // مراجع البيانات
+        const onlineRef = db.ref('stats/online');
+        const totalRef = db.ref('stats/totalVisits');
+
+        // حساب الزيارات الإجمالية (مرة واحدة لكل متصفح)
+        if (!localStorage.getItem('v2026')) {
+            totalRef.transaction(curr => (curr || 0) + 1);
+            localStorage.setItem('v2026', 'true');
+        }
+
+        // حساب المتواجدين الآن
+        const myStatusRef = onlineRef.push();
+        db.ref('.info/connected').on('value', (snap) => {
+            if (snap.val() === true) {
+                myStatusRef.onDisconnect().remove();
+                myStatusRef.set(true);
+            }
+        });
+
+        // تحديث الأرقام في الواجهة
+        onlineRef.on('value', (snap) => {
+            document.getElementById('online-count').innerText = snap.numChildren();
+        });
+        totalRef.on('value', (snap) => {
+            document.getElementById('total-count').innerText = snap.val() || 0;
+        });
+
+        // --- كود الموقع والتوقيت الأصلي ---
         let userCoords = null;
         function getLocation() {
             if (navigator.geolocation) {
@@ -306,7 +360,6 @@
                 const data = await res.json();
                 const times = data.data.timings;
                 
-                // تحويل الوقت لنظام التاريخ
                 const fajr = new Date(now.toDateString() + " " + times.Fajr);
                 const maghrib = new Date(now.toDateString() + " " + times.Maghrib);
                 
@@ -329,7 +382,6 @@
             }
         }
 
-        // تحكم القائمة الجانبية
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         document.getElementById('menuBtn').onclick = () => { 
@@ -341,7 +393,6 @@
             overlay.classList.remove('active'); 
         };
 
-        // وضع الليل والنهار
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
@@ -354,7 +405,6 @@
             }
         }
 
-        // مشاركة التطبيق
         function shareApp() {
             if (navigator.share) {
                 navigator.share({
