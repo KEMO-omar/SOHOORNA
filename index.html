@@ -12,200 +12,120 @@
     
     <style>
         :root {
-            --bg: #030508;
-            --surface: #0f141e;
-            --gold: #D4AF37;
-            --gold-light: #FFD700;
-            --text-main: #f8f9fa;
-            --text-dim: #94a3b8;
-            --nav-bg: rgba(15, 20, 30, 0.96);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            --sidebar-bg: #080c14;
+            --bg: #030508; --surface: #0f141e; --gold: #D4AF37; --gold-light: #FFD700;
+            --text-main: #f8f9fa; --text-dim: #94a3b8; --nav-bg: rgba(15, 20, 30, 0.96);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.5); --sidebar-bg: #080c14;
         }
 
         [data-theme="light"] {
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --gold: #a37e00;
-            --gold-light: #c5a021;
-            --text-main: #0f172a;
-            --text-dim: #64748b;
-            --nav-bg: rgba(255, 255, 255, 0.96);
-            --card-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            --bg: #f8fafc; --surface: #ffffff; --gold: #a37e00; --gold-light: #c5a021;
+            --text-main: #0f172a; --text-dim: #64748b; --nav-bg: rgba(255, 255, 255, 0.96);
             --sidebar-bg: #ffffff;
         }
 
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: 0.3s; }
 
         body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Cairo', sans-serif;
-            margin: 0; padding-bottom: 100px;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
+            background-color: var(--bg); color: var(--text-main); font-family: 'Cairo', sans-serif;
+            margin: 0; padding-bottom: 100px; overflow-x: hidden;
         }
 
-        .lantern-right {
-            position: fixed; top: 0; right: 10px;
-            width: 65px; z-index: 5000;
+        /* الفوانيس المتحركة */
+        .lantern-right, .lantern-left {
+            position: fixed; top: 0; width: 65px; z-index: 5000;
             filter: drop-shadow(0 0 8px var(--gold));
             animation: swing 3s ease-in-out infinite alternate;
-            transform-origin: top center;
-            pointer-events: none;
+            transform-origin: top center; pointer-events: none;
         }
-
-        .lantern-left {
-            position: fixed; top: 0; left: 10px;
-            width: 65px; z-index: 5000;
-            filter: drop-shadow(0 0 8px var(--gold));
-            animation: swing 3.5s ease-in-out infinite alternate-reverse;
-            transform-origin: top center;
-            pointer-events: none;
-        }
-
-        @keyframes swing {
-            from { transform: rotate(-5deg); }
-            to { transform: rotate(5deg); }
-        }
+        .lantern-right { right: 10px; }
+        .lantern-left { left: 10px; animation-duration: 3.5s; }
+        @keyframes swing { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
 
         .header {
-            height: 320px; text-align: center; padding-top: 70px;
+            min-height: 400px; text-align: center; padding-top: 60px;
             background: radial-gradient(circle at top, rgba(212,175,55,0.15), transparent 70%);
-            position: relative;
+            position: relative; padding-bottom: 40px;
         }
 
         .logo-container {
-            width: 130px;
-            height: 130px;
-            margin: 0 auto 15px;
-            background: var(--surface);
-            border: 2px solid var(--gold);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
+            width: 100px; height: 100px; margin: 0 auto 10px;
+            background: var(--surface); border: 2px solid var(--gold);
+            border-radius: 25px; display: flex; align-items: center;
+            justify-content: center; box-shadow: var(--card-shadow); overflow: hidden;
         }
+        .brand-logo { width: 100%; height: 100%; object-fit: cover; }
 
-        .brand-logo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        /* تعديل العدادات لتكون واضحة ولا تتداخل */
+        .visitor-stats {
+            display: flex; justify-content: center; gap: 15px; margin: 20px auto;
+            max-width: 280px; background: rgba(212, 175, 55, 0.08); padding: 12px;
+            border-radius: 18px; border: 1px solid rgba(212, 175, 55, 0.15);
+            position: relative; z-index: 5;
         }
+        .stat-box { display: flex; flex-direction: column; align-items: center; flex: 1; }
+        .stat-box i { color: var(--gold); font-size: 14px; margin-bottom: 4px; }
+        .stat-box span { font-size: 10px; color: var(--text-dim); }
+        .stat-box b { font-size: 18px; color: var(--gold-light); font-family: 'Amiri'; }
 
         .top-controls {
             position: fixed; top: 20px; left: 0; right: 0;
-            padding: 0 20px;
-            display: flex; justify-content: space-between; align-items: center; z-index: 2000;
+            padding: 0 20px; display: flex; justify-content: space-between; z-index: 2000;
         }
-
         .top-btn {
             background: var(--surface); border: 1.5px solid var(--gold);
-            color: var(--gold); width: 45px; height: 45px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; font-size: 18px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            color: var(--gold); width: 42px; height: 42px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
 
-        .top-btn:active { transform: scale(0.9); }
-
         .timer-container {
-            margin: -40px 20px 25px; background: var(--surface);
+            margin: -20px 20px 25px; background: var(--surface);
             border-radius: 25px; padding: 25px 15px; border: 1px solid rgba(212,175,55,0.3);
             box-shadow: var(--card-shadow); text-align: center; position: relative; z-index: 10;
         }
+        .countdown-row { display: flex; justify-content: center; gap: 10px; }
+        .c-item { background: rgba(212, 175, 55, 0.05); padding: 10px; border-radius: 15px; min-width: 75px; }
+        .c-item span { display: block; font-size: 28px; font-weight: 900; color: var(--gold); font-family: 'Amiri'; }
+        .c-item label { font-size: 11px; color: var(--text-dim); }
 
-        .countdown-row { display: flex; justify-content: center; gap: 12px; }
-        .c-item { 
-            background: rgba(212, 175, 55, 0.1); 
-            padding: 12px; border-radius: 18px; min-width: 80px;
-            border: 1px solid rgba(212,175,55,0.1);
-        }
-        .c-item span { display: block; font-size: 30px; font-weight: 900; color: var(--gold); font-family: 'Amiri'; }
-        .c-item label { font-size: 12px; color: var(--text-dim); font-weight: 600; }
-
-        .group-name { 
-            padding: 20px 25px 10px; font-weight: 900; color: var(--gold); 
-            font-size: 18px; display: flex; align-items: center; gap: 10px; 
-        }
-
-        .main-grid { 
-            display: grid; grid-template-columns: repeat(4, 1fr); 
-            gap: 12px; padding: 10px 20px 30px; 
-        }
-
+        .group-name { padding: 20px 25px 10px; font-weight: 900; color: var(--gold); display: flex; align-items: center; gap: 10px; }
+        .main-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 10px 20px 30px; }
         .card {
-            background: var(--surface); border-radius: 20px; padding: 18px 5px;
+            background: var(--surface); border-radius: 18px; padding: 15px 5px;
             text-decoration: none; color: var(--text-main); text-align: center;
-            border: 1px solid rgba(212,175,55,0.05); box-shadow: var(--card-shadow);
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            transition: 0.3s;
+            border: 1px solid rgba(212,175,55,0.05); display: flex; flex-direction: column; align-items: center; gap: 8px;
         }
-
-        .card:hover { border-color: var(--gold); transform: translateY(-3px); }
-        .card:active { transform: scale(0.95); }
-        .card i { font-size: 22px; color: var(--gold); }
-        .card span { font-size: 11px; font-weight: 700; }
+        .card i { font-size: 20px; color: var(--gold); }
+        .card span { font-size: 10px; font-weight: 700; }
 
         .sidebar {
-            position: fixed; top: 0; right: -300px; width: 290px; height: 100%;
-            background: var(--sidebar-bg); z-index: 6000;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            padding-top: 20px;
-            overflow-y: auto;
+            position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
+            background: var(--sidebar-bg); z-index: 6000; transition: 0.4s; overflow-y: auto;
         }
         .sidebar.active { right: 0; }
-        .sidebar-item {
-            display: flex; align-items: center; gap: 15px; color: var(--text-main);
-            text-decoration: none; padding: 16px 25px; font-weight: 600;
-            border-bottom: 1px solid rgba(212,175,55,0.05);
-        }
-        .sidebar-item:active { background: rgba(212,175,55,0.1); }
-        .sidebar-item i { color: var(--gold); width: 25px; }
+        .sidebar-item { display: flex; align-items: center; gap: 15px; color: var(--text-main); text-decoration: none; padding: 15px 20px; border-bottom: 1px solid rgba(212,175,55,0.05); }
         
-        .overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-            display: none; z-index: 5500; backdrop-filter: blur(5px);
-        }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 5500; }
         .overlay.active { display: block; }
 
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; background: var(--nav-bg);
             display: flex; justify-content: space-around; padding: 12px 0 30px;
-            border-top: 1px solid rgba(212, 175, 55, 0.3); backdrop-filter: blur(15px); z-index: 4000;
+            border-top: 1px solid rgba(212, 175, 55, 0.2); z-index: 4000;
         }
-        .nav-btn { color: var(--text-dim); text-decoration: none; font-size: 20px; transition: 0.3s; }
-        .nav-btn.active { color: var(--gold); transform: translateY(-5px); }
-
-        #location-status { font-size: 12px; color: var(--gold-light); margin-top: 8px; font-weight: bold; }
-
-        /* ستايل عداد الزوار */
-        .visitor-stats {
-            display: flex; justify-content: center; gap: 20px; 
-            margin: 10px 0; font-size: 12px; color: var(--gold-light);
-            background: rgba(212, 175, 55, 0.05); padding: 8px; border-radius: 10px;
-        }
+        .nav-btn { color: var(--text-dim); font-size: 20px; }
+        .nav-btn.active { color: var(--gold); }
     </style>
 </head>
 <body data-theme="dark">
 
-    <img src="antern.png" alt="Fanoos Right" class="lantern-right">
-    <img src="antern.png" alt="Fanoos Left" class="lantern-left">
-
+    <img src="antern.png" class="lantern-right">
+    <img src="antern.png" class="lantern-left">
     <div class="overlay" id="overlay"></div>
 
     <nav class="sidebar" id="sidebar">
-        <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid var(--gold);">
-            <div class="logo-container" style="width: 80px; height: 80px; border-radius: 15px; margin-bottom: 10px;">
-                <img src="sohoorna.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Logo">
-            </div>
-            <h3 style="color:var(--gold); margin:0; font-size: 18px;">القائمة الرئيسية</h3>
+        <div style="text-align: center; padding: 20px;">
+            <img src="sohoorna.png" style="width: 70px; border-radius: 15px; border: 1px solid var(--gold);">
+            <h3 style="color:var(--gold);">سحورنا 2026</h3>
         </div>
         <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
         <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
@@ -227,7 +147,7 @@
     </nav>
 
     <div class="top-controls">
-        <div style="display:flex; gap:12px;">
+        <div style="display:flex; gap:10px;">
             <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
             <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         </div>
@@ -236,19 +156,29 @@
 
     <div class="header">
         <div class="logo-container">
-            <img src="sohoorna.png" class="brand-logo" alt="SOHOORNA 2026">
+            <img src="sohoorna.png" class="brand-logo">
         </div>
-        <h1 style="font-family:'Amiri'; font-size: 32px; color: var(--gold); margin:0;">سحورنا 2026</h1>
-        <p id="hijri-date" style="font-size: 16px; margin: 5px 0; opacity: 0.9;">رمضان كريم</p>
+        <h1 style="font-family:'Amiri'; font-size: 28px; color: var(--gold); margin:0;">سحورنا 2026</h1>
+        <p id="hijri-date" style="margin:5px 0; font-weight: bold;">رمضان كريم</p>
+        
         <div class="visitor-stats">
-            <span><i class="fa-solid fa-users"></i> متصل الآن: <span id="online-count">0</span></span>
-            <span><i class="fa-solid fa-eye"></i> الزيارات: <span id="total-count">0</span></span>
+            <div class="stat-box">
+                <i class="fa-solid fa-users"></i>
+                <span>متصل الآن</span>
+                <b id="online-count">0</b>
+            </div>
+            <div style="width: 1px; background: rgba(212,175,55,0.2); height: 25px; align-self: center;"></div>
+            <div class="stat-box">
+                <i class="fa-solid fa-eye"></i>
+                <span>إجمالي الزيارات</span>
+                <b id="total-count">0</b>
+            </div>
         </div>
-        <span id="location-status"><i class="fa-solid fa-location-dot"></i> جاري تحديد الموقع...</span>
+        <span id="location-status" style="font-size: 11px; color: var(--gold-light); display: block; margin-top: 10px;"><i class="fa-solid fa-location-dot"></i> جاري تحديد الموقع...</span>
     </div>
 
     <div class="timer-container">
-        <span id="next-event-title" style="color:var(--gold); font-weight:700; font-size:16px; display:block; margin-bottom:15px;">انتظر قليلاً...</span>
+        <span id="next-event-title" style="color:var(--gold); font-weight:700; margin-bottom:10px; display:block;">انتظر قليلاً...</span>
         <div class="countdown-row">
             <div class="c-item"><span id="h">00</span><label>ساعة</label></div>
             <div class="c-item"><span id="m">00</span><label>دقيقة</label></div>
@@ -271,12 +201,12 @@
     <div class="group-name"><i class="fa-solid fa-heart"></i> جودة الحياة</div>
     <div class="main-grid">
         <a href="recipes.html" class="card"><i class="fa-solid fa-plate-wheat"></i><span>وصفات</span></a>
-        <a href="suhoor.html" class="card"><i class="fa-solid fa-faucet-drip"></i><span>السحور</span></a>
+        <a href="suhoor.html" class="card"><i class="fa-solid fa-faucet-drip"></i><span>سحور</span></a>
         <a href="health-tips.html" class="card"><i class="fa-solid fa-staff-snake"></i><span>صحتك</span></a>
         <a href="habits.html" class="card"><i class="fa-solid fa-calendar-check"></i><span>عاداتي</span></a>
         <a href="ehsan.html" class="card"><i class="fa-solid fa-hand-holding-heart"></i><span>إحسان</span></a>
         <a href="series.html" class="card"><i class="fa-solid fa-film"></i><span>مسلسلات</span></a>
-        <a href="kids.html" class="card"><i class="fa-solid fa-child-reaching"></i><span>للأطفال</span></a>
+        <a href="kids.html" class="card"><i class="fa-solid fa-child-reaching"></i><span>أطفال</span></a>
         <a href="designers.html" class="card"><i class="fa-solid fa-palette"></i><span>الفريق</span></a>
     </div>
 
@@ -291,7 +221,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // --- إعداد Firebase ---
+        // 1. إعداد Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC0WJ11PvTUAWxLMlPBqXA-2QrcXM2uHg0",
             authDomain: "sohoorna.firebaseapp.com",
@@ -299,54 +229,34 @@
             projectId: "sohoorna",
             storageBucket: "sohoorna.firebasestorage.app",
             messagingSenderId: "433150559884",
-            appId: "1:433150559884:web:62932d2ba01f19f3ec5da9",
-            measurementId: "G-J99367TN0Z"
+            appId: "1:433150559884:web:62932d2ba01f19f3ec5da9"
         };
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // مراجع البيانات
         const onlineRef = db.ref('stats/online');
         const totalRef = db.ref('stats/totalVisits');
 
-        // حساب الزيارات الإجمالية (مرة واحدة لكل متصفح)
-        if (!localStorage.getItem('v2026')) {
-            totalRef.transaction(curr => (curr || 0) + 1);
-            localStorage.setItem('v2026', 'true');
+        if (!localStorage.getItem('v26')) {
+            totalRef.transaction(c => (c || 0) + 1);
+            localStorage.setItem('v26', 'true');
         }
 
-        // حساب المتواجدين الآن
-        const myStatusRef = onlineRef.push();
-        db.ref('.info/connected').on('value', (snap) => {
-            if (snap.val() === true) {
-                myStatusRef.onDisconnect().remove();
-                myStatusRef.set(true);
-            }
+        const myStatus = onlineRef.push();
+        db.ref('.info/connected').on('value', s => {
+            if (s.val()) { myStatus.onDisconnect().remove(); myStatus.set(true); }
         });
 
-        // تحديث الأرقام في الواجهة
-        onlineRef.on('value', (snap) => {
-            document.getElementById('online-count').innerText = snap.numChildren();
-        });
-        totalRef.on('value', (snap) => {
-            document.getElementById('total-count').innerText = snap.val() || 0;
-        });
+        onlineRef.on('value', s => document.getElementById('online-count').innerText = s.numChildren());
+        totalRef.on('value', s => document.getElementById('total-count').innerText = s.val() || 0);
 
-        // --- كود الموقع والتوقيت الأصلي ---
         let userCoords = null;
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                        document.getElementById('location-status').innerHTML = '<i class="fa-solid fa-check-circle"></i> تم تحديد موقعك بنجاح';
-                        updateTimes();
-                    },
-                    () => { 
-                        document.getElementById('location-status').innerHTML = '<i class="fa-solid fa-map-pin"></i> الموقع: القاهرة (افتراضي)';
-                        updateTimes(); 
-                    }
+                    (p) => { userCoords={lat:p.coords.latitude, lng:p.coords.longitude}; updateTimes(); },
+                    () => { updateTimes(); }
                 );
             }
         }
@@ -358,18 +268,14 @@
             try {
                 const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(now.getTime()/1000)}?latitude=${lat}&longitude=${lng}&method=4`);
                 const data = await res.json();
-                const times = data.data.timings;
-                
-                const fajr = new Date(now.toDateString() + " " + times.Fajr);
-                const maghrib = new Date(now.toDateString() + " " + times.Maghrib);
+                const t = data.data.timings;
+                const fajr = new Date(now.toDateString() + " " + t.Fajr);
+                const maghrib = new Date(now.toDateString() + " " + t.Maghrib);
                 
                 let target, label;
-                if (now < fajr) { target = fajr; label = "باقي على مدفع الإمساك"; }
-                else if (now < maghrib) { target = maghrib; label = "باقي على آذان المغرب"; }
-                else {
-                    target = new Date(fajr.getTime() + 86400000);
-                    label = "باقي على سحور الغد";
-                }
+                if (now < fajr) { target = fajr; label = "باقي على الإمساك"; }
+                else if (now < maghrib) { target = maghrib; label = "باقي على الفطور"; }
+                else { target = new Date(fajr.getTime() + 86400000); label = "باقي على سحور الغد"; }
 
                 const diff = target - now;
                 document.getElementById('h').innerText = Math.floor(diff/3600000).toString().padStart(2,'0');
@@ -377,48 +283,25 @@
                 document.getElementById('s').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
                 document.getElementById('next-event-title').innerText = label;
                 document.getElementById('hijri-date').innerText = `${data.data.date.hijri.day} ${data.data.date.hijri.month.ar} ${data.data.date.hijri.year}هـ`;
-            } catch (e) {
-                document.getElementById('next-event-title').innerText = "حدث خطأ في البيانات";
-            }
+                document.getElementById('location-status').innerHTML = userCoords ? '<i class="fa-solid fa-check"></i> تم تحديد الموقع' : '<i class="fa-solid fa-map-pin"></i> القاهرة (افتراضي)';
+            } catch (e) {}
         }
 
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
-        document.getElementById('menuBtn').onclick = () => { 
-            sidebar.classList.add('active'); 
-            overlay.classList.add('active'); 
-        };
-        overlay.onclick = () => { 
-            sidebar.classList.remove('active'); 
-            overlay.classList.remove('active'); 
-        };
+        document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+        overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 
         function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('themeIcon');
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.setAttribute('data-theme', 'light');
-                icon.className = 'fa-solid fa-sun';
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                icon.className = 'fa-solid fa-moon';
-            }
+            const b = document.body;
+            const dark = b.getAttribute('data-theme') === 'dark';
+            b.setAttribute('data-theme', dark ? 'light' : 'dark');
+            document.getElementById('themeIcon').className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
 
-        function shareApp() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'سحورنا 2026',
-                    text: 'رفيقك في شهر الخير - مواقيت، أذكار، ومحتوى رمضاني متكامل',
-                    url: window.location.href
-                });
-            }
-        }
+        function shareApp() { if (navigator.share) navigator.share({ title: 'سحورنا 2026', url: window.location.href }); }
 
-        window.onload = () => {
-            getLocation();
-            setInterval(updateTimes, 1000);
-        };
+        window.onload = () => { getLocation(); setInterval(updateTimes, 1000); };
     </script>
 </body>
 </html>
