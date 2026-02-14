@@ -162,7 +162,7 @@
     <button class="icon-btn" onclick="toggleSidebar(true)"><i class="fa-solid fa-bars-staggered"></i></button>
     <div style="text-align: center;">
         <span id="userGreeting" style="color: var(--accent); font-weight: 900;">يا ذاكر الله</span>
-        <div id="activePageName" style="font-size: 0.6rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px;">الرئيسية</div>
+        <div id="activePageName" style="font-size: 0.6rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px;">اهلا</div>
     </div>
     <button class="icon-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
 </nav>
@@ -172,12 +172,24 @@
         <input type="text" id="nameInp" placeholder="اسمك الكريم.." 
                style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--accent); padding:15px; border-radius:15px; color:white; text-align:center;">
     </div>
-    <div class="sidebar-menu">
-        <div class="card" onclick="showPage('home')"><i class="fa-solid fa-house"></i> &nbsp; لوحة التحكم</div>
-        <div class="card" onclick="showPage('tasbih')"><i class="fa-solid fa-fingerprint"></i> &nbsp; المسبحة المتطورة</div>
-        <div class="card" onclick="showPage('azkar')"><i class="fa-solid fa-book-open"></i> &nbsp; حصن المسلم</div>
-        <div class="card" onclick="showPage('ramadan')"><i class="fa-solid fa-calendar-star"></i> &nbsp; خطة الـ 30 يوم</div>
-        <div class="card" onclick="showPage('zakat')"><i class="fa-solid fa-hand-holding-dollar"></i> &nbsp; حاسبة الزكاة</div>
+    <div class="sidebar-menu"><a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
+        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
+        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
+        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> المسبحة الإلكترونية</a>
+        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> حاسبة الزكاة</a>
+        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
+        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الدينية</a>
+        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> وصفات الفطور</a>
+        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> نصائح السحور</a>
+        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
+        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
+        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
+        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
+        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> ركن الأطفال</a>
+        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
+    </nav>
     </div>
     <button class="card" onclick="toggleSidebar(false)" style="margin-top: 20px; background: #ff4444; color: white;">إغلاق القائمة</button>
 </aside>
@@ -190,11 +202,11 @@
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px;">
         <div class="card" onclick="startTasbih('wood')">
             <i class="fa-solid fa-circle-nodes" style="font-size: 2rem; color: var(--accent);"></i>
-            <h4>خشبية</h4>
+            <h4>خشبية مصريه ملمس مصري اصيل</h4>
         </div>
         <div class="card" onclick="startTasbih('digital')">
             <i class="fa-solid fa-bolt" style="font-size: 2rem; color: var(--accent);"></i>
-            <h4>رقمية</h4>
+            <h4>رقمية الكترونيه </h4>
         </div>
     </div>
 </div>
