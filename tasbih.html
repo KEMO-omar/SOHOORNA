@@ -11,7 +11,7 @@
             --bg: #050505;
             --surface: rgba(255, 255, 255, 0.03);
             --accent: #FFD700;
-            --accent-glow: rgba(255, 215, 0, 0.5);
+            --accent-glow: rgba(255, 215, 0, 0.3);
             --text-main: #ffffff;
             --text-muted: #b0b0b0;
             --glass-border: rgba(255, 255, 255, 0.08);
@@ -45,7 +45,7 @@
             transition: background 0.5s ease;
         }
 
-        /* Navigation */
+        /* Navigation Header */
         .nav-header {
             position: fixed; top: 0; left: 0; right: 0; 
             padding: calc(15px + var(--safe-area-inset-top)) 20px 15px;
@@ -60,32 +60,59 @@
         }
         .icon-btn:active { transform: scale(0.9); background: var(--accent); color: #000; }
 
-        /* Sidebar */
-        .sidebar {
-            position: fixed; top: 0; right: -100%; width: 85%; max-width: 350px; height: 100%;
-            background: rgba(10, 10, 10, 0.95); z-index: 5000; padding: 40px 20px; 
-            backdrop-filter: blur(25px); border-left: 2px solid var(--accent);
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Enhanced Sidebar */
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            z-index: 4999; display: none; opacity: 0; transition: 0.3s;
         }
-        .sidebar.active { right: 0; box-shadow: -20px 0 60px rgba(0,0,0,0.9); }
+        .sidebar-overlay.active { display: block; opacity: 1; }
+
+        .sidebar {
+            position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100%;
+            background: linear-gradient(180deg, #111 0%, #050505 100%); 
+            z-index: 5000; display: flex; flex-direction: column;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 1px solid var(--glass-border);
+        }
+        .sidebar.active { right: 0; box-shadow: -15px 0 50px rgba(0,0,0,0.8); }
+
+        .sidebar-header {
+            padding: 40px 20px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .sidebar-content {
+            flex: 1; overflow-y: auto; padding: 20px;
+            scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
+        }
+
+        .sidebar-item {
+            display: flex; align-items: center; padding: 14px 18px;
+            color: var(--text-main); text-decoration: none; border-radius: 15px;
+            margin-bottom: 8px; transition: 0.2s; background: rgba(255,255,255,0.02);
+            border: 1px solid transparent;
+        }
+        .sidebar-item i { width: 30px; font-size: 1.1rem; color: var(--accent); }
+        .sidebar-item:active { background: var(--accent); color: #000; transform: scale(0.97); }
+        .sidebar-item:active i { color: #000; }
 
         /* Pages System */
         .page {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: none; flex-direction: column; align-items: center; 
-            padding: 100px 20px 120px; overflow-y: auto; overflow-x: hidden;
+            padding: 100px 20px 120px; overflow-y: auto;
         }
         .page.active { display: flex; animation: slideUp 0.4s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Modern Cards */
+        /* Cards */
         .card {
             background: var(--surface); width: 100%; max-width: 450px; 
             padding: 20px; border-radius: 28px; margin-bottom: 15px;
             border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
-            transition: 0.3s;
         }
-        .card:active { transform: scale(0.98); }
 
         /* 3D Wood Rosary */
         .wood-container {
@@ -94,66 +121,48 @@
         }
         #woodEngine {
             position: relative; width: 200px; height: 200px;
-            transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            transform-style: preserve-3d; transition: transform 0.4s;
         }
         .bead {
             position: absolute; width: 65px; height: 65px;
             background: radial-gradient(circle at 30% 30%, #a67c52, #4e342e);
-            border-radius: 50%; box-shadow: inset -5px -5px 15px rgba(0,0,0,0.5), 5px 10px 20px rgba(0,0,0,0.4);
+            border-radius: 50%; box-shadow: inset -5px -5px 15px rgba(0,0,0,0.5);
         }
 
-        /* Digital Rosary */
+        /* Digital View */
         .digital-device {
             width: 260px; height: 360px; background: #1a1a1a; border-radius: 40px 40px 100px 100px;
-            border: 8px solid #333; display: flex; flex-direction: column; align-items: center;
-            padding: 25px; box-shadow: 0 40px 60px rgba(0,0,0,0.7);
+            border: 8px solid #333; display: flex; flex-direction: column; align-items: center; padding: 25px;
         }
         .lcd-screen {
             width: 100%; height: 90px; background: #94a394; border: 6px solid #000;
             border-radius: 12px; color: #111; font-family: 'Orbitron'; font-size: 3rem;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: inset 0 5px 15px rgba(0,0,0,0.4); margin-bottom: 30px;
         }
         .btn-trigger {
             width: 130px; height: 130px; background: radial-gradient(#d4af37, #8b6e00);
             border-radius: 50%; border: 6px solid #222; cursor: pointer;
-            box-shadow: 0 10px 0 #111; transition: 0.1s;
+            box-shadow: 0 10px 0 #111;
         }
         .btn-trigger:active { transform: translateY(6px); box-shadow: 0 4px 0 #111; }
 
-        /* Stats & Counter */
-        #sessionCount { font-family: 'Orbitron'; font-size: 5rem; font-weight: 900; color: var(--accent); margin: 10px 0; }
+        #sessionCount { font-family: 'Orbitron'; font-size: 5rem; font-weight: 900; color: var(--accent); }
         
-        /* Habits Grid */
         .habit-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%; }
         .day-box { 
             aspect-ratio: 1; background: var(--surface); border-radius: 12px; 
-            display: grid; place-items: center; font-weight: bold; font-size: 0.9rem;
-            border: 1px solid var(--glass-border); cursor: pointer;
+            display: grid; place-items: center; font-weight: bold; border: 1px solid var(--glass-border);
         }
-        .day-box.completed { background: var(--accent); color: #000; border-color: var(--accent); }
+        .day-box.completed { background: var(--accent); color: #000; }
 
-        /* Footer */
         .global-footer {
             position: fixed; bottom: 0; width: 100%; padding: 20px;
-            background: linear-gradient(transparent, var(--bg));
-            text-align: center; pointer-events: none;
+            background: linear-gradient(transparent, var(--bg)); text-align: center;
         }
         .total-badge {
             background: var(--surface); padding: 8px 20px; border-radius: 50px;
-            border: 1px solid var(--accent); display: inline-block; pointer-events: auto;
+            border: 1px solid var(--accent); display: inline-block;
         }
-
-        .dhikr-tabs {
-            display: flex; gap: 10px; overflow-x: auto; width: 100%; padding: 10px 0;
-            scrollbar-width: none;
-        }
-        .dhikr-tabs::-webkit-scrollbar { display: none; }
-        .tab {
-            padding: 8px 20px; background: var(--surface); border-radius: 50px;
-            white-space: nowrap; border: 1px solid var(--glass-border); font-size: 0.9rem;
-        }
-        .tab.active { background: var(--accent); color: #000; font-weight: bold; }
     </style>
 </head>
 <body data-theme="dark">
@@ -162,69 +171,72 @@
     <button class="icon-btn" onclick="toggleSidebar(true)"><i class="fa-solid fa-bars-staggered"></i></button>
     <div style="text-align: center;">
         <span id="userGreeting" style="color: var(--accent); font-weight: 900;">يا ذاكر الله</span>
-        <div id="activePageName" style="font-size: 0.6rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px;">اهلا</div>
+        <div id="activePageName" style="font-size: 0.6rem; text-transform: uppercase; opacity: 0.6;">الرئيسية</div>
     </div>
     <button class="icon-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
 </nav>
 
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar(false)"></div>
+
 <aside class="sidebar" id="sidebar">
-    <div style="margin-bottom: 30px;">
-        <input type="text" id="nameInp" placeholder="اسمك الكريم.." 
-               style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--accent); padding:15px; border-radius:15px; color:white; text-align:center;">
+    <div class="sidebar-header">
+        <div style="font-family: 'Orbitron'; color: var(--accent); font-weight: 900;">MENU</div>
+        <button class="icon-btn" onclick="toggleSidebar(false)"><i class="fa-solid fa-xmark"></i></button>
     </div>
-    <div class="sidebar-menu"><a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+
+    <div class="sidebar-content">
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="nameInp" placeholder="اسمك الكريم.." 
+                   style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--accent); padding:12px; border-radius:12px; color:white; text-align:center; font-family:'Cairo';">
+        </div>
+
+        <a href="#" class="sidebar-item" onclick="showPage('home')"><i class="fa-solid fa-house"></i> الرئيسية</a>
         <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
         <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
         <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
         <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
-        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> المسبحة الإلكترونية</a>
-        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> حاسبة الزكاة</a>
+        <a href="#" class="sidebar-item" onclick="showPage('tasbih')"><i class="fa-solid fa-toggle-on"></i> المسبحة الإلكترونية</a>
+        <a href="#" class="sidebar-item" onclick="showPage('zakat')"><i class="fa-solid fa-coins"></i> حاسبة الزكاة</a>
         <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
         <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الدينية</a>
         <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> وصفات الفطور</a>
         <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> نصائح السحور</a>
         <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
-        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
+        <a href="#" class="sidebar-item" onclick="showPage('ramadan')"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
         <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
         <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
         <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> ركن الأطفال</a>
         <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
-    </nav>
     </div>
-    <button class="card" onclick="toggleSidebar(false)" style="margin-top: 20px; background: #ff4444; color: white;">إغلاق القائمة</button>
 </aside>
 
 <div id="home" class="page active">
-    <div class="card" style="background: linear-gradient(45deg, #1a1a1a, #000); border-color: var(--accent);">
+    <div class="card" style="background: linear-gradient(45deg, #1a1a1a, #000); border-color: var(--accent); text-align: center;">
         <h2 style="margin: 0; font-family: 'Orbitron'; color: var(--accent);">PULSE PRAY</h2>
         <p style="opacity: 0.7;">رَفِيقُكَ فِي طَرِيقِ الذِّكْرِ</p>
     </div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px;">
-        <div class="card" onclick="startTasbih('wood')">
+        <div class="card" onclick="startTasbih('wood')" style="text-align: center; cursor: pointer;">
             <i class="fa-solid fa-circle-nodes" style="font-size: 2rem; color: var(--accent);"></i>
-            <h4>خشبية مصريه ملمس مصري اصيل</h4>
+            <h4>خشبية مصرية ملمس أصيل</h4>
         </div>
-        <div class="card" onclick="startTasbih('digital')">
+        <div class="card" onclick="startTasbih('digital')" style="text-align: center; cursor: pointer;">
             <i class="fa-solid fa-bolt" style="font-size: 2rem; color: var(--accent);"></i>
-            <h4>رقمية الكترونيه </h4>
+            <h4>رقمية إلكترونية</h4>
         </div>
     </div>
 </div>
 
 <div id="tasbih" class="page">
-    <div class="dhikr-tabs" id="dhikrTabs"></div>
-    
+    <div class="dhikr-tabs" id="dhikrTabs" style="display: flex; gap: 10px; overflow-x: auto; width: 100%; padding: 10px 0;"></div>
     <div id="sessionCount">0</div>
-
     <div class="wood-container" id="woodView">
         <div id="woodEngine"></div>
     </div>
-
     <div class="digital-device" id="digitalView" style="display:none">
         <div class="lcd-screen" id="lcd">0000</div>
         <div class="btn-trigger" onclick="countAction()"></div>
     </div>
-
     <div style="display:flex; gap:10px; margin-top: 20px;">
         <button class="icon-btn" onclick="resetSession()"><i class="fa-solid fa-rotate-left"></i></button>
         <button class="icon-btn" onclick="toggleTasbihMode()"><i class="fa-solid fa-arrows-rotate"></i></button>
@@ -259,7 +271,6 @@
 </footer>
 
 <script>
-    // Configuration & State
     const ADHKAR = ["سبحان الله", "الحمد لله", "الله أكبر", "لا إله إلا الله", "أستغفر الله", "صلِ على محمد"];
     let state = {
         count: 0,
@@ -270,13 +281,11 @@
         name: localStorage.getItem('pp_name') || "ذاكر الله"
     };
 
-    // Initialize
     window.onload = () => {
         setupWoodBeads();
         setupDhikrTabs();
         setupHabitGrid();
         updateUI();
-        
         document.getElementById('nameInp').value = state.name;
         document.getElementById('nameInp').addEventListener('input', (e) => {
             state.name = e.target.value;
@@ -285,9 +294,21 @@
         });
     };
 
+    function toggleSidebar(show) {
+        document.getElementById('sidebar').classList.toggle('active', show);
+        document.getElementById('overlay').classList.toggle('active', show);
+    }
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        const pageNames = { 'home': 'الرئيسية', 'tasbih': 'المسبحة', 'ramadan': 'متبع العادات', 'zakat': 'الزكاة' };
+        document.getElementById('activePageName').innerText = pageNames[id] || id;
+        toggleSidebar(false);
+    }
+
     function setupWoodBeads() {
         const engine = document.getElementById('woodEngine');
-        engine.innerHTML = '';
         for (let i = 0; i < 12; i++) {
             const bead = document.createElement('div');
             bead.className = 'bead';
@@ -301,12 +322,16 @@
         const container = document.getElementById('dhikrTabs');
         ADHKAR.forEach((text, i) => {
             const tab = document.createElement('div');
-            tab.className = `tab ${i === 0 ? 'active' : ''}`;
+            tab.style.cssText = "padding:8px 20px; background:var(--surface); border-radius:50px; white-space:nowrap; border:1px solid var(--glass-border); font-size:0.9rem; cursor:pointer;";
+            if(i===0) tab.style.background = "var(--accent)", tab.style.color="#000";
             tab.innerText = text;
             tab.onclick = () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                vibrate(30);
+                Array.from(container.children).forEach(t => {
+                    t.style.background = "var(--surface)";
+                    t.style.color = "var(--text-main)";
+                });
+                tab.style.background = "var(--accent)";
+                tab.style.color = "#000";
             };
             container.appendChild(tab);
         });
@@ -315,16 +340,12 @@
     function countAction() {
         state.count++;
         state.grandTotal++;
-        
-        // Haptic & Sound logic
-        vibrate(state.count % 33 === 0 ? 150 : 40);
-        
+        if (navigator.vibrate) navigator.vibrate(state.count % 33 === 0 ? 150 : 40);
         if (state.mode === 'wood') {
             state.angle -= 30;
             document.getElementById('woodEngine').style.transform = `rotateX(${state.angle}deg)`;
         }
-
-        saveData();
+        localStorage.setItem('pp_grand', state.grandTotal);
         updateUI();
     }
 
@@ -333,17 +354,6 @@
         document.getElementById('lcd').innerText = state.count.toString().padStart(4, '0');
         document.getElementById('grandTotal').innerText = state.grandTotal.toLocaleString();
         document.getElementById('userGreeting').innerText = `يا ${state.name}`;
-    }
-
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.getElementById('activePageName').innerText = id;
-        toggleSidebar(false);
-    }
-
-    function toggleSidebar(show) {
-        document.getElementById('sidebar').classList.toggle('active', show);
     }
 
     function startTasbih(mode) {
@@ -358,10 +368,7 @@
     }
 
     function resetSession() {
-        if(confirm("تصفير العداد الحالي؟")) {
-            state.count = 0;
-            updateUI();
-        }
+        if(confirm("تصفير العداد؟")) { state.count = 0; updateUI(); }
     }
 
     function setupHabitGrid() {
@@ -372,12 +379,8 @@
             day.className = `day-box ${state.habits.includes(i) ? 'completed' : ''}`;
             day.innerText = i;
             day.onclick = () => {
-                if (state.habits.includes(i)) {
-                    state.habits = state.habits.filter(d => d !== i);
-                } else {
-                    state.habits.push(i);
-                    vibrate(70);
-                }
+                if (state.habits.includes(i)) state.habits = state.habits.filter(d => d !== i);
+                else state.habits.push(i);
                 localStorage.setItem('pp_habits', JSON.stringify(state.habits));
                 setupHabitGrid();
             };
@@ -391,18 +394,8 @@
     }
 
     function toggleTheme() {
-        const current = document.body.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
+        const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.body.setAttribute('data-theme', next);
-        document.querySelector('.fa-moon').className = next === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-    }
-
-    function saveData() {
-        localStorage.setItem('pp_grand', state.grandTotal);
-    }
-
-    function vibrate(ms) {
-        if (navigator.vibrate) navigator.vibrate(ms);
     }
 </script>
 </body>
