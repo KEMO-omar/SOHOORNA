@@ -37,6 +37,32 @@
             display: flex;
         }
 
+        /* زر فتح القائمة الجديد */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1002;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .menu-toggle:hover {
+            background: var(--gold);
+            color: #000;
+        }
+
         /* القائمة الجانبية */
         .sidebar {
             width: var(--sidebar-width);
@@ -49,6 +75,7 @@
             right: 0; top: 0;
             overflow-y: auto;
             z-index: 1001;
+            transition: transform 0.5s ease;
         }
 
         .sidebar-item {
@@ -72,13 +99,19 @@
             margin-right: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
             min-height: 100vh;
+            transition: margin 0.5s ease, width 0.5s ease;
         }
 
+        /* تحسينات الشاشات الصغيرة والتفاعلية */
         @media (max-width: 992px) {
-            .sidebar { transform: translateX(100%); transition: 0.5s; }
+            .sidebar { transform: translateX(100%); }
             .sidebar.active { transform: translateX(0); }
             .main-content { margin-right: 0; width: 100%; }
         }
+
+        /* لإخفاء القائمة في الشاشات الكبيرة إذا أردت (اختياري) */
+        body.sidebar-closed .sidebar { transform: translateX(100%); }
+        body.sidebar-closed .main-content { margin-right: 0; width: 100%; }
 
         .bg-glow {
             position: fixed;
@@ -221,7 +254,11 @@
 </head>
 <body data-theme="dark">
 
-    <nav class="sidebar">
+    <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <nav class="sidebar" id="mainSidebar">
         <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border); margin-bottom: 20px;">
             <h2 style="font-family: 'Amiri'; color: var(--gold);">فهرس النور</h2>
         </div>
@@ -244,7 +281,7 @@
         <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
     </nav>
 
-    <main class="main-content">
+    <main class="main-content" id="mainContent">
         <div class="bg-glow"></div>
         <div class="container">
             <header>
@@ -304,6 +341,18 @@
             "رتل وارتقِ كما كنت ترتل في الدنيا",
             "القرآن يشفع لأصحابه يوم القيامة"
         ];
+
+        // دالة التحكم في القائمة
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mainSidebar');
+            const isMobile = window.innerWidth <= 992;
+            
+            if (isMobile) {
+                sidebar.classList.toggle('active');
+            } else {
+                document.body.classList.toggle('sidebar-closed');
+            }
+        }
 
         function save() {
             localStorage.setItem('ramadan_ultra_v1', JSON.stringify(state));
