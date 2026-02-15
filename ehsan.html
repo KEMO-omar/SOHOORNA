@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 يوم إحسان | تجربة النيون الذهبي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;700&family=Tajawal:wght@300;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --gold: #ffdf00;
+            --neon-glow: 0 0 20px rgba(255, 223, 0, 0.6), 0 0 40px rgba(255, 223, 0, 0.2);
+            --dark-base: #080808;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --sidebar-width: 280px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        [data-theme="light"] {
+            --dark-base: #f9f6f0;
+            --gold: #b8860b;
+            --glass-bg: rgba(0, 0, 0, 0.02);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--dark-base);
+            color: #fff;
+            font-family: 'Tajawal', sans-serif;
+            transition: var(--transition);
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        body[data-theme="light"] { color: #2c2410; }
+
+        /* القائمة الجانبية الملكية */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 223, 0, 0.3);
+            padding: 30px 15px;
+            position: fixed;
+            right: 0; top: 0;
+            overflow-y: auto;
+            z-index: 2000;
+            transition: transform 0.3s ease;
+        }
+
+        body[data-theme="light"] .sidebar { background: #f9f6f0; }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        body[data-theme="light"] .sidebar-item { color: #2c2410; }
+
+        .sidebar-item i { color: var(--gold); width: 20px; text-align: center; }
+        .sidebar-item:hover { background: rgba(255, 223, 0, 0.2); transform: translateX(-5px); }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            margin-right: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-right: 0; width: 100%; }
+        }
+
+        .menu-toggle {
+            display: none; position: fixed; top: 20px; right: 20px; z-index: 3000;
+            background: var(--gold); color: #000; border: none; padding: 10px 15px;
+            border-radius: 8px; cursor: pointer; font-size: 1.2rem;
+        }
+        @media (max-width: 992px) { .menu-toggle { display: block; } }
+
+        /* تصميم الهيدر والتحدي */
+        header { text-align: center; padding: 60px 20px; }
+        h1 {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 3.5rem;
+            background: linear-gradient(to bottom, #fff 30%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(255, 223, 0, 0.4));
+            margin: 0;
+        }
+
+        .progress-wrapper { max-width: 600px; margin: 40px auto; }
+        .progress-bar-bg { background: rgba(255, 255, 255, 0.05); height: 6px; border-radius: 10px; border: 1px solid rgba(255, 223, 0, 0.1); }
+        #progress-fill { height: 100%; width: 0%; background: var(--gold); box-shadow: var(--neon-glow); border-radius: 10px; transition: width 1s ease; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 25px; max-width: 1100px; margin: 0 auto; }
+        .card { height: 220px; perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card.open .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255, 223, 0, 0.2); }
+        .card-front { background: var(--glass-bg); backdrop-filter: blur(10px); color: var(--gold); }
+        .card-back { background: linear-gradient(135deg, #1a1500 0%, #000 100%); transform: rotateY(180deg); padding: 20px; text-align: center; border: 1px solid var(--gold); }
+
+        .action-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 30px; cursor: pointer; transition: 0.3s; }
+        .action-btn:hover { background: var(--gold); color: #000; box-shadow: var(--neon-glow); }
+
+        /* عناصر التحكم العائمة */
+        .floating-controls { position: fixed; bottom: 30px; left: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
+        .float-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; color: #000; font-size: 1.5rem; transition: 0.3s; box-shadow: 0 10px 25px rgba(255,223,0,0.3); }
+
+        footer { text-align: center; padding: 40px; opacity: 0.6; }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+
+    <nav class="sidebar" id="sidebar">
+        <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid var(--gold); margin-bottom: 20px;">
+            <h2 style="font-family: 'Reem Kufi'; color: var(--gold);">فهرس النور</h2>
+        </div>
+        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
+        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
+        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
+        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> المسبحة الإلكترونية</a>
+        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> حاسبة الزكاة</a>
+        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
+        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الدينية</a>
+        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> وصفات الفطور</a>
+        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> نصائح السحور</a>
+        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
+        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
+        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
+        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
+        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> ركن الأطفال</a>
+        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
+    </nav>
+
+    <div class="main-content">
+        <header>
+            <div style="font-size: 3rem; margin-bottom: 10px;">✨</div>
+            <h1>تحدي الإحسان</h1>
+            <p class="subtitle">30 يوماً لترك أثر جميل في هذا العالم</p>
+            <div class="progress-wrapper">
+                <div id="stats-label" style="margin-bottom: 10px; font-weight: bold; color: var(--gold);">0% من الرحلة اكتمل</div>
+                <div class="progress-bar-bg"><div id="progress-fill"></div></div>
+            </div>
+        </header>
+
+        <div class="grid" id="main-grid"></div>
+
+        <footer>
+            تم التصميم بكل حب | 2026
+        </footer>
+    </div>
+
+    <div class="floating-controls">
+        <button class="float-btn" onclick="shareSite()" title="مشاركة الموقع" style="background:#fff;"><i class="fa-solid fa-share-nodes"></i></button>
+        <button class="float-btn" onclick="toggleTheme()" id="themeToggle">☀️</button>
+    </div>
+
+    <script>
+        const tasks = [
+            "إطعام قطة أو طائر في طريقك", "رسالة شكر مفاجئة لصديق قديم", "صدقة خفية بمبلغ بسيط جداً",
+            "ابتسم في وجه أول 5 أشخاص تقابلهم", "رتّب مكاناً عاماً (مسجد، حديقة، مكتب)", "سقيا ماء لعامل في الحر",
+            "اتصال هاتفي بوالديك أو أقاربك", "الدعاء لـ 10 أشخاص تعرفهم بالخير", "صناعة معروف لشخص لا تحبه",
+            "ترك رسالة إيجابية داخل كتاب أو على مكتب", "التبرع بقطعة ملابس تحبها", "إخلاء الطريق أو تنظيفه من الأذى",
+            "مدح ميزة حقيقية في زميل عمل", "مشاركة وجبة إفطار مع شخص محتاج", "تعليم طفل صفة حميدة أو مهارة",
+            "كف لسانك عن أي انتقاد طوال اليوم", "تقبيل يد أو رأس من تحب تقديراً", "تقديم هدية بسيطة (وردة/حلوى) لعابر",
+            "مساعدة كبار السن في حمل أغراضهم", "نشر محتوى هادف أو نصيحة مفيدة", "الاستماع بإنصات لشخص مهموم",
+            "التنازل عن رأيك في نقاش لتجنب الخلاف", "صنع كوب قهوة أو شاي لشخص متعب", "الدعاء لمن ظلمك بالهداية",
+            "توفير مياه لحيوانات الشارع بوعاء نظيف", "كتابة قائمة بـ 20 نعمة في حياتك", "التبكير في موعد أو عمل لراحة غيرك",
+            "إطعام مسكين أو التبرع لجمعية خيرية", "قضاء اليوم بقلب سليم (لا غل ولا حقد)", "كتابة رسالة لنفسك عن إنجازاتك"
+        ];
+
+        let completed = JSON.parse(localStorage.getItem('ihsan_pro_v3')) || [];
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('themeToggle').innerText = isDark ? '🌙' : '☀️';
+        }
+
+        function shareSite() {
+            if (navigator.share) {
+                navigator.share({ title: 'تحدي الإحسان', url: window.location.href });
+            } else {
+                alert("رابط الموقع: " + window.location.href);
+            }
+        }
+
+        function updateUI() {
+            const progress = (completed.length / 30) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('stats-label').innerText = `${Math.round(progress)}% من الرحلة اكتمل - (${completed.length} من 30)`;
+        }
+
+        function createGrid() {
+            const grid = document.getElementById('main-grid');
+            grid.innerHTML = '';
+            tasks.forEach((task, i) => {
+                const day = i + 1;
+                const isDone = completed.includes(day);
+                const card = document.createElement('div');
+                card.className = `card ${isDone ? 'open' : ''}`;
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front"><span>المهمة</span><h2>${day}</h2></div>
+                        <div class="card-back">
+                            <p>${task}</p>
+                            ${isDone ? '<div style="font-size:2rem">✅</div>' : `<button class="action-btn" onclick="completeTask(event, ${day})">تم الإحسان</button>`}
+                        </div>
+                    </div>`;
+                card.onclick = () => card.classList.toggle('open');
+                grid.appendChild(card);
+            });
+        }
+
+        window.completeTask = (e, day) => {
+            e.stopPropagation();
+            if(!completed.includes(day)) {
+                completed.push(day);
+                localStorage.setItem('ihsan_pro_v3', JSON.stringify(completed));
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#ffdf00', '#ffffff'] });
+                setTimeout(() => { createGrid(); updateUI(); }, 400);
+            }
+        };
+
+        createGrid();
+        updateUI();
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="stats.js"></script>
+</body>
+</html>
+
