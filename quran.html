@@ -193,10 +193,6 @@
 
 <button id="btn-up" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i></button>
 
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-<script src="stats.js"></script>
-
 <script>
     const content = document.getElementById('main-content');
     const player = document.getElementById('main-player');
@@ -292,6 +288,8 @@
         // روابط Quran.com المستقرة
         player.src = `https://download.quranicaudio.com/qdc/misbahi/128/${num}.mp3`;
         
+        // تعديل الرابط بناءً على القارئ (هنا كمثال نستخدم سيرفر ثابت، وللقراء المختلفين نحتاج معرفاتهم من API)
+        // للحفاظ على البساطة والعمل بنسبة 100%:
         const audioUrl = `https://api.quran.com/api/v4/chapter_recitations/${reciterId}/${num}`;
         
         fetch(audioUrl)
@@ -372,6 +370,8 @@
 
     loadQuran();
 </script>
-
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="stats.js"></script>
 </body>
 </html>
