@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سحورنا | المكتبة الرمضانية الكبرى</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa&family=Cairo:wght@400;700;900&family=Reem+Kufi:wght@400;700&family=Scheherazade+New:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa&family=Cairo:wght@400;700;900&family=Reem+Kufi:wght@400;700&family=Scheherazade+New:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    
+    <style>
+        :root {
+            --bg: #050505; --card-bg: #121212; --neon: #ffcc00; --text: #ffffff;
+            --glow: 0 0 15px #ffcc00; --overlay-bg: rgba(0,0,0,0.95);
+            --main-font: 'Cairo', sans-serif;
+        }
+
+        body.light-mode {
+            --bg: #f0f0f0; --card-bg: #ffffff; --neon: #b8860b; --text: #222;
+            --glow: 0 4px 10px rgba(0,0,0,0.1); --overlay-bg: rgba(255,255,255,0.95);
+        }
+
+        body.sepia-mode {
+            --bg: #f4ecd8; --card-bg: #fdf6e3; --neon: #d3a13b; --text: #5b4636;
+            --glow: 0 4px 10px rgba(91, 70, 54, 0.1); --overlay-bg: rgba(244, 236, 216, 0.95);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        body {
+            font-family: var(--main-font); background-color: var(--bg);
+            color: var(--text); overflow-x: hidden; display: flex;
+        }
+
+        /* القائمة الجانبية */
+        .sidebar {
+            width: 250px; background: var(--card-bg); height: 100vh;
+            position: fixed; right: 0; top: 0; border-left: 2px solid var(--neon);
+            display: flex; flex-direction: column; padding: 20px 0; z-index: 1500;
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            padding: 12px 20px; color: var(--text); text-decoration: none;
+            display: flex; align-items: center; gap: 15px; font-size: 0.95rem;
+            border-bottom: 1px solid rgba(255, 204, 0, 0.1);
+        }
+
+        .sidebar-item i { color: var(--neon); width: 20px; text-align: center; }
+        .sidebar-item:hover { background: rgba(255, 204, 0, 0.1); color: var(--neon); }
+
+        .main-content { margin-right: 250px; width: calc(100% - 250px); flex-grow: 1; }
+
+        header {
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: var(--card-bg);
+            border-bottom: 3px solid var(--neon); box-shadow: var(--glow); z-index: 1000;
+        }
+
+        .logo { font-size: 1.8rem; font-weight: 900; color: var(--neon); text-shadow: var(--glow); }
+
+        .theme-switcher { display: flex; gap: 10px; }
+        .t-btn {
+            border: none; padding: 10px; border-radius: 50%; width: 45px; height: 45px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; box-shadow: var(--glow); background: var(--card-bg); color: var(--neon); border: 1px solid var(--neon);
+        }
+
+        .font-switcher { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+        .f-btn {
+            border: 1px solid var(--neon); padding: 5px 10px; border-radius: 5px;
+            cursor: pointer; font-size: 0.8rem; color: var(--text); background: transparent;
+            font-weight: bold; transition: 0.2s;
+        }
+        .f-btn:hover { background: var(--neon); color: var(--bg); }
+        .f-btn.active { background: var(--neon); color: var(--bg); box-shadow: 0 0 10px var(--neon); transform: scale(1.05); }
+
+        .container {
+            max-width: 1200px; margin: 40px auto; padding: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;
+            content-visibility: auto;
+        }
+
+        .card {
+            background: var(--card-bg); border: 1px solid rgba(255, 204, 0, 0.2);
+            border-radius: 15px; padding: 20px; text-align: center; position: relative;
+            contain: layout; will-change: transform;
+        }
+
+        .card:hover { transform: translateY(-10px); border-color: var(--neon); box-shadow: var(--glow); }
+
+        .card h3 { color: var(--neon); margin-bottom: 10px; }
+        .card p { font-size: 0.9rem; color: var(--text); opacity: 0.8; height: 50px; overflow: hidden; }
+
+        .open-btn {
+            margin-top: 15px; background: var(--neon); color: #000;
+            border: none; padding: 10px 20px; border-radius: 8px;
+            font-weight: bold; cursor: pointer; width: 100%;
+        }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--overlay-bg); backdrop-filter: blur(15px);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+            width: 90%; max-width: 750px; height: 85vh;
+            border-radius: 30px; border: 2px solid var(--neon);
+            box-shadow: var(--glow); position: relative;
+            display: flex; flex-direction: column; overflow: hidden;
+            transform: scale(0.8); opacity: 0;
+        }
+
+        body.light-mode .modal { background: linear-gradient(to bottom, #fffbf2, #fff); color: #333; }
+        body.sepia-mode .modal { background: linear-gradient(to bottom, #fdf6e3, #f4ecd8); color: #5b4636; }
+
+        .overlay.active { display: flex; }
+        .overlay.active .modal { transform: scale(1); opacity: 1; }
+
+        .modal-header {
+            padding: 20px 30px; border-bottom: 1px solid rgba(255, 204, 0, 0.2);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .modal-body {
+            padding: 30px; overflow-y: auto; flex-grow: 1;
+            font-size: 1.15rem; line-height: 2; text-align: justify;
+            white-space: pre-wrap;
+        }
+
+        .close-btn {
+            background: #ff4444; color: white; border: none;
+            width: 45px; height: 45px; border-radius: 50%;
+            font-size: 1.2rem; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+        }
+
+        .controls { display: flex; gap: 10px; align-items: center; }
+        .c-btn {
+            background: transparent; border: 1px solid var(--neon); color: var(--text);
+            width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .c-btn:hover { background: var(--neon); color: var(--bg); }
+
+        .search-wrapper { display: flex; align-items: center; justify-content: center; margin: 0 15px; }
+        .search-input {
+            padding: 8px 15px; border-radius: 20px; border: 1px solid var(--neon);
+            background: rgba(255,255,255,0.1); color: var(--text); outline: none;
+            width: 220px; text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 70px; }
+            .sidebar-item span { display: none; }
+            .main-content { margin-right: 70px; width: calc(100% - 70px); }
+        }
+
+        @media (max-width: 768px) { 
+            header { flex-direction: column; gap: 15px; }
+            .modal { width: 95%; height: 90vh; }
+            .sidebar { transform: translateX(100%); transition: 0.5s; }
+            .sidebar.active { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body id="body">
+
+    <nav class="sidebar">
+        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> <span>الرئيسية</span></a>
+        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> <span>مواقيت الصلاة</span></a>
+        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> <span>المصحف الشريف</span></a>
+        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> <span>متابعة الختمة</span></a>
+        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> <span>أذكار المسلم</span></a>
+        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> <span>المسبحة الإلكترونية</span></a>
+        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> <span>حاسبة الزكاة</span></a>
+        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> <span>فتاوى الصيام</span></a>
+        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> <span>المكتبة الدينية</span></a>
+        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> <span>وصفات الفطور</span></a>
+        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> <span>نصائح السحور</span></a>
+        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> <span>صحتك في رمضان</span></a>
+        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> <span>متبع العادات</span></a>
+        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> <span>أعمال الخير</span></a>
+        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> <span>جدول المسلسلات</span></a>
+        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> <span>ركن الأطفال</span></a>
+        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> <span>فريق العمل</span></a>
+    </nav>
+
+    <div class="main-content">
+        <header>
+            <div class="logo">سحورنا <i class="fas fa-moon"></i></div>
+            <div class="search-wrapper">
+                <input type="text" class="search-input" placeholder="ابحث عن قصة نبي..." oninput="searchStories(this.value)">
+            </div>
+            <div class="font-switcher">
+                <button class="f-btn active" onclick="setFont('Cairo', this)">أصلي</button>
+                <button class="f-btn" onclick="setFont('Amiri', this)">عثماني</button>
+                <button class="f-btn" onclick="setFont('Reem Kufi', this)">كوفي</button>
+                <button class="f-btn" onclick="setFont('Tajawal', this)">تجوال</button>
+                <button class="f-btn" onclick="setFont('Aref Ruqaa', this)">رقعة</button>
+                <button class="f-btn" onclick="setFont('Scheherazade New', this)">تراث</button>
+            </div>
+            <div class="theme-switcher">
+                <button class="t-btn" id="themeBtn" onclick="cycleTheme()"><i class="fas fa-moon"></i></button>
+            </div>
+        </header>
+
+        <div class="container" id="storiesGrid"></div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeStory()">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="mTitle" style="color: var(--neon); text-shadow: var(--glow);"></h2>
+                <div class="controls">
+                    <button class="c-btn" onclick="adjustFont(0.1)" title="تكبير الخط"><i class="fas fa-plus"></i></button>
+                    <button class="c-btn" onclick="adjustFont(-0.1)" title="تصغير الخط"><i class="fas fa-minus"></i></button>
+                    <button class="close-btn" onclick="closeStory()"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="modal-body" id="mContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const prophets = [
+            { 
+                n: "محمد ﷺ", 
+                s: "سيد المرسلين وخاتم النبيين ورحمة الله للعالمين.", 
+                c: `ولادة النبي ونسبه
+
+للتعرف على حياة النبي صلى الله عليه وسلم ، نبدأ بمعرفة نسب النبي فهو محمد بن عبد الله بن عبد المطلب بن هاشم بن عبد مناف بن قصي بن كلاب بن مرة بن كعب بن لؤي بن غالب بن فهر بن مالك بن النضر بن كنانة بن خزيمة بن مدركة بن إلياس بن مضر بن نزار بن معد بن عدنان .
+
+وقد تزوج والد النبي عبد الله من آمنة بنت وهب، وولد النبي - عليه الصلاة والسلام- يوم الاثنين الثاني عشر من شهر ربيع الأول من عام الفيل ، وهو العام الذي توجه فيه أبرهة لهدم الكعبة ، إلا أن العرب تصدت له ، وأخبره عبد المطلب بأن للبيت رب يحميه ، فقدم أبرهة مع الفيلة، فأرسل عليهم الله طيوراً تحمل حجارةً من نارٍ أهلكتهم، وبذلك حمى الله البيت من أي أذى.
+
+وتوفي والده وهو حمل في بطن أمه على الصحيح من أقوال العلماء ، فولد الرسول يتيماً ، قال - تعالى -: (أَلَمْ يَجِدْكَ يَتِيمًا فَآوَى).
+
+هو محمد بن عبد الله بن عبد المطلب بن هاشم بن عبد مناف ، وأمّه آمنة بنت وهب ، ولد في يوم الاثنين من ربيع الأول في عام الفيل .
+
+اسم أم النبي محمد صلى الله عليه وسلم
+
+أم النبي محمد - عليه الصلاة والسلام - هي آمنة بنت وهب بن عبد مناف بن زهرة بن كلاب بن مرة بن كعب بن لؤي بن غالب بن مالك بن النّضر بن كنانة بن خزيمة بن إلياس بن مضر بن نزار بن معد بن عدنان، تعرف بزهرة قريش ، ويضل نسبها إلى إسماعيل ابن إبراهيم -عليهم السلام - وقد كان تمتاز بأنها من أجمل من أجمل وأشرف بنات قريش وابنة أحد ساداته .
+
+نشأة النبي صلى الله عليه وسلم ورضاعته
+
+رضع النبي محمد -عليه الصلاة والسلام- من حليمة السعدية بعد أن قدمت إلى قريش تلتمس أي من الرضعاء ، وكان لها ابناً رضيعاً لا تجد ما يسد جوعه ، ذلك بعد أن رفضت نساء بن سعد إرضاع النبي - عليه السلام - بسبب فقده لوالده ؛ ظناً منهن أن لا تعود عليهن رضاعته بالخير والأجر، وبسبب ذلك نالت حليمة السعدية بركة في حياتها وخيراً عظيماً لم تر مثله قط .
+
+ونشأ محمد -عليه السلام- بخلاف غيره من الشباب من حيث القوة والشدة . وعادت به إلى أمه بعد أن بلغ العامين من عمره واستأذنتها ببقاء محمد عندها خوفاً عليه من الأمراض في مكة ، وعاد معها بالفعل ، وفي أحد الأيام أتاه رجلان ذوي ثياب بيضاء شقّا بطنه واستخرجا علقةً سوداء منه ، فكانت حادثة شق الصدر، الأمر الذي دفع حليمة أن تعيده لأمه خوفًا عليه ، وبعد أن عاد لأمه لم تعش طويلًا فتوفيت وهو ابن ست سنوات، وكانت وفاتها في منطقة الأبواء، فكفله جده عبد المطلب الذي توفي هو الآخر والنّبي -صلى الله عليه وسلم- في عمر الثامنة، وانتقل بعدها للعيش في كفالة عمه أبو طالب، الذي كفله وعامله كما يعامل أبناءه ، عمل النّبي في الرّعي والتّجارة في شبابه برفقة عمّه أبو طالب .` 
+            },
+            { 
+                n: "آدم عليه السلام", 
+                s: "أول الأنبياء وأبو البشر الذي خلقه الله بيده.", 
+                c: `ملخص خلق آدم عليه السلام
+
+أخبر الله تعالى ملائكته على سبيل التنويه بخلق آدم وذريته، فذكروا ما كان من إفساد من قبلهم وسفك للدماء، فأخبرهم سبحانه أنه يعلم ما لا يعلمون، ثم خلق آدم بيده من طين لازب، ثم صار صلصالا كالفخار، وصوره أحسن صورة، ونفخ فيه من روحه، فصار بشرا سويا.
+
+ثم علم الله آدم الأسماء كلها، وعرضهم على الملائكة، فاعترفوا بعجزهم، فأخبرهم آدم بالأسماء، فظهر فضل آدم عليهم، وأمرهم الله بالسجود له سجود تحية وتكريم، فسجدوا إلا إبليس أبى واستكبر، فلعنه الله وطرده من رحمته.
+
+وأسكن الله آدم وزوجته الجنة، وأباح لهما الأكل من كل ثمارها إلا شجرة واحدة، فوسوس لهما الشيطان فأكلا منها، فبدت لهما سوآتهما، فأهبطهما الله إلى الأرض ليعمراها بعبادته وطاعته، وتاب الله عليهما، ووعدهما بالهدى، فكان آدم أول الأنبياء والرسل.` 
+            },
+            { 
+                n: "إبراهيم عليه السلام", 
+                s: "خليل الله وأبو الأنبياء الذي حطم الأصنام.", 
+                c: `نبي الله إبراهيم عليه السلام
+
+آتاه الله رشده في صغره ، وابتعثه رسولا ، واتخذه خليلا في كبره . قال تعالى : {ولقد آتينا إبراهيم رشده من قبل وكنا به عالمين} [الأنبياء: 51] . أي كان أهلا لذلك .
+
+دعا إبراهيم أباه وقومه لترك عبادة الأصنام، فحطم أصنامهم ليثبت لهم عجزها، فغضبوا وألقوه في نار عظيمة، فأمر الله النار أن تكون برداً وسلاماً عليه. هاجر إبراهيم إلى بلاد الشام ومصر، ورزقه الله بإسماعيل وإسحاق، وبنى مع ابنه إسماعيل الكعبة المشرفة في مكة المكرمة.` 
+            },
+            { 
+                n: "يوسف عليه السلام", 
+                s: "النبي الصديق صاحب الرؤيا والجمال الباهر.", 
+                c: `قصة يوسف عليه السلام
+
+بدأت رؤيا يوسف بسجود أحد عشر كوكباً والشمس والقمر له، فحقد عليه إخوته وألقوه في الجب. وجدته قافلة وباعوه في مصر، فتربى في بيت العزيز. واجه فتنة امرأة العزيز فصبر واختار السجن على المعصية.
+
+اشتهر بتأويل الرؤى، فأول رؤيا الملك عن سنوات القحط، فخرج من السجن وأصبح وزيراً لخزائن مصر. وفي سنوات القحط جاءه إخوته يطلبون الميرة فعرفهم وهم له منكرون، وفي النهاية اجتمع شمله بأبيه يعقوب وأهله أجمعين.` 
+            },
+            { 
+                n: "موسى عليه السلام", 
+                s: "كليم الله الذي واجه فرعون بمعجزات باهرة.", 
+                c: `نبي الله موسى عليه السلام
+
+ولد في مصر في عام قتل الأبناء، فألقته أمه في اليم بأمر الله، فالتقطه آل فرعون. نشأ في قصر فرعون، ثم خرج إلى مدين وتزوج هناك. ناداه الله عند جبل الطور وأرسله إلى فرعون بالمعجزات (العصا واليد).
+
+دعا فرعون للتوحيد وتحرير بني إسرائيل، فرفض فرعون وغرق وجيشه في البحر بعد أن شقه الله لموسى. نزل عليه التوراة في سيناء، وقاد بني إسرائيل في التيه حتى وفاته.` 
+            },
+            { 
+                n: "سليمان عليه السلام", 
+                s: "الملك النبي الذي سخر الله له الجن والريح.", 
+                c: `قصة سليمان عليه السلام
+
+ورث النبوة والملك عن أبيه داود، وآتاه الله ملكاً لم يؤته لأحد من بعده. سخر الله له الريح تجري بأمره، وعلمه منطق الطير، وسخر له الجن يعملون بين يديه.
+
+قصته مع الهدهد وملكة سبأ (بلقيس) شهيرة، حيث دعاها للإسلام فجاءت مستسلمة لله رب العالمين. كان يحكم بالعدل والحكمة، وبنى بيت المقدس، وتوفي وهو متكئ على عصاه.` 
+            },
+            { 
+                n: "داود عليه السلام", 
+                s: "صاحب الزبور الذي كان يسبح معه الجبال والطير.", 
+                c: `نبي الله داود عليه السلام
+
+كان جندياً في جيش طالوت وقتل جالوت الجبار، فآتاه الله الملك والنبوة. أنزل الله عليه الزبور، وألان له الحديد يصنع منه الدروع. كان يمتاز بصوت جميل في التسبيح، فكانت الجبال والطير تسبح معه.
+
+كان يشتهر بعبادته العظيمة، فكان يصوم يوماً ويفطر يوماً، ويقوم نصف الليل وينام ثلثه ويقوم سدسه. وهو أول من جمع الله له بين الملك والنبوة في بني إسرائيل.` 
+            },
+            { 
+                n: "هود عليه السلام", 
+                s: "نبي عاد الذين بنوا إرم ذات العماد.", 
+                c: `قصة هود عليه السلام
+
+أرسله الله إلى قوم عاد في الأحقاف، وكانوا قوماً أقوياء بنوا قصوراً شامخة (إرم ذات العماد). دعاهم لتوحيد الله وترك عبادة الأصنام والشكر على النعم، فكذبوه واستكبروا.
+
+أرسل الله عليهم ريحاً صرصراً عاتية دمرتهم وأبقت مساكنهم عبرة، ونجى الله هوداً والذين آمنوا معه برحمته.` 
+            }
+        ];
+
+        function renderStories(data) {
+            const grid = document.getElementById('storiesGrid');
+            grid.innerHTML = data.map((p, i) => `
+                <div class="card">
+                    <h3>${p.n}</h3>
+                    <p>${p.s}</p>
+                    <button class="open-btn" onclick="openStory(${i})">اقرأ القصة كاملة</button>
+                </div>
+            `).join('');
+        }
+
+        function openStory(index) {
+            const p = prophets[index];
+            document.getElementById('mTitle').innerText = p.n;
+            document.getElementById('mContent').innerText = p.c;
+            document.getElementById('overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeStory() {
+            document.getElementById('overlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function searchStories(val) {
+            const filtered = prophets.filter(p => p.n.includes(val) || p.s.includes(val));
+            renderStories(filtered);
+        }
+
+        let currentTheme = 'night';
+        function cycleTheme() {
+            const b = document.body;
+            const btnIcon = document.querySelector('#themeBtn i');
+            if (currentTheme === 'night') {
+                currentTheme = 'light';
+                b.className = 'light-mode';
+                btnIcon.className = 'fas fa-sun';
+            } else if (currentTheme === 'light') {
+                currentTheme = 'sepia';
+                b.className = 'sepia-mode';
+                btnIcon.className = 'fas fa-book-open';
+            } else {
+                currentTheme = 'night';
+                b.className = '';
+                btnIcon.className = 'fas fa-moon';
+            }
+        }
+
+        function setFont(font, btn) {
+            document.documentElement.style.setProperty('--main-font', font);
+            document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        let fontSize = 1.15;
+        function adjustFont(delta) {
+            fontSize += delta;
+            if (fontSize < 0.8) fontSize = 0.8;
+            if (fontSize > 3.0) fontSize = 3.0;
+            document.getElementById('mContent').style.fontSize = fontSize + 'rem';
+        }
+
+        renderStories(prophets);
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+</body>
+</html>
