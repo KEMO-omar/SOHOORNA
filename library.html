@@ -8,13 +8,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa&family=Cairo:wght@400;700;900&family=Reem+Kufi:wght@400;700&family=Scheherazade+New:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa&family=Cairo:wght@400;700;900&family=Reem+Kufi:wght@400;700&family=Scheherazade+New:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet"></noscript>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             --bg: #050505; --card-bg: #121212; --neon: #ffcc00; --text: #ffffff;
             --glow: 0 0 15px #ffcc00; --overlay-bg: rgba(0,0,0,0.95);
             --main-font: 'Cairo', sans-serif;
+            --sidebar-width: 280px;
         }
 
         body.light-mode {
@@ -31,95 +32,103 @@
 
         body {
             font-family: var(--main-font); background-color: var(--bg);
-            color: var(--text); overflow-x: hidden; display: flex;
+            color: var(--text); overflow-x: hidden; min-height: 100vh;
         }
 
-        /* القائمة الجانبية */
+        /* القائمة الجانبية المحسنة */
         .sidebar {
-            width: 250px; background: var(--card-bg); height: 100vh;
-            position: fixed; right: 0; top: 0; border-left: 2px solid var(--neon);
-            display: flex; flex-direction: column; padding: 20px 0; z-index: 1500;
-            overflow-y: auto;
+            width: var(--sidebar-width); background: var(--card-bg); height: 100vh;
+            position: fixed; right: calc(-1 * var(--sidebar-width)); top: 0; 
+            border-left: 2px solid var(--neon);
+            display: flex; flex-direction: column; padding: 20px 0; z-index: 2500;
+            overflow-y: auto; box-shadow: -5px 0 15px rgba(0,0,0,0.5);
         }
+
+        .sidebar.active { right: 0; }
 
         .sidebar-item {
-            padding: 12px 20px; color: var(--text); text-decoration: none;
-            display: flex; align-items: center; gap: 15px; font-size: 0.95rem;
-            border-bottom: 1px solid rgba(255, 204, 0, 0.1);
+            padding: 14px 20px; color: var(--text); text-decoration: none;
+            display: flex; align-items: center; gap: 15px; font-size: 1rem;
+            border-bottom: 1px solid rgba(255, 204, 0, 0.05);
         }
 
-        .sidebar-item i { color: var(--neon); width: 20px; text-align: center; }
-        .sidebar-item:hover { background: rgba(255, 204, 0, 0.1); color: var(--neon); }
+        .sidebar-item i { color: var(--neon); width: 25px; text-align: center; }
+        .sidebar-item:hover { background: rgba(255, 204, 0, 0.1); color: var(--neon); padding-right: 30px; }
 
-        .main-content { margin-right: 250px; width: calc(100% - 250px); flex-grow: 1; }
+        /* زر فتح القائمة */
+        .menu-trigger {
+            position: fixed; top: 20px; right: 20px; z-index: 2600;
+            background: var(--neon); color: var(--bg); border: none;
+            width: 45px; height: 45px; border-radius: 10px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; box-shadow: var(--glow);
+        }
 
+        /* المحتوى الرئيسي */
+        .main-content { width: 100%; transition: 0.5s; }
+        
         header {
-            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 80px 20px 5%; display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; background: var(--card-bg);
             border-bottom: 3px solid var(--neon); box-shadow: var(--glow); z-index: 1000;
+            flex-wrap: wrap; gap: 15px;
         }
 
         .logo { font-size: 1.8rem; font-weight: 900; color: var(--neon); text-shadow: var(--glow); }
 
-        .theme-switcher { display: flex; gap: 10px; }
-        .t-btn {
-            border: none; padding: 10px; border-radius: 50%; width: 45px; height: 45px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; box-shadow: var(--glow); background: var(--card-bg); color: var(--neon); border: 1px solid var(--neon);
+        .search-wrapper { flex: 1; max-width: 300px; display: flex; align-items: center; }
+        .search-input {
+            width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--neon);
+            background: rgba(255,255,255,0.05); color: var(--text); outline: none; text-align: center;
         }
 
         .font-switcher { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
         .f-btn {
             border: 1px solid var(--neon); padding: 5px 10px; border-radius: 5px;
             cursor: pointer; font-size: 0.8rem; color: var(--text); background: transparent;
-            font-weight: bold; transition: 0.2s;
+            font-weight: bold;
         }
-        .f-btn:hover { background: var(--neon); color: var(--bg); }
-        .f-btn.active { background: var(--neon); color: var(--bg); box-shadow: 0 0 10px var(--neon); transform: scale(1.05); }
+        .f-btn.active { background: var(--neon); color: var(--bg); box-shadow: 0 0 10px var(--neon); }
+
+        .t-btn {
+            border: 1px solid var(--neon); width: 45px; height: 45px; border-radius: 50%;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; background: var(--card-bg); color: var(--neon);
+        }
 
         .container {
             max-width: 1200px; margin: 40px auto; padding: 20px;
             display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;
-            content-visibility: auto;
         }
 
         .card {
             background: var(--card-bg); border: 1px solid rgba(255, 204, 0, 0.2);
-            border-radius: 15px; padding: 20px; text-align: center; position: relative;
-            contain: layout; will-change: transform;
+            border-radius: 20px; padding: 25px; text-align: center; position: relative;
         }
 
         .card:hover { transform: translateY(-10px); border-color: var(--neon); box-shadow: var(--glow); }
-
-        .card h3 { color: var(--neon); margin-bottom: 10px; }
-        .card p { font-size: 0.9rem; color: var(--text); opacity: 0.8; height: 50px; overflow: hidden; }
+        .card h3 { color: var(--neon); margin-bottom: 15px; font-size: 1.4rem; }
+        .card p { font-size: 0.95rem; opacity: 0.8; height: 60px; overflow: hidden; line-height: 1.5; }
 
         .open-btn {
-            margin-top: 15px; background: var(--neon); color: #000;
-            border: none; padding: 10px 20px; border-radius: 8px;
-            font-weight: bold; cursor: pointer; width: 100%;
+            margin-top: 20px; background: var(--neon); color: #000;
+            border: none; padding: 12px; border-radius: 10px;
+            font-weight: 900; cursor: pointer; width: 100%;
         }
 
+        /* المودال ونظام العرض */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg); backdrop-filter: blur(15px);
-            display: none; justify-content: center; align-items: center; z-index: 2000;
+            display: none; justify-content: center; align-items: center; z-index: 3000;
         }
+        .overlay.active { display: flex; }
 
         .modal {
-            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
-            width: 90%; max-width: 750px; height: 85vh;
+            background: var(--card-bg); width: 95%; max-width: 800px; height: 85vh;
             border-radius: 30px; border: 2px solid var(--neon);
-            box-shadow: var(--glow); position: relative;
-            display: flex; flex-direction: column; overflow: hidden;
-            transform: scale(0.8); opacity: 0;
+            box-shadow: var(--glow); display: flex; flex-direction: column; overflow: hidden;
         }
-
-        body.light-mode .modal { background: linear-gradient(to bottom, #fffbf2, #fff); color: #333; }
-        body.sepia-mode .modal { background: linear-gradient(to bottom, #fdf6e3, #f4ecd8); color: #5b4636; }
-
-        .overlay.active { display: flex; }
-        .overlay.active .modal { transform: scale(1); opacity: 1; }
 
         .modal-header {
             padding: 20px 30px; border-bottom: 1px solid rgba(255, 204, 0, 0.2);
@@ -127,67 +136,53 @@
         }
 
         .modal-body {
-            padding: 30px; overflow-y: auto; flex-grow: 1;
-            font-size: 1.15rem; line-height: 2; text-align: justify;
-            white-space: pre-wrap;
+            padding: 35px; overflow-y: auto; flex-grow: 1;
+            font-size: 1.25rem; line-height: 2.2; text-align: justify;
+            white-space: pre-wrap; color: var(--text);
         }
 
-        .close-btn {
-            background: #ff4444; color: white; border: none;
-            width: 45px; height: 45px; border-radius: 50%;
-            font-size: 1.2rem; cursor: pointer; display: flex;
-            align-items: center; justify-content: center;
-        }
+        .close-btn { background: #ff4444; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
 
-        .controls { display: flex; gap: 10px; align-items: center; }
-        .c-btn {
-            background: transparent; border: 1px solid var(--neon); color: var(--text);
-            width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        /* غطاء عند فتح القائمة */
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 2000; display: none;
         }
-        .c-btn:hover { background: var(--neon); color: var(--bg); }
+        .sidebar-overlay.active { display: block; }
 
-        .search-wrapper { display: flex; align-items: center; justify-content: center; margin: 0 15px; }
-        .search-input {
-            padding: 8px 15px; border-radius: 20px; border: 1px solid var(--neon);
-            background: rgba(255,255,255,0.1); color: var(--text); outline: none;
-            width: 220px; text-align: center;
-        }
-
-        @media (max-width: 1024px) {
-            .sidebar { width: 70px; }
-            .sidebar-item span { display: none; }
-            .main-content { margin-right: 70px; width: calc(100% - 70px); }
-        }
-
-        @media (max-width: 768px) { 
-            header { flex-direction: column; gap: 15px; }
-            .modal { width: 95%; height: 90vh; }
-            .sidebar { transform: translateX(100%); transition: 0.5s; }
-            .sidebar.active { transform: translateX(0); }
+        @media (max-width: 768px) {
+            header { padding: 80px 20px 20px; flex-direction: column; }
+            .modal { width: 98%; height: 90vh; }
+            .logo { font-size: 1.5rem; }
         }
     </style>
 </head>
-<body id="body">
+<body>
 
-    <nav class="sidebar">
-        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> <span>الرئيسية</span></a>
-        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> <span>مواقيت الصلاة</span></a>
-        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> <span>المصحف الشريف</span></a>
-        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> <span>متابعة الختمة</span></a>
-        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> <span>أذكار المسلم</span></a>
-        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> <span>المسبحة الإلكترونية</span></a>
-        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> <span>حاسبة الزكاة</span></a>
-        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> <span>فتاوى الصيام</span></a>
-        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> <span>المكتبة الدينية</span></a>
-        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> <span>وصفات الفطور</span></a>
-        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> <span>نصائح السحور</span></a>
-        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> <span>صحتك في رمضان</span></a>
-        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> <span>متبع العادات</span></a>
-        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> <span>أعمال الخير</span></a>
-        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> <span>جدول المسلسلات</span></a>
-        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> <span>ركن الأطفال</span></a>
-        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> <span>فريق العمل</span></a>
+    <button class="menu-trigger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div style="padding: 20px; text-align: center; border-bottom: 2px solid var(--neon); margin-bottom: 10px;">
+            <h2 style="color: var(--neon);">سحورنا</h2>
+        </div>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-house"></i> <span>الرئيسية</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-clock"></i> <span>مواقيت الصلاة</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> <span>المصحف الشريف</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> <span>متابعة الختمة</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> <span>أذكار المسلم</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> <span>المسبحة الإلكترونية</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-coins"></i> <span>حاسبة الزكاة</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> <span>فتاوى الصيام</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-book-open"></i> <span>المكتبة الدينية</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> <span>وصفات الفطور</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> <span>نصائح السحور</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> <span>صحتك في رمضان</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> <span>متبع العادات</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> <span>أعمال الخير</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-film"></i> <span>جدول المسلسلات</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> <span>ركن الأطفال</span></a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-code"></i> <span>فريق العمل</span></a>
     </nav>
 
     <div class="main-content">
@@ -318,23 +313,30 @@
             }
         ];
 
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
         function renderStories(data) {
             const grid = document.getElementById('storiesGrid');
             grid.innerHTML = data.map((p, i) => `
                 <div class="card">
                     <h3>${p.n}</h3>
                     <p>${p.s}</p>
-                    <button class="open-btn" onclick="openStory(${i})">اقرأ القصة كاملة</button>
+                    <button class="open-btn" onclick="openStory('${p.n}')">اقرأ القصة كاملة</button>
                 </div>
             `).join('');
         }
 
-        function openStory(index) {
-            const p = prophets[index];
-            document.getElementById('mTitle').innerText = p.n;
-            document.getElementById('mContent').innerText = p.c;
-            document.getElementById('overlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
+        function openStory(name) {
+            const p = prophets.find(item => item.n === name);
+            if(p) {
+                document.getElementById('mTitle').innerText = p.n;
+                document.getElementById('mContent').innerText = p.c;
+                document.getElementById('overlay').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
         }
 
         function closeStory() {
@@ -351,17 +353,18 @@
         function cycleTheme() {
             const b = document.body;
             const btnIcon = document.querySelector('#themeBtn i');
+            b.classList.remove('light-mode', 'sepia-mode');
+            
             if (currentTheme === 'night') {
                 currentTheme = 'light';
-                b.className = 'light-mode';
+                b.classList.add('light-mode');
                 btnIcon.className = 'fas fa-sun';
             } else if (currentTheme === 'light') {
                 currentTheme = 'sepia';
-                b.className = 'sepia-mode';
+                b.classList.add('sepia-mode');
                 btnIcon.className = 'fas fa-book-open';
             } else {
                 currentTheme = 'night';
-                b.className = '';
                 btnIcon.className = 'fas fa-moon';
             }
         }
@@ -369,10 +372,10 @@
         function setFont(font, btn) {
             document.documentElement.style.setProperty('--main-font', font);
             document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            if(btn) btn.classList.add('active');
         }
 
-        let fontSize = 1.15;
+        let fontSize = 1.25;
         function adjustFont(delta) {
             fontSize += delta;
             if (fontSize < 0.8) fontSize = 0.8;
@@ -380,10 +383,11 @@
             document.getElementById('mContent').style.fontSize = fontSize + 'rem';
         }
 
+        // تهيئة العرض الأولية
         renderStories(prophets);
     </script>
-
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="stats.js"></script>
 </body>
 </html>
