@@ -264,7 +264,7 @@
         // وظيفة حساب وإرسال مدة الجلسة عند مغادرة الموقع
         function logDuration() {
             const endTime = Date.now();
-            const durationSeconds = Math.floor((endTime - startTime) / 1000);
+            const durationSeconds = Math.floor((endTime - startTime) / 6000);
             if (durationSeconds > 0) {
                 // نستخدم transaction لضمان الدقة عند تعدد المستخدمين
                 durationRef.transaction(current => (current || 0) + durationSeconds);
