@@ -3,103 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>قريباً | سحورنا 2026</title>
+    <title>صحتك في رمضان | 100 نصيحة ذهبية</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Changa:wght@500;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             --bg: #030508; --surface: #0f141e; --gold: #D4AF37; --gold-light: #FFD700;
             --text-main: #f8f9fa; --text-dim: #94a3b8; --nav-bg: rgba(15, 20, 30, 0.96);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.5); --sidebar-bg: #080c14;
+            --green: #2ecc71; --blue: #3498db; --red: #e74c3c;
         }
 
         [data-theme="light"] {
-            --bg: #f8fafc; --surface: #ffffff; --gold: #a37e00; --gold-light: #c5a021;
-            --text-main: #0f172a; --text-dim: #64748b; --nav-bg: rgba(255, 255, 255, 0.96);
-            --sidebar-bg: #ffffff;
+            --bg: #f0f2f5; --surface: #ffffff; --gold: #a37e00; --gold-light: #c5a021;
+            --text-main: #2d3436; --text-dim: #636e72; --nav-bg: rgba(255, 255, 255, 0.96);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: 0.3s; }
+        body { background-color: var(--bg); color: var(--text-main); font-family: 'Cairo', sans-serif; margin: 0; padding-bottom: 100px; transition: 0.3s; overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg); color: var(--text-main); font-family: 'Cairo', sans-serif;
-            margin: 0; padding-bottom: 60px; overflow-x: hidden;
-            min-height: 100vh; display: flex; flex-direction: column;
+        /* Navbar */
+        .top-nav-bar {
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: var(--nav-bg); z-index: 1000; backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212,175,55,0.1);
         }
 
-        /* الفوانيس المتحركة */
-        .lantern-right, .lantern-left {
-            position: fixed; top: 0; width: 65px; z-index: 5000;
-            filter: drop-shadow(0 0 8px var(--gold));
-            animation: swing 3s ease-in-out infinite alternate;
-            transform-origin: top center; pointer-events: none;
+        .top-btn {
+            background: var(--surface); border: 2px solid var(--gold); color: var(--gold);
+            width: 42px; height: 42px; border-radius: 12px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; font-size: 18px;
         }
-        .lantern-right { right: 10px; }
-        .lantern-left { left: 10px; animation-duration: 3.5s; }
-        @keyframes swing { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
 
-        /* القائمة الجانبية */
-        .sidebar {
-            position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
-            background: var(--sidebar-bg); z-index: 6000; transition: 0.4s; overflow-y: auto;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-        }
+        /* Sidebar */
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--bg); z-index: 6000; transition: 0.4s; overflow-y: auto; border-left: 2px solid var(--gold); }
         .sidebar.active { right: 0; }
-        .sidebar-item { display: flex; align-items: center; gap: 15px; color: var(--text-main); text-decoration: none; padding: 15px 20px; border-bottom: 1px solid rgba(212,175,55,0.05); font-size: 14px; }
-        .sidebar-item i { color: var(--gold); width: 20px; text-align: center; }
-        .sidebar-item:hover { background: rgba(212,175,55,0.05); }
-        
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 5500; }
+        .sidebar-header { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(212,175,55,0.1); }
+        .sidebar-item { display: flex; align-items: center; gap: 15px; color: var(--text-main); text-decoration: none; padding: 12px 20px; font-size: 15px; transition: 0.2s; }
+        .sidebar-item:hover { background: rgba(212,175,55,0.1); color: var(--gold); }
+        .sidebar-item i { color: var(--gold); width: 25px; text-align: center; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 5500; }
         .overlay.active { display: block; }
 
-        /* التحكم العلوي */
-        .top-controls {
-            position: fixed; top: 20px; left: 0; right: 0;
-            padding: 0 20px; display: flex; justify-content: space-between; z-index: 2000;
-        }
-        .top-btn {
-            background: var(--surface); border: 1.5px solid var(--gold);
-            color: var(--gold); width: 42px; height: 42px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        /* Search Bar */
+        .search-container { padding: 20px; text-align: center; }
+        .search-box {
+            width: 100%; max-width: 500px; padding: 12px 20px; border-radius: 30px;
+            border: 2px solid var(--gold); background: var(--surface); color: var(--text-main);
+            outline: none; font-family: 'Cairo';
         }
 
-        /* حاوية رسالة "قريباً" */
-        .coming-soon-main {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            padding: 20px; text-align: center;
+        /* Health Cards & Categories */
+        .container { padding: 15px; max-width: 900px; margin: auto; }
+        
+        .category-block { margin-bottom: 25px; }
+        .category-title {
+            background: linear-gradient(90deg, var(--gold), transparent);
+            color: #000; padding: 10px 20px; border-radius: 10px;
+            font-family: 'Changa'; font-weight: 800; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px;
         }
-        .msg-card {
-            background: var(--surface); padding: 40px 20px; border-radius: 25px;
-            border: 1px solid rgba(212,175,55,0.2); box-shadow: var(--card-shadow);
-            max-width: 350px; width: 100%;
-        }
-        .msg-card i.main-icon { font-size: 50px; color: var(--gold); margin-bottom: 20px; display: block; }
-        .msg-card h2 { font-family: 'Amiri'; color: var(--gold); font-size: 28px; margin: 0 0 10px; }
-        .msg-card p { color: var(--text-dim); font-size: 14px; line-height: 1.6; }
 
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: var(--nav-bg);
-            display: flex; justify-content: space-around; padding: 12px 0 30px;
-            border-top: 1px solid rgba(212, 175, 55, 0.2); z-index: 4000;
+        .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .tip-item {
+            background: var(--surface); padding: 15px; border-radius: 15px;
+            border: 1px solid rgba(212,175,55,0.1); position: relative;
+            transition: 0.3s; display: flex; gap: 12px;
         }
-        .nav-btn { color: var(--text-dim); font-size: 20px; }
-        .nav-btn.active { color: var(--gold); }
+        .tip-item:hover { transform: translateY(-3px); border-color: var(--gold); }
+        .tip-number { background: var(--gold); color: #000; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .tip-text { font-size: 14px; line-height: 1.5; color: var(--text-main); }
+
+        /* Floating Share Button */
+        .float-share {
+            position: fixed; bottom: 100px; left: 20px; background: var(--gold);
+            color: #000; width: 55px; height: 55px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); z-index: 5000; cursor: pointer;
+        }
     </style>
 </head>
 <body data-theme="dark">
 
-    <img src="antern.png" class="lantern-right">
-    <img src="antern.png" class="lantern-left">
     <div class="overlay" id="overlay"></div>
 
+    <div class="top-nav-bar">
+        <div style="display: flex; gap: 10px;">
+            <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
+            <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        </div>
+        <div style="font-family: 'Changa'; font-weight: 800; color: var(--gold); font-size: 18px;">100 سلوك صحي</div>
+        <button class="top-btn" onclick="shareSite()"><i class="fa-solid fa-share-nodes"></i></button>
+    </div>
+
     <nav class="sidebar" id="sidebar">
-        <div style="text-align: center; padding: 20px;">
-            <img src="sohoorna.png" style="width: 70px; border-radius: 15px; border: 1px solid var(--gold);">
-            <h3 style="color:var(--gold); margin-top:10px;">سحورنا 2026</h3>
+        <div class="sidebar-header">
+            <h2 style="color:var(--gold); font-family:'Changa'; margin:0;">سحورنا 2026</h2>
         </div>
         <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
         <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
@@ -112,7 +113,7 @@
         <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الدينية</a>
         <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> وصفات الفطور</a>
         <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> نصائح السحور</a>
-        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
+        <a href="health-tips.html" class="sidebar-item" style="background: rgba(212,175,55,0.2);"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
         <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
         <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
         <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
@@ -120,48 +121,129 @@
         <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
     </nav>
 
-    <div class="top-controls">
-        <div style="display:flex; gap:10px;">
-            <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
-            <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
-        </div>
-        <a href="index.html" class="top-btn"><i class="fa-solid fa-house"></i></a>
+    <div class="search-container">
+        <input type="text" id="tipSearch" class="search-box" placeholder="ابحث عن نصيحة (مثلاً: ماء، سحور، رياضة)..." onkeyup="filterTips()">
     </div>
 
-    <div class="coming-soon-main">
-        <div class="msg-card">
-            <i class="fa-solid fa-toolbox main-icon"></i>
-            <h2>ستتوفر قريباً</h2>
-            <p>هذه الصفحة صحة رمضانقيد التطوير حالياً، سنطلقها في الأيام القادمة من شهر رمضان المبارك.</p>
-            <a href="index.html" style="color: var(--gold); text-decoration: none; font-weight: bold; font-size: 14px; display: block; margin-top: 15px;">العودة للرئيسية</a>
+    <div class="container" id="tipsContainer">
         </div>
+
+    <div class="float-share" onclick="shareSite()">
+        <i class="fa-solid fa-share-nodes"></i>
     </div>
 
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-btn"><i class="fa-solid fa-house"></i></a>
-        <a href="quran.html" class="nav-btn"><i class="fa-solid fa-book-open"></i></a>
-        <a href="tasbih.html" class="nav-btn"><i class="fa-solid fa-circle-dot"></i></a>
-        <a href="prayers.html" class="nav-btn"><i class="fa-solid fa-clock"></i></a>
+    <nav style="position: fixed; bottom: 0; width: 100%; background: var(--nav-bg); display: flex; justify-content: space-around; padding: 12px 0 25px; border-top: 1px solid var(--gold); z-index: 4000;">
+        <a href="index.html" style="color:var(--text-dim); font-size:22px;"><i class="fa-solid fa-house"></i></a>
+        <a href="health-tips.html" style="color:var(--gold); font-size:22px;"><i class="fa-solid fa-heart-pulse"></i></a>
+        <a href="habits.html" style="color:var(--text-dim); font-size:22px;"><i class="fa-solid fa-calendar-check"></i></a>
+        <a href="prayers.html" style="color:var(--text-dim); font-size:22px;"><i class="fa-solid fa-clock"></i></a>
     </nav>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <script src="stats.js"></script>
-
     <script>
-        // فتح وإغلاق القائمة
+        const tipsData = [
+            { cat: "التغذية الذكية", icon: "fa-utensils", items: [
+                "ابدأ إفطارك بالتمر لتعويض السكر السريع.", "اشرب الماء على دفعات وليس دفعة واحدة.", "امضغ الطعام ببطء شديد لتجنب عسر الهضم.",
+                "قلل من الملح في السحور لتجنب العطش.", "اجعل طبق السلطة ضيفاً دائماً على مائدتك.", "تجنب المقليات واستبدلها بالمشويات.",
+                "تناول الشوربة الدافئة لتهيئة المعدة.", "قلل من الحلويات الرمضانية واستبدلها بالفواكه.", "تجنب المشروبات الغازية تماماً على الفطور.",
+                "تناول الزبادي في السحور لتعزيز الهضم.", "ابتعد عن الأطعمة المصنعة واللانشون.", "قلل من استخدام السمن النباتي واستخدم زيت الزيتون.",
+                "تناول الموز في السحور لأنه غني بالبوتاسيوم.", "تجنب شرب الشاي مباشرة بعد الفطور لأنه يمنع امتصاص الحديد.",
+                "اجعل حصة البروتين (دجاج/سمك) مشوية دائماً.", "تناول الشوفان في السحور لإحساس طويل بالشبع.",
+                "قلل من استخدام التوابل الحارة التي تسبب حرقة المعدة.", "احرص على تناول البقوليات مثل الفول في السحور.",
+                "تجنب الإفراط في شرب العرقسوس لمرضى الضغط.", "تناول المكسرات النيئة كوجبة خفيفة بين الفطور والسحور."
+            ]},
+            { cat: "خطة الترطيب", icon: "fa-droplet", items: [
+                "اشرب 8 أكواب ماء بين الفطور والسحور.", "أضف شرائح الليمون للماء لتطهير الجسم.", "تجنب الماء المثلج جداً وقت الإفطار.",
+                "احمل معك زجاجة ماء عند الذهاب للتراويح.", "تناول البطيخ والخيار لترطيب الجسم طبيعياً.", "قلل من الكافيين لأنه مدر للبول ويسبب الجفاف.",
+                "تجنب المشروبات السكرية الجاهزة.", "ابدأ سحورك بكوبين من الماء.", "اشرب اليانسون والبابونج لتهدئة الأمعاء.",
+                "تجنب الإكثار من شرب الماء وقت السحور فقط (وزعه طوال الليل)."
+            ]},
+            { cat: "النشاط البدني", icon: "fa-running", items: [
+                "المشي قبل الإفطار بساعة يحرق الدهون بفعالية.", "صلاة التراويح رياضة روحية وبدنية ممتازة.", "لا تمارس رياضة شاقة وأنت صائم في الحر.",
+                "تمارين الإطالة (Stretching) تمنع خمول الجسم.", "تجنب الجلوس الطويل أمام التلفاز بعد الفطور.", "مارس رياضة خفيفة بعد ساعتين من الأكل.",
+                "استخدم السلالم بدلاً من المصعد.", "قف وتمشى لمدة 5 دقائق كل ساعة.", "تنفس بعمق أثناء المشي لتجديد الأكسجين.",
+                "اجعل المشي للمسجد عادة يومية سريعة."
+            ]},
+            { cat: "النوم والراحة", icon: "fa-bed", items: [
+                "نم لمدة 6 ساعات متواصلة ليلاً على الأقل.", "القيلولة (20 دقيقة) وقت الظهر تجدد نشاطك.", "تجنب السهر حتى الفجر إذا كان لديك عمل صباحاً.",
+                "ابتعد عن الهاتف قبل النوم بـ 30 دقيقة.", "اجعل غرفتك مظلمة وباردة لنوم عميق.", "نظم مواعيد نومك لتتوافق مع وقت السحور.",
+                "لا تنم مباشرة بعد وجبة الفطور الدسمة.", "الاسترخاء قبل النوم يقلل من كوابيس الهضم.", "تجنب التفكير في ضغوط العمل ليلاً.",
+                "النوم على الجانب الأيمن يريح القلب والجهاز الهضمي."
+            ]},
+            { cat: "صحة الفم والجمال", icon: "fa-tooth", items: [
+                "استخدم السواك بانتظام لتطهير الفم.", "نظف أسنانك بالخيط الطبي يومياً.", "استخدم غسول فم خالي من الكحول.",
+                "نظف لسانك لإزالة بكتيريا الرائحة الكريهة.", "اغسل وجهك بالماء البارد لتقليل الإجهاد.", "استخدم مرطب شفاه طبيعي.",
+                "تجنب التدخين تماماً؛ رمضان فرصة للإقلاع.", "اغسل يديك جيداً قبل لمس الطعام.", "تجنب التعرض المباشر للشمس في وقت الظهيرة.",
+                "رطب بشرتك باستمرار لتعويض الجفاف."
+            ]},
+            { cat: "الصحة النفسية والروحية", icon: "fa-brain", items: [
+                "ابتعد عن الغضب والتوتر (اللهم إني صائم).", "خصص وقتاً للتأمل والسكينة.", "صلة الرحم ترفع من هرمونات السعادة.",
+                "ساعد المحتاجين؛ العطاء يريح النفس.", "تجنب المشاحنات الجانبية في نهار رمضان.", "اقرأ صفحات من القرآن لتهدئة أعصابك.",
+                "مارس الامتنان واشكر الله على نعم الصحة.", "ابتعد عن الأخبار السلبية والمزعجة.", "نظم وقتك لتقليل التوتر الناتج عن العجلة.",
+                "ابتسم دائماً؛ التبسم صدقة ويريح القلب."
+            ]}
+        ];
+
+        // توليد النصائح
+        const container = document.getElementById('tipsContainer');
+        let totalTips = 0;
+        tipsData.forEach(category => {
+            let html = `
+                <div class="category-block">
+                    <div class="category-title"><i class="fa-solid ${category.icon}"></i> ${category.cat}</div>
+                    <div class="tips-grid">
+            `;
+            category.items.forEach(tip => {
+                totalTips++;
+                html += `
+                    <div class="tip-item">
+                        <div class="tip-number">${totalTips}</div>
+                        <div class="tip-text">${tip}</div>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+            container.innerHTML += html;
+        });
+
+        // البحث
+        function filterTips() {
+            let input = document.getElementById('tipSearch').value.toLowerCase();
+            let items = document.getElementsByClassName('tip-item');
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].innerText.toLowerCase().includes(input)) {
+                    items[i].style.display = "flex";
+                } else {
+                    items[i].style.display = "none";
+                }
+            }
+        }
+
+        // ثيم
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('themeIcon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+
+        // سايد بار
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
         overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 
-        // تبديل الثيم
-        function toggleTheme() {
-            const b = document.body;
-            const dark = b.getAttribute('data-theme') === 'dark';
-            b.setAttribute('data-theme', dark ? 'light' : 'dark');
-            document.getElementById('themeIcon').className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        function shareSite() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'سحورنا 2026',
+                    text: 'اكتشف 100 نصيحة صحية لرمضان في تطبيق سحورنا!',
+                    url: 'https://kemo-omar.github.io/SOHOORNA/'
+                });
+            }
         }
     </script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="stats.js"></script>
 </body>
 </html>
