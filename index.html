@@ -237,7 +237,7 @@
         // مراجع البيانات
         const onlineRef = db.ref('stats/online');
         const totalRef = db.ref('stats/totalVisits');
-        const durationRef = db.ref('stats/totalDurationSeconds'); // المرجع الجديد لحساب المدة
+        const durationRef = db.ref('stats/totalDurationMinutes'); // تم التعديل ليحسب بالدقائق
 
         // وقت الدخول
         const startTime = Date.now();
@@ -261,13 +261,14 @@
         onlineRef.on('value', s => document.getElementById('online-count').innerText = s.numChildren());
         totalRef.on('value', s => document.getElementById('total-count').innerText = s.val() || 0);
 
-        // وظيفة حساب وإرسال مدة الجلسة عند مغادرة الموقع
+        // وظيفة حساب وإرسال مدة الجلسة بالدقائق عند مغادرة الموقع
         function logDuration() {
             const endTime = Date.now();
-            const durationSeconds = Math.floor((endTime - startTime) / 6000);
-            if (durationSeconds > 0) {
+            // القسمة على 60000 لتحويل الملي ثانية إلى دقائق
+            const durationMinutes = Math.floor((endTime - startTime) / 60000);
+            if (durationMinutes > 0) {
                 // نستخدم transaction لضمان الدقة عند تعدد المستخدمين
-                durationRef.transaction(current => (current || 0) + durationSeconds);
+                durationRef.transaction(current => (current || 0) + durationMinutes);
             }
         }
 
