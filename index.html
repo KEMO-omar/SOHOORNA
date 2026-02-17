@@ -55,7 +55,6 @@
         }
         .brand-logo { width: 100%; height: 100%; object-fit: cover; }
 
-        /* تعديل العدادات لتكون واضحة ولا تتداخل */
         .visitor-stats {
             display: flex; justify-content: center; gap: 15px; margin: 20px auto;
             max-width: 280px; background: rgba(212, 175, 55, 0.08); padding: 12px;
@@ -235,21 +234,48 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // مراجع البيانات
         const onlineRef = db.ref('stats/online');
         const totalRef = db.ref('stats/totalVisits');
+        const durationRef = db.ref('stats/totalDurationSeconds'); // المرجع الجديد لحساب المدة
 
+        // وقت الدخول
+        const startTime = Date.now();
+
+        // تسجيل الزيارة الجديدة
         if (!localStorage.getItem('v26')) {
             totalRef.transaction(c => (c || 0) + 1);
             localStorage.setItem('v26', 'true');
         }
 
+        // تسجيل المتصلين الآن
         const myStatus = onlineRef.push();
         db.ref('.info/connected').on('value', s => {
-            if (s.val()) { myStatus.onDisconnect().remove(); myStatus.set(true); }
+            if (s.val()) { 
+                myStatus.onDisconnect().remove(); 
+                myStatus.set(true); 
+            }
         });
 
+        // تحديث العدادات في الصفحة
         onlineRef.on('value', s => document.getElementById('online-count').innerText = s.numChildren());
         totalRef.on('value', s => document.getElementById('total-count').innerText = s.val() || 0);
+
+        // وظيفة حساب وإرسال مدة الجلسة عند مغادرة الموقع
+        function logDuration() {
+            const endTime = Date.now();
+            const durationSeconds = Math.floor((endTime - startTime) / 1000);
+            if (durationSeconds > 0) {
+                // نستخدم transaction لضمان الدقة عند تعدد المستخدمين
+                durationRef.transaction(current => (current || 0) + durationSeconds);
+            }
+        }
+
+        // الاستماع لإغلاق الصفحة أو التنقل بعيداً
+        window.addEventListener('beforeunload', logDuration);
+        window.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') logDuration();
+        });
 
         let userCoords = null;
         function getLocation() {
