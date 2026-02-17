@@ -18,50 +18,65 @@ const db = firebase.database();
 // 3. تعريف المراجع في قاعدة البيانات
 const onlineRef = db.ref('stats/online');
 const totalRef = db.ref('stats/totalVisits');
+const durationRef = db.ref('stats/totalDurationMinutes'); // المرجع الجديد للدقائق
 
-// --- أولاً: كود "المتواجدون الآن" (يعمل في كل الصفحات الـ 17) ---
+// --- أولاً: كود "المتواجدون الآن" ---
 const myStatus = onlineRef.push();
-
-// مراقبة حالة الاتصال بالإنترنت
 db.ref('.info/connected').on('value', (snapshot) => {
     if (snapshot.val() === true) {
-        // عند انقطاع الاتصال (إغلاق الصفحة)، احذف هذا المستخدم من القائمة
         myStatus.onDisconnect().remove();
-        // عند الاتصال، سجل المستخدم كـ "true"
         myStatus.set(true);
     }
 });
 
-// --- ثانياً: كود "إجمالي الزيارات" (يعمل في index.html فقط) ---
-// نتأكد من اسم الصفحة الحالية
+// --- ثانياً: كود "إجمالي الزيارات" ---
 const currentPage = window.location.pathname.split("/").pop();
-
 if (currentPage === "index.html" || currentPage === "" || window.location.pathname === "/") {
-    // استخدمنا localStorage لضمان عدم زيادة العدد عند عمل Refresh للصفحة
     if (!localStorage.getItem('hasVisitedToday')) {
-        totalRef.transaction((currentValue) => {
-            return (currentValue || 0) + 1;
-        });
-        // حفظ علامة في المتصفح تدل على أن الزيارة تم احتسابها
+        totalRef.transaction((currentValue) => (currentValue || 0) + 1);
         localStorage.setItem('hasVisitedToday', 'true');
     }
 }
 
-// --- ثالثاً: عرض الأرقام في الصفحة (إذا وجدت عناصر HTML) ---
-// لتحديث عداد "متصل الآن" في أي صفحة
+// --- ثالثاً: حساب مدة البقاء بالدقائق (احترافي) ---
+let startTime = Date.now();
+
+function logDuration() {
+    const endTime = Date.now();
+    const durationMs = endTime - startTime;
+    
+    // تحويل الملي ثانية إلى دقائق (القسمة على 60000)
+    // أضفنا "بقايا الوقت" من الجلسة السابقة لضمان دقة الحساب إذا كانت الجلسة قصيرة
+    let savedMs = parseFloat(localStorage.getItem('pendingMs') || 0);
+    let totalMs = durationMs + savedMs;
+    
+    const minutesToReport = Math.floor(totalMs / 60000);
+    const remainingMs = totalMs % 60000;
+
+    if (minutesToReport > 0) {
+        durationRef.transaction((currentValue) => (currentValue || 0) + minutesToReport);
+    }
+    
+    // حفظ الأجزاء التي لم تكمل دقيقة للمرة القادمة
+    localStorage.setItem('pendingMs', remainingMs);
+    startTime = Date.now(); // إعادة تعيين الوقت
+}
+
+// إرسال البيانات عند إغلاق المتصفح أو التنقل
+window.addEventListener('beforeunload', logDuration);
+window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') logDuration();
+});
+
+// --- رابعاً: عرض الأرقام في الصفحة ---
 onlineRef.on('value', (snapshot) => {
     const onlineElement = document.getElementById('online-count');
-    if (onlineElement) {
-        onlineElement.innerText = snapshot.numChildren();
-    }
+    if (onlineElement) onlineElement.innerText = snapshot.numChildren();
 });
 
-// لتحديث عداد "إجمالي الزيارات"
 totalRef.on('value', (snapshot) => {
     const totalElement = document.getElementById('total-count');
-    if (totalElement) {
-        totalElement.innerText = snapshot.val() || 0;
-    }
+    if (totalElement) totalElement.innerText = snapshot.val() || 0;
 });
 
-console.log("Stats System Active: Page -> " + (currentPage || "Home"));
+console.log("Stats System Active: Tracking Minutes");
