@@ -220,7 +220,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // 1. إعداد Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC0WJ11PvTUAWxLMlPBqXA-2QrcXM2uHg0",
             authDomain: "sohoorna.firebaseapp.com",
@@ -234,21 +233,17 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // مراجع البيانات
         const onlineRef = db.ref('stats/online');
         const totalRef = db.ref('stats/totalVisits');
-        const durationRef = db.ref('stats/totalDurationMinutes'); // تم التعديل ليحسب بالدقائق
+        const durationRef = db.ref('stats/totalDurationMinutes');
 
-        // وقت الدخول
         const startTime = Date.now();
 
-        // تسجيل الزيارة الجديدة
         if (!localStorage.getItem('v26')) {
             totalRef.transaction(c => (c || 0) + 1);
             localStorage.setItem('v26', 'true');
         }
 
-        // تسجيل المتصلين الآن
         const myStatus = onlineRef.push();
         db.ref('.info/connected').on('value', s => {
             if (s.val()) { 
@@ -257,22 +252,17 @@
             }
         });
 
-        // تحديث العدادات في الصفحة
         onlineRef.on('value', s => document.getElementById('online-count').innerText = s.numChildren());
         totalRef.on('value', s => document.getElementById('total-count').innerText = s.val() || 0);
 
-        // وظيفة حساب وإرسال مدة الجلسة بالدقائق عند مغادرة الموقع
         function logDuration() {
             const endTime = Date.now();
-            // القسمة على 60000 لتحويل الملي ثانية إلى دقائق
             const durationMinutes = Math.floor((endTime - startTime) / 60000);
             if (durationMinutes > 0) {
-                // نستخدم transaction لضمان الدقة عند تعدد المستخدمين
                 durationRef.transaction(current => (current || 0) + durationMinutes);
             }
         }
 
-        // الاستماع لإغلاق الصفحة أو التنقل بعيداً
         window.addEventListener('beforeunload', logDuration);
         window.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden') logDuration();
@@ -293,7 +283,8 @@
             let lat = userCoords ? userCoords.lat : 30.0444;
             let lng = userCoords ? userCoords.lng : 31.2357;
             try {
-                const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(now.getTime()/1000)}?latitude=${lat}&longitude=${lng}&method=4`);
+                // إضافة معامل adjustment=-1 لتعديل التاريخ الهجري ليناسب رؤية مصر
+                const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(now.getTime()/1000)}?latitude=${lat}&longitude=${lng}&method=4&adjustment=-1`);
                 const data = await res.json();
                 const t = data.data.timings;
                 const fajr = new Date(now.toDateString() + " " + t.Fajr);
@@ -309,6 +300,8 @@
                 document.getElementById('m').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
                 document.getElementById('s').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
                 document.getElementById('next-event-title').innerText = label;
+                
+                // عرض التاريخ الهجري المعدل
                 document.getElementById('hijri-date').innerText = `${data.data.date.hijri.day} ${data.data.date.hijri.month.ar} ${data.data.date.hijri.year}هـ`;
                 document.getElementById('location-status').innerHTML = userCoords ? '<i class="fa-solid fa-check"></i> تم تحديد الموقع' : '<i class="fa-solid fa-map-pin"></i> القاهرة (افتراضي)';
             } catch (e) {}
