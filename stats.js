@@ -1,4 +1,4 @@
-// 1. إعدادات Firebase الخاصة بمشروعك
+// 1. إعدادات Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyC0WJ11PvTUAWxLMlPBqXA-2QrcXM2uHg0",
     authDomain: "sohoorna.firebaseapp.com",
@@ -9,74 +9,70 @@ const firebaseConfig = {
     appId: "1:433150559884:web:62932d2ba01f19f3ec5da9"
 };
 
-// 2. تهيئة Firebase ومنع التكرار
+// تهيئة Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.database();
-
-// 3. تعريف المراجع في قاعدة البيانات
+const durationRef = db.ref('stats/totalDurationMinutes');
 const onlineRef = db.ref('stats/online');
 const totalRef = db.ref('stats/totalVisits');
-const durationRef = db.ref('stats/totalDurationMinutes'); // المرجع الجديد للدقائق
 
-// --- أولاً: كود "المتواجدون الآن" ---
+// --- أولاً: تتبع المتواجدين الآن (يعمل في كل الصفحات) ---
 const myStatus = onlineRef.push();
-db.ref('.info/connected').on('value', (snapshot) => {
-    if (snapshot.val() === true) {
+db.ref('.info/connected').on('value', (s) => {
+    if (s.val()) {
         myStatus.onDisconnect().remove();
         myStatus.set(true);
     }
 });
 
-// --- ثانياً: كود "إجمالي الزيارات" ---
-const currentPage = window.location.pathname.split("/").pop();
-if (currentPage === "index.html" || currentPage === "" || window.location.pathname === "/") {
-    if (!localStorage.getItem('hasVisitedToday')) {
-        totalRef.transaction((currentValue) => (currentValue || 0) + 1);
-        localStorage.setItem('hasVisitedToday', 'true');
-    }
+// --- ثانياً: إجمالي الزيارات (يحتسب مرة واحدة فقط في اليوم للمستخدم) ---
+if (!localStorage.getItem('v26_visited')) {
+    totalRef.transaction(c => (c || 0) + 1);
+    localStorage.setItem('v26_visited', 'true');
 }
 
-// --- ثالثاً: حساب مدة البقاء بالدقائق (احترافي) ---
-let startTime = Date.now();
+// --- ثالثاً: حساب الدقائق التراكمي (الحل السحري لـ 17 صفحة) ---
+let pageStartTime = Date.now();
 
-function logDuration() {
-    const endTime = Date.now();
-    const durationMs = endTime - startTime;
-    
-    // تحويل الملي ثانية إلى دقائق (القسمة على 60000)
-    // أضفنا "بقايا الوقت" من الجلسة السابقة لضمان دقة الحساب إذا كانت الجلسة قصيرة
-    let savedMs = parseFloat(localStorage.getItem('pendingMs') || 0);
-    let totalMs = durationMs + savedMs;
-    
-    const minutesToReport = Math.floor(totalMs / 60000);
-    const remainingMs = totalMs % 60000;
+function updateGlobalDuration() {
+    const now = Date.now();
+    const sessionMs = now - pageStartTime;
+    pageStartTime = now; // إعادة التعيين للجزء القادم
 
-    if (minutesToReport > 0) {
-        durationRef.transaction((currentValue) => (currentValue || 0) + minutesToReport);
+    // جلب ما تم تخزينه سابقاً في المتصفح (بالملي ثانية)
+    let accumulatedMs = parseFloat(localStorage.getItem('accMs') || 0);
+    accumulatedMs += sessionMs;
+
+    // تحويل الملي ثانية المكتملة إلى دقائق
+    const minutesToSend = Math.floor(accumulatedMs / 60000);
+    
+    if (minutesToSend > 0) {
+        // إرسال الدقائق المكتملة فقط لـ Firebase
+        durationRef.transaction(current => (current || 0) + minutesToSend);
+        // حفظ الباقي (الأقل من دقيقة) للمرة القادمة أو الصفحة التالية
+        accumulatedMs = accumulatedMs % 60000;
     }
-    
-    // حفظ الأجزاء التي لم تكمل دقيقة للمرة القادمة
-    localStorage.setItem('pendingMs', remainingMs);
-    startTime = Date.now(); // إعادة تعيين الوقت
+
+    localStorage.setItem('accMs', accumulatedMs);
 }
 
-// إرسال البيانات عند إغلاق المتصفح أو التنقل
-window.addEventListener('beforeunload', logDuration);
+// التحديث عند مغادرة الصفحة أو إغلاقها أو تغيير التبويب
+window.addEventListener('beforeunload', updateGlobalDuration);
 window.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') logDuration();
+    if (document.visibilityState === 'hidden') updateGlobalDuration();
 });
 
-// --- رابعاً: عرض الأرقام في الصفحة ---
-onlineRef.on('value', (snapshot) => {
-    const onlineElement = document.getElementById('online-count');
-    if (onlineElement) onlineElement.innerText = snapshot.numChildren();
-});
+// تحديث تلقائي كل دقيقة لضمان عدم ضياع البيانات إذا ظل المستخدم في صفحة واحدة طويلاً
+setInterval(updateGlobalDuration, 60000);
 
-totalRef.on('value', (snapshot) => {
-    const totalElement = document.getElementById('total-count');
-    if (totalElement) totalElement.innerText = snapshot.val() || 0;
+// --- رابعاً: تحديث العناصر في الواجهة (إذا وجدت) ---
+onlineRef.on('value', s => {
+    const el = document.getElementById('online-count');
+    if (el) el.innerText = s.numChildren();
 });
-
-console.log("Stats System Active: Tracking Minutes");
+totalRef.on('value', s => {
+    const el = document.getElementById('total-count');
+    if (el) el.innerText = s.val() || 0;
+});
