@@ -30,7 +30,6 @@
             margin: 0; padding-bottom: 100px; overflow-x: hidden;
         }
 
-        /* الفوانيس المتحركة */
         .lantern-right, .lantern-left {
             position: fixed; top: 0; width: 65px; z-index: 5000;
             filter: drop-shadow(0 0 8px var(--gold));
@@ -158,7 +157,7 @@
             <img src="sohoorna.png" class="brand-logo">
         </div>
         <h1 style="font-family:'Amiri'; font-size: 28px; color: var(--gold); margin:0;">سحورنا 2026</h1>
-        <p id="hijri-date" style="margin:5px 0; font-weight: bold;">رمضان كريم</p>
+        <p id="hijri-date" style="margin:5px 0; font-weight: bold;">جاري التحميل...</p>
         
         <div class="visitor-stats">
             <div class="stat-box">
@@ -220,6 +219,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
+        // تكوين Firebase (بياناتك الأصلية)
         const firebaseConfig = {
             apiKey: "AIzaSyC0WJ11PvTUAWxLMlPBqXA-2QrcXM2uHg0",
             authDomain: "sohoorna.firebaseapp.com",
@@ -232,11 +232,9 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-
         const onlineRef = db.ref('stats/online');
         const totalRef = db.ref('stats/totalVisits');
         const durationRef = db.ref('stats/totalDurationMinutes');
-
         const startTime = Date.now();
 
         if (!localStorage.getItem('v26')) {
@@ -256,17 +254,11 @@
         totalRef.on('value', s => document.getElementById('total-count').innerText = s.val() || 0);
 
         function logDuration() {
-            const endTime = Date.now();
-            const durationMinutes = Math.floor((endTime - startTime) / 60000);
-            if (durationMinutes > 0) {
-                durationRef.transaction(current => (current || 0) + durationMinutes);
-            }
+            const durationMinutes = Math.floor((Date.now() - startTime) / 60000);
+            if (durationMinutes > 0) durationRef.transaction(current => (current || 0) + durationMinutes);
         }
-
         window.addEventListener('beforeunload', logDuration);
-        window.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') logDuration();
-        });
+        window.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') logDuration(); });
 
         let userCoords = null;
         function getLocation() {
@@ -275,7 +267,7 @@
                     (p) => { userCoords={lat:p.coords.latitude, lng:p.coords.longitude}; updateTimes(); },
                     () => { updateTimes(); }
                 );
-            }
+            } else { updateTimes(); }
         }
 
         async function updateTimes() {
@@ -283,30 +275,56 @@
             let lat = userCoords ? userCoords.lat : 30.0444;
             let lng = userCoords ? userCoords.lng : 31.2357;
             try {
-                // إضافة معامل adjustment=-1 لتعديل التاريخ الهجري ليناسب رؤية مصر
-                const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(now.getTime()/1000)}?latitude=${lat}&longitude=${lng}&method=4&adjustment=-1`);
+                // نطلب البيانات من الـ API (بدون تعديل داخلي منه لنعدله نحن برمجياً)
+                const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(now.getTime()/1000)}?latitude=${lat}&longitude=${lng}&method=4`);
                 const data = await res.json();
                 const t = data.data.timings;
-                const fajr = new Date(now.toDateString() + " " + t.Fajr);
-                const maghrib = new Date(now.toDateString() + " " + t.Maghrib);
+                
+                // --- معالجة التقويم الهجري ليكون منضبطاً طوال الـ 29/30 يوم ---
+                let hDay = parseInt(data.data.date.hijri.day);
+                let hMonth = data.data.date.hijri.month.ar;
+                let hYear = data.data.date.hijri.year;
+
+                // القاعدة: طرح يوم واحد من حساب الـ API الفلكي ليتطابق مع رؤية مصر 
+                // التي بدأت رمضان يوم الخميس 19 فبراير.
+                hDay = hDay - 1;
+
+                // معالجة الانتقال بين الشهور (إذا أصبح اليوم 0 يعني أنه آخر يوم في الشهر السابق)
+                if (hDay === 0) {
+                    // نحن الآن في اليوم الأخير من شعبان (المتمم في مصر)
+                    hDay = 30; 
+                    hMonth = "شعبان";
+                }
+                
+                // تحديث واجهة المستخدم بالتاريخ المصحح
+                document.getElementById('hijri-date').innerText = `${hDay} ${hMonth} ${hYear}هـ`;
+
+                // --- منطق العد التنازلي ---
+                const fajrTime = new Date(now.toDateString() + " " + t.Fajr);
+                const maghribTime = new Date(now.toDateString() + " " + t.Maghrib);
                 
                 let target, label;
-                if (now < fajr) { target = fajr; label = "باقي على الإمساك"; }
-                else if (now < maghrib) { target = maghrib; label = "باقي على الفطور"; }
-                else { target = new Date(fajr.getTime() + 86400000); label = "باقي على سحور الغد"; }
+                // إذا كان اليوم ميلادياً هو 18 فبراير (قبل بداية رمضان في مصر)
+                if (now.getDate() === 18 && now.getMonth() === 1) {
+                    target = fajrTime;
+                    label = "باقي على أول سحور (رمضان)";
+                } else {
+                    if (now < fajrTime) { target = fajrTime; label = "باقي على الإمساك"; }
+                    else if (now < maghribTime) { target = maghribTime; label = "باقي على الفطور"; }
+                    else { target = new Date(fajrTime.getTime() + 86400000); label = "باقي على السحور"; }
+                }
 
                 const diff = target - now;
-                document.getElementById('h').innerText = Math.floor(diff/3600000).toString().padStart(2,'0');
-                document.getElementById('m').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
-                document.getElementById('s').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+                document.getElementById('h').innerText = Math.max(0, Math.floor(diff/3600000)).toString().padStart(2,'0');
+                document.getElementById('m').innerText = Math.max(0, Math.floor((diff%3600000)/60000)).toString().padStart(2,'0');
+                document.getElementById('s').innerText = Math.max(0, Math.floor((diff%60000)/1000)).toString().padStart(2,'0');
                 document.getElementById('next-event-title').innerText = label;
                 
-                // عرض التاريخ الهجري المعدل
-                document.getElementById('hijri-date').innerText = `${data.data.date.hijri.day} ${data.data.date.hijri.month.ar} ${data.data.date.hijri.year}هـ`;
                 document.getElementById('location-status').innerHTML = userCoords ? '<i class="fa-solid fa-check"></i> تم تحديد الموقع' : '<i class="fa-solid fa-map-pin"></i> القاهرة (افتراضي)';
             } catch (e) {}
         }
 
+        // التحكم في القائمة الجانبية والثيم
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
@@ -320,8 +338,8 @@
         }
 
         function shareApp() { if (navigator.share) navigator.share({ title: 'سحورنا 2026', url: window.location.href }); }
-
         window.onload = () => { getLocation(); setInterval(updateTimes, 1000); };
     </script>
 </body>
-</html>
+                                                      </html>
+                                                      
