@@ -25,7 +25,7 @@
             display: flex;
         }
 
-        /* القائمة الجانبية */
+        /* القائمة الجانبية - تظهر دائماً */
         .sidebar {
             width: var(--sidebar-width);
             background: #000;
@@ -55,6 +55,8 @@
             margin-right: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
@@ -92,7 +94,7 @@
 
         .category-btn.active { background: var(--neon-gold); color: #000; box-shadow: 0 0 10px var(--neon-gold); }
 
-        .container { padding: 40px 20px; max-width: 1200px; margin: auto; }
+        .container { padding: 40px 20px; max-width: 1200px; margin: auto; flex: 1; }
 
         .search-box {
             width: 100%;
@@ -167,32 +169,46 @@
         }
         .share-btn:hover { background: #1fb355; transform: scale(1.02); }
 
+        /* تذييل الصفحة */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #000;
+            border-top: 1px solid var(--dark-gold);
+            color: #888;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 992px) {
-            .sidebar { display: none; }
-            .main-content { margin-right: 0; width: 100%; }
+            /* تعديل لتظل القائمة ظاهرة ولكن بأسلوب متجاوب */
+            .sidebar { width: 70px; }
+            .sidebar-item span { display: none; }
+            .sidebar-item { justify-content: center; padding: 20px 0; }
+            .sidebar-item i { margin: 0; font-size: 1.2rem; }
+            .main-content { margin-right: 70px; width: calc(100% - 70px); }
         }
     </style>
 </head>
 <body>
 
     <nav class="sidebar">
-        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
-        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
-        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
-        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
-        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
-        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> المسبحة الإلكترونية</a>
-        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> حاسبة الزكاة</a>
-        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
-        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الدينية</a>
-        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> وصفات الفطور</a>
-        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> نصائح السحور</a>
-        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
-        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
-        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
-        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
-        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> ركن الأطفال</a>
-        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
+        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> <span>الرئيسية</span></a>
+        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> <span>مواقيت الصلاة</span></a>
+        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> <span>المصحف الشريف</span></a>
+        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> <span>متابعة الختمة</span></a>
+        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> <span>أذكار المسلم</span></a>
+        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> <span>المسبحة الإلكترونية</span></a>
+        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> <span>حاسبة الزكاة</span></a>
+        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> <span>فتاوى الصيام</span></a>
+        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> <span>المكتبة الدينية</span></a>
+        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> <span>وصفات الفطور</span></a>
+        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> <span>نصائح السحور</span></a>
+        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> <span>صحتك في رمضان</span></a>
+        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> <span>متبع العادات</span></a>
+        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> <span>أعمال الخير</span></a>
+        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> <span>جدول المسلسلات</span></a>
+        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> <span>ركن الأطفال</span></a>
+        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> <span>فريق العمل</span></a>
     </nav>
 
     <div class="main-content">
@@ -211,13 +227,17 @@
             <input type="text" id="search" class="search-box" placeholder="🔍 ابحث عن وصفة معينة (مثلاً: ملوخية، بسبوسة)..." onkeyup="doSearch()">
             <div class="recipe-grid" id="grid"></div>
         </div>
+
+        <footer>
+            جميع الحقوق محفوظة لـ سحورنا &copy; 2026
+        </footer>
     </div>
 
     <div id="modal" class="modal">
         <div class="modal-inner">
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <h2 id="mTitle" style="color:var(--neon-gold); margin-top:0;"></h2>
-            <div id="mBadge" class="badge" style="margin-bottom:20px;"></div>
+            <div id="mBadge" class="badge" style="margin-bottom:20px; background: #222; color: #888; padding: 4px 10px; border-radius: 5px; font-size: 0.75rem; width: fit-content;"></div>
             
             <h4 style="color:var(--dark-gold);"><i class="fa-solid fa-basket-shopping"></i> المكونات والمقادير:</h4>
             <ul id="mIng" class="ing-list"></ul>
@@ -231,13 +251,9 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <script src="stats.js"></script>
-
     <script>
         const recipes = [
-            // --- أكلات مصرية (25 وصفة) ---
+            // --- أكلات مصرية (25 وصفة كاملة) ---
             { title: "الملوخية الخضراء المصرية", cat: "أكلات مصرية", ing: ["نصف كيلو ملوخية مخرطة", "شوربة دجاج دسمة", "5 فصوص ثوم مفروم", "ملعقة كبيرة كزبرة ناشفة", "سمن بلدي"], step: "1. سخني الشوربة حتى الغليان.\n2. أضيفي الملوخية وقلبيها بالمضرب اليدوي حتى تمتزج.\n3. في مقلاة صغيرة، حمري الثوم مع السمن حتى يصفر، ثم أضيفي الكزبرة وقلبي ثواني.\n4. اسكبي 'الطشة' فوق الملوخية وشهقي الشهقة المصرية الشهيرة وغطيها فوراً." },
             { title: "كشري التحرير الأصلي", cat: "أكلات مصرية", ing: ["أرز مصري", "عدس بجبة", "مكرونة صغيرة", "بصل محمر (ورد)", "صلصة طماطم بالثوم"], step: "1. اسلقي العدس والمكرونة كلٍ على حدة.\n2. حضري الأرز بالشعيرية.\n3. للصلصة: ثوم محمر، خل، عصير طماطم، ملح، كمون.\n4. الدقة: ماء، ثوم، خل، ليمون، كمون وشطة.\n5. رصي الطبقات وزينيها بالبصل المقرمش." },
             { title: "بط محشي فريك", cat: "أكلات مصرية", ing: ["بطة كاملة", "فريك منقوع", "بصل مفروم", "ملح وفلفل وبهارات", "مستكة وحبهان"], step: "1. شوحي البصل ثم أضيفي الفريك والكبد والقوانص المقطعة مع البهارات.\n2. احشي البطة بالخليط وأغلقيها جيداً.\n3. اسلقي البطة في ماء به بوكيه جارنيه.\n4. ادهني البطة بالصلصة والعسل وحمريها في الفرن لتأخذ لوناً ذهبياً." },
@@ -264,7 +280,7 @@
             { title: "سبانخ بالحمص", cat: "أكلات مصرية", ing: ["سبانخ طازجة", "حمص طبيخ منقوع", "صلصة طماطم", "كزبرة وثوم"], step: "1. شوحي البصل وأضيفي الطماطم والحمص.\n2. بعد غليان الصلصة أضيفي السبانخ المقطعة.\n3. في النهاية أضيفي طشة الثوم والكزبرة." },
             { title: "أرانب بالملوخية", cat: "أكلات مصرية", ing: ["أرنب مقطع", "ملوخية", "مستكة وحبهان", "ثوم"], step: "1. اسلقي الأرنب مع المستكة والحبهان.\n2. استخدمي الشوربة لعمل الملوخية بنفس الطريقة المعتادة.\n3. حمري قطع الأرنب في السمن البلدي وقدميها مع الملوخية." },
 
-            // --- حلويات (25 وصفة) ---
+            // --- حلويات (25 وصفة كاملة) ---
             { title: "بسبوسة الحلواني المرملة", cat: "حلويات", ing: ["نصف كيلو سميد", "كوب سمن دافئ", "كوب سكر", "نصف كوب لبن", "شربات خفيف"], step: "1. ابسي السميد مع السمن جيدا حتى يتغلف.\n2. أضيفي السكر واللبن وقلبي بخفة (بدون عجن).\n3. ضعيها في صينية مدهونة وادخليها فرن متوسط.\n4. اسقيها بالشربات الخفيف الساخن فور خروجها." },
             { title: "كنافة بالقشطة الكدابة", cat: "حلويات", ing: ["نصف كيلو كنافة", "سمن سايح", "لبن ونشا (للمهلبية)", "شربات ثقيل بارد"], step: "1. قطعي الكنافة واخلطيها بالسمن.\n2. حضري القشطة (غلي اللبن مع النشا حتى يثقل).\n3. ضعي نصف الكنافة في الصينية ثم القشطة ثم باقي الكنافة.\n4. اخبزيها واسقيها بالشربات البارد." },
             { title: "لقيمات (قاضي القضاة)", cat: "حلويات", ing: ["دقيق", "خميرة فورية", "ملعقة نشا", "ماء دافئ"], step: "1. اعجني المكونات لتكون عجينة لينة واتركيها تخمر.\n2. شكلي كرات صغيرة واقليها في زيت غزير.\n3. بعد أن تبرد قليلاً، ضعيها في شربات ثقيل أو سكر بودرة." },
@@ -279,10 +295,10 @@
             { title: "غريبة ناعمة", cat: "حلويات", ing: ["4 أكواب دقيق", "2 كوب سمن بارد", "1 كوب سكر بودرة"], step: "1. اضربي السمن مع السكر حتى يصبح كريمياً.\n2. أضيفي الدقيق تدريجياً حتى تتشكل عجينة.\n3. شكليها كرات صغيرة وزينيها بالفصوص أو اللوز.\n4. اخبزيها في فرن هادئ جداً (لا يجب أن يتغير لونها)." },
             { title: "كحك العيد الدايب", cat: "حلويات", ing: ["كيلو دقيق", "نصف كيلو سمن مقدوح", "ملعقة ريحة كحك", "خميرة وسمسم"], step: "1. ضعي السميد وريحة الكحك على الدقيق.\n2. اسكبي السمن المقدوح وبسّي الدقيق جيداً.\n3. أضيفي الخميرة المذابة في قليل من الماء.\n4. شكلي وانقشي واخبزيه في فرن متوسط." },
             { title: "ليالي لبنان الباردة", cat: "حلويات", ing: ["لبن", "سميد ناعم", "مستكة", "قشطة وفستق"], step: "1. غلي اللبن مع السميد والمستكة مع التقليب المستمر.\n2. صبي الخليط في بايركس واتركيه يبرد.\n3. غطي الوجه بطبقة قشطة وزينيها بالفستق والعسل." },
-            { title: "تورتة الجيلي", cat: "حلويات", ing: ["كيكة إسفنجية", "جيلي فراولة", "قطع فواكه"], step: "1. حضري الجيلي واتركيه يبرد قليلاً.\n2. ضعي قطع الفواكه في القالب ثم صبي جزء من الجيلي وادخليه الثلاجة.\n3. ضعي الكيكة فوق الجيلي المتماسك وصبي باقي الجيلي.\n4. اتركيها تجمد تماماً ثم اقلبيها." },
+            { title: "تورتة الجيلي", cat: "حلويات", ing: ["كيكة إسفنجية", "جيلي فراولة", "قطع فواكه"], step: "1. حضري الجيلي واتركيه يبرد قليلاً.\n2. ضعي قطع فواكه في القالب ثم صبي جزء من الجيلي وادخليه الثلاجة.\n3. ضعي الكيكة فوق الجيلي المتماسك وصبي باقي الجيلي.\n4. اتركيها تجمد تماماً ثم اقلبيها." },
             { title: "بسكويت النشادر", cat: "حلويات", ing: ["دقيق", "بيض", "نشادر", "زبده أو سمن", "سكر بودرة"], step: "1. اخفقي الزبدة والسكر.\n2. أضيفي البيض والنشادر المذاب في قليل من اللبن.\n3. أضيفي الدقيق وشكلي باستخدام كيس الحلواني.\n4. اخبزي في فرن متوسط الحرارة." },
             { title: "زلابية بالسكر البودرة", cat: "حلويات", ing: ["دقيق", "خميرة", "رشة ملح", "سكر بودرة للزينة"], step: "1. اعجني الدقيق والماء والخميرة.\n2. بعد التخمير، اقلي كرات الزلابية.\n3. فور خروجها رشي عليها السكر البودرة بكثافة." },
-            { title: "كنافة نابلسية (بالجبن)", cat: "حلويات", ing: ["كنافة ناعمة", "جبنة عكاوي منقوعة", "سمن ولون برتقالي"], step: "1. افركي الكنافة بالسمن واللون.\n2. رصي نصف الكنافة في الصينية وضعي الجبن.\n3. ضعي باقي الكنافة واضغطي جيداً.\n4. بعد النضج اسقيها بالشربات الخفيف وقدميها ساخنة." },
+            { title: " كنافة نابلسية (بالجبن)", cat: "حلويات", ing: ["كنافة ناعمة", "جبنة عكاوي منقوعة", "سمن ولون برتقالي"], step: "1. افركي الكنافة بالسمن واللون.\n2. رصي نصف الكنافة في الصينية وضعي الجبن.\n3. ضعي باقي الكنافة واضغطي جيداً.\n4. بعد النضج اسقيها بالشربات الخفيف وقدميها ساخنة." },
             { title: "عاشورا مصرية", cat: "حلويات", ing: ["قمح (بليلة) مسلوق", "لبن", "نشا", "مكسرات"], step: "1. اضربي نصف كمية القمح المسلوق في الخلاط.\n2. ضعي القمح (المضروب والصحيح) مع اللبن والسكر على النار.\n3. أضيفي النشا المذاب في لبن وقلبي.\n4. تزين بالقرفة والمكسرات." },
             { title: "مشط الحلا (حلوى المشط)", cat: "حلويات", ing: ["دقيق", "زبادي", "سمن", "شربات"], step: "1. اعجني المكونات وشكليها أصابع.\n2. اضغطي عليها بظهر مشط (نظيف ومخصص للمطبخ) لتأخذ الشكل.\n3. اقليها في الزيت وضعيها في الشربات." },
             { title: "بقايا الحلويات (ترايفل)", cat: "حلويات", ing: ["قطع كيك أو بسبوسة", "كريم شانتيه", "فاكهة", "صوص شوكولاتة"], step: "1. ضعي طبقة من الكيك المفتت في كاسات.\n2. أضيفي طبقة كريم شانتيه وفاكهة.\n3. كرري الطبقات وزيني بالصوص." },
