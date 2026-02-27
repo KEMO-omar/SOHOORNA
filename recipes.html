@@ -3,408 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الموسوعة الذهبية الكبرى للطبخ العربي | +350 وصفة</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>موسوعة الأكل المصري والحلويات | سحورنا</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root {
             --neon-gold: #ffdf00;
             --dark-gold: #b8860b;
-            --pure-gold: #ffd700;
             --bg-deep: #020202;
             --card-bg: #0d0d0d;
-            --shadow-gold: 0 0 20px rgba(255, 223, 0, 0.4);
-            --neon-border: 2px solid var(--neon-gold);
             --text-main: #ffffff;
-            --transition: all 0.3s ease; /* سرعة استجابة أعلى */
+            --sidebar-width: 280px;
         }
 
         * { box-sizing: border-box; scroll-behavior: smooth; }
-
         body {
             background-color: var(--bg-deep);
             color: var(--text-main);
             font-family: 'Tajawal', sans-serif;
             margin: 0;
-            overflow-x: hidden;
-            content-visibility: auto; /* تحسين سرعة الرندر */
+            display: flex;
         }
 
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1a1500 0%, #000 100%);
-            z-index: -1;
-        }
-
-        /* --- القائمة الجانبية (17 صفحة) --- */
+        /* القائمة الجانبية */
         .sidebar {
-            position: fixed; top: 0; right: -310px; width: 280px; height: 100%;
-            background: #080c14; z-index: 6000; transition: var(--transition); overflow-y: auto;
-            border-left: 2px solid var(--neon-gold);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.9);
+            width: var(--sidebar-width);
+            background: #000;
+            height: 100vh;
+            position: fixed;
+            right: 0; top: 0;
+            border-left: 2px solid var(--dark-gold);
+            overflow-y: auto;
+            z-index: 1001;
         }
-        .sidebar.active { right: 0; }
-        .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid var(--dark-gold); }
-        .sidebar-item { 
-            display: flex; align-items: center; gap: 15px; color: #fff; 
-            text-decoration: none; padding: 15px 25px; 
-            border-bottom: 1px solid rgba(255,223,0,0.05); transition: 0.2s;
-        }
-        .sidebar-item i { color: var(--neon-gold); width: 20px; text-align: center; }
-        .sidebar-item:hover { background: rgba(255,223,0,0.1); padding-right: 35px; color: var(--neon-gold); }
-        
-        .overlay { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
-            display: none; z-index: 5500; backdrop-filter: blur(5px);
-        }
-        .overlay.active { display: block; }
 
-        .menu-toggle {
-            position: fixed; top: 20px; right: 20px; z-index: 5100;
-            background: var(--neon-gold); color: #000; border: none;
-            width: 50px; height: 50px; border-radius: 10px; cursor: pointer;
-            font-size: 1.5rem; box-shadow: var(--shadow-gold);
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #ccc;
+            text-decoration: none;
+            transition: 0.3s;
+            border-bottom: 1px solid #111;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-item i { margin-left: 12px; color: var(--neon-gold); width: 20px; text-align: center; }
+        .sidebar-item:hover { background: #111; color: var(--neon-gold); padding-right: 30px; }
+
+        .main-content {
+            margin-right: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            min-height: 100vh;
         }
 
         header {
-            padding: 80px 20px 60px;
+            padding: 60px 20px;
             text-align: center;
-            border-bottom: 4px solid var(--neon-gold);
-            position: relative;
-            background: rgba(0,0,0,0.6);
+            background: linear-gradient(to bottom, #151515, #000);
+            border-bottom: 3px solid var(--neon-gold);
         }
 
-        header h1 {
-            font-size: clamp(2.5rem, 8vw, 4.5rem); /* Responsive font size */
-            margin: 0;
-            color: var(--neon-gold);
-            text-shadow: 0 0 10px var(--neon-gold);
-            font-weight: 900;
-        }
-
-        .visitor-badge {
-            display: inline-block; margin-top: 20px; padding: 8px 20px;
-            background: rgba(255,223,0,0.1); border: 1px solid var(--neon-gold);
-            border-radius: 50px; color: var(--neon-gold);
-        }
-
-        .stat-ribbon {
-            background: var(--neon-gold); color: #000;
-            padding: 15px 0; display: flex; justify-content: center;
-            gap: 30px; font-weight: bold; flex-wrap: wrap;
-        }
+        header h1 { font-size: 2.8rem; color: var(--neon-gold); margin: 0 0 10px 0; text-shadow: 0 0 15px rgba(255,223,0,0.3); }
+        header p { color: #aaa; max-width: 600px; margin: auto; line-height: 1.6; }
 
         .nav-scroller {
-            position: sticky; top: 0; z-index: 1000;
-            background: rgba(5, 5, 5, 0.95); border-bottom: 1px solid var(--dark-gold);
-            padding: 15px 0; overflow-x: auto; white-space: nowrap;
-            display: flex; scrollbar-width: none; /* Hide scrollbar Firefox */
+            background: #0a0a0a;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--dark-gold);
+            z-index: 100;
         }
-        .nav-scroller::-webkit-scrollbar { display: none; }
 
         .category-btn {
-            background: transparent; border: 1px solid var(--dark-gold);
-            color: var(--dark-gold); padding: 10px 25px; margin: 0 5px;
-            border-radius: 50px; cursor: pointer; font-weight: 700; transition: 0.3s;
-        }
-        .category-btn.active, .category-btn:hover {
-            background: var(--neon-gold); color: #000; box-shadow: var(--shadow-gold);
+            background: #111;
+            border: 1px solid var(--dark-gold);
+            color: var(--neon-gold);
+            padding: 8px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
         }
 
-        .container { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
+        .category-btn.active { background: var(--neon-gold); color: #000; box-shadow: 0 0 10px var(--neon-gold); }
 
-        .main-search {
-            width: 100%; max-width: 700px; padding: 18px 30px;
-            background: #111; border: 2px solid var(--dark-gold);
-            border-radius: 100px; color: #fff; font-size: 1.1rem;
-            outline: none; transition: 0.3s; margin-bottom: 40px;
+        .container { padding: 40px 20px; max-width: 1200px; margin: auto; }
+
+        .search-box {
+            width: 100%;
+            padding: 18px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 35px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: 0.3s;
         }
-        .main-search:focus { border-color: var(--neon-gold); box-shadow: var(--shadow-gold); }
+        .search-box:focus { border-color: var(--neon-gold); box-shadow: 0 0 10px rgba(255,223,0,0.1); }
 
-        .recipe-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 25px; 
-            will-change: transform;
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
         }
 
         .card {
-            background: var(--card-bg); border: 1px solid #222;
-            border-radius: 20px; padding: 25px; cursor: pointer;
-            transition: var(--transition); position: relative;
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid #222;
+            transition: 0.4s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .card:hover { transform: translateY(-8px); border-color: var(--neon-gold); }
-        .card h3 { color: var(--neon-gold); font-size: 1.4rem; margin: 0 0 10px 0; }
 
+        .card:hover { border-color: var(--neon-gold); transform: translateY(-8px); background: #151515; }
+        .card h3 { color: var(--neon-gold); margin: 15px 0 10px; font-size: 1.3rem; }
+        .card .badge { background: #222; color: #888; padding: 4px 10px; border-radius: 5px; font-size: 0.75rem; width: fit-content; }
+
+        /* Modal */
         .modal {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.95); z-index: 9999; 
-            justify-content: center; align-items: center; padding: 20px;
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
         }
+
         .modal-inner {
-            background: #050505; width: 100%; max-width: 900px; max-height: 90vh;
-            border: 2px solid var(--neon-gold); border-radius: 30px; padding: 40px;
-            position: relative; overflow-y: auto;
-        }
-        .close-btn { position: absolute; top: 20px; left: 20px; color: var(--neon-gold); font-size: 35px; cursor: pointer; }
-
-        .recipe-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
-        
-        .calculator-box { 
-            background: #0a0a0a; border-radius: 30px; padding: 30px; 
-            margin-top: 60px; border: 1px solid var(--dark-gold); 
-        }
-        
-        .calc-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .calc-table th { padding: 15px; color: var(--neon-gold); border-bottom: 2px solid var(--neon-gold); }
-        .calc-table td { padding: 15px; text-align: center; border-bottom: 1px solid #222; }
-
-        .result-bar { 
-            margin-top: 30px; background: var(--neon-gold); color: #000; 
-            padding: 20px; border-radius: 15px; text-align: center; 
-            font-size: 2rem; font-weight: 900; 
+            background: #0a0a0a;
+            width: 90%; max-width: 650px;
+            max-height: 85vh;
+            border: 1px solid var(--neon-gold);
+            border-radius: 25px;
+            padding: 35px;
+            overflow-y: auto;
+            position: relative;
         }
 
-        .add-to-plan { 
-            background: var(--neon-gold); color: #000; border: none; 
-            padding: 15px 30px; border-radius: 12px; font-weight: 900; 
-            cursor: pointer; width: 100%; transition: 0.3s;
-        }
+        .close-btn { position: absolute; top: 20px; left: 20px; color: var(--neon-gold); font-size: 30px; cursor: pointer; }
 
-        @media (max-width: 768px) {
-            .container { padding: 0 15px; }
-            .stat-ribbon { font-size: 0.8rem; gap: 15px; }
-            .modal-inner { padding: 20px; }
+        .ing-list { list-style: none; padding: 0; margin: 20px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .ing-list li { background: #151515; padding: 10px; border-radius: 8px; font-size: 0.9rem; border-right: 3px solid var(--neon-gold); }
+
+        .steps-box { line-height: 1.8; color: #ddd; background: #111; padding: 20px; border-radius: 12px; white-space: pre-line; }
+
+        .share-btn {
+            background: #25d366; color: white; border: none; padding: 15px;
+            border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold;
+            display: flex; align-items: center; gap: 10px; justify-content: center;
+            margin-top: 30px; transition: 0.3s;
+        }
+        .share-btn:hover { background: #1fb355; transform: scale(1.02); }
+
+        @media (max-width: 992px) {
+            .sidebar { display: none; }
+            .main-content { margin-right: 0; width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="فتح القائمة"><i class="fa-solid fa-bars"></i></button>
-
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2 style="color:var(--neon-gold)">الموسوعة</h2>
-            <p style="color:#888; font-size:0.8rem">دليلك الرمضاني الشامل 2026</p>
-        </div>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-dhikr"></i> المسبحة الإلكترونية</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-hand-holding-dollar"></i> حاسبة الزكاة</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الإسلامية</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-utensils"></i> وصفات الإفطار</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-moon"></i> نصائح السحور</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-heart-pulse"></i> صحتك في رمضان</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-tv"></i> جدول المسلسلات</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-children"></i> ركن الأطفال</a>
-        <a href="#" class="sidebar-item"><i class="fa-solid fa-circle-info"></i> حول الموسوعة</a>
+    <nav class="sidebar">
+        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
+        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
+        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
+        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> المسبحة الإلكترونية</a>
+        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> حاسبة الزكاة</a>
+        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
+        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الدينية</a>
+        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> وصفات الفطور</a>
+        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> نصائح السحور</a>
+        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
+        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
+        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
+        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
+        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> ركن الأطفال</a>
+        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
     </nav>
 
-    <header>
-        <h1>المَوسُوعة العَرَبِيَّة <span style="color:#fff">الذهبية</span></h1>
-        <p>دليلك الصحي لرمضان 2026 - أكثر من 350 وصفة عربية</p>
-        <div class="visitor-badge" id="visitorBadge">👁️ زوار اليوم: جاري التحميل...</div>
-    </header>
+    <div class="main-content">
+        <header>
+            <h1>موسوعة سفرة رمضان</h1>
+            <p>نقدم لكي سيدتي أجمل الوصفات المصرية الأصيلة والحلويات الشرقية المختارة بعناية لتزيين مائدتك في الشهر الفضيل، بطرق تحضير دقيقة ومقادير مضبوطة.</p>
+        </header>
 
-    <div class="stat-ribbon">
-        <span>🏆 أقسام الطعام: 9</span>
-        <span>🔥 إجمالي السعرات: 150,000+</span>
-        <span>🍽️ مطابخ عربية: 22 دولة</span>
-    </div>
-
-    <div class="nav-scroller" id="tabContainer"></div>
-
-    <div class="container">
-        <div style="text-align: center;">
-            <input type="text" id="recipeSearch" class="main-search" placeholder="ابحث في 350+ وصفة..." oninput="handleSearch()">
+        <div class="nav-scroller">
+            <button class="category-btn active" id="btn-all" onclick="filterCat('الكل')">الكل</button>
+            <button class="category-btn" id="btn-egy" onclick="filterCat('أكلات مصرية')">أكلات مصرية</button>
+            <button class="category-btn" id="btn-sweet" onclick="filterCat('حلويات')">حلويات</button>
         </div>
 
-        <div id="recipeGrid" class="recipe-grid"></div>
-
-        <div class="calculator-box" id="calcSection">
-            <h2 style="color: var(--neon-gold); text-align: center; font-size: 2rem;">📊 مخطط التغذية الرمضاني</h2>
-            <div style="overflow-x: auto;">
-                <table class="calc-table">
-                    <thead>
-                        <tr>
-                            <th>الوصفة</th>
-                            <th>التصنيف</th>
-                            <th>السعرات</th>
-                            <th>تحكم</th>
-                        </tr>
-                    </thead>
-                    <tbody id="trackerBody"></tbody>
-                </table>
-            </div>
-            <div class="result-bar" id="totalCaloriesDisplay">الإجمالي: 0 سعر</div>
-            <button class="add-to-plan" style="background:#333; color:white; margin-top:20px;" onclick="clearPlan()">إعادة ضبط المخطط</button>
+        <div class="container">
+            <input type="text" id="search" class="search-box" placeholder="🔍 ابحث عن وصفة معينة (مثلاً: ملوخية، بسبوسة)..." onkeyup="doSearch()">
+            <div class="recipe-grid" id="grid"></div>
         </div>
     </div>
 
-    <div id="recipeModal" class="modal">
+    <div id="modal" class="modal">
         <div class="modal-inner">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 id="mTitle" style="color: var(--neon-gold); font-size: 2.5rem; margin-bottom: 10px;"></h2>
-            <div id="mMeta" class="visitor-badge"></div>
-            <div class="recipe-details-grid">
-                <div>
-                    <h4 style="color:var(--neon-gold)">🛒 المقادير:</h4>
-                    <ul id="mIngredients" style="line-height: 1.8;"></ul>
-                </div>
-                <div>
-                    <h4 style="color:var(--neon-gold)">👨‍🍳 طريقة التحضير:</h4>
-                    <p id="mSteps" style="line-height: 1.8; color: #ccc;"></p>
-                </div>
-            </div>
-            <button id="addBtnInModal" class="add-to-plan" style="margin-top:30px;">إضافة إلى خطتي ⚡</button>
+            <h2 id="mTitle" style="color:var(--neon-gold); margin-top:0;"></h2>
+            <div id="mBadge" class="badge" style="margin-bottom:20px;"></div>
+            
+            <h4 style="color:var(--dark-gold);"><i class="fa-solid fa-basket-shopping"></i> المكونات والمقادير:</h4>
+            <ul id="mIng" class="ing-list"></ul>
+
+            <h4 style="color:var(--dark-gold);"><i class="fa-solid fa-kitchen-set"></i> طريقة التحضير خطوة بخطوة:</h4>
+            <div id="mStep" class="steps-box"></div>
+
+            <button id="shareBtn" class="share-btn">
+                <i class="fa-brands fa-whatsapp"></i> مشاركة الوصفة عبر واتساب
+            </button>
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="stats.js"></script>
+
     <script>
-        // --- البيانات العملاقة (تم الحفاظ عليها بالكامل) ---
-        const categoriesData = {
-            "مصر": ["ملوخية بالفراخ", "كفتة داوود باشا", "فتة موزة بالخل", "بامية باللحمة", "شوربة عدس بالشعرية", "حمام محشي فريك", "ممبار صحي", "مسقعة بالفرن", "كشري مصري لايت", "سمك بلطي مشوي", "حواوشي جريل", "أرز معمر دايت", "قلقاس بالسلق", "بصارة مصرية", "شكشوكة", "طعمية في الفرن", "كبدة إسكندراني", "رقاق باللحم المفروم", "صينية بطاطس بالفراخ", "تورلي خضار باللحم", "كشك ألماظ", "خبيزة مصرية", "ويكة صعيدي", "شوربة لسان عصفور", "أرانب محمرة بالثوم", "كباب حلة", "كفتة أرز بالصلصة", "سجق شرقي بيتي", "مكرونة بشاميل دايت", "كوسة محشية"],
-            "الخليج": ["كبسة سعودية", "مندي يمني لحم", "مجبوس دجاج كويتي", "جريش قطري", "هريس إماراتي", "مكبوس ربيان بحريني", "ثريد عماني", "مرقوقة خضار", "صالونة دجاج", "قوزي عراقي", "بخاري دجاج", "سليق طائفي", "مطازيز سعودية", "مندي سمك", "مفطح لايت", "شوربة حب حجازية", "مضروبة دجاج", "كبيبة حائل", "عصيدة تمر", "حنيذ عسيري", "أرز حساوي", "مشخول سمك", "قبور بر", "بلاليط إماراتي", "خنفروش", "مشوي قدر", "ثريد دجاج", "قرصان", "أرز بخاري", "مرق سمك خليجي"],
-            "المغرب العربي": ["كسكسي مغربي بالخضار", "طاجن برقوق باللحم", "حريرة مغربية أصلية", "بسطيلة دجاج", "رفيسة عمياء", "شوربة فريك جزائرية", "طاجن زيتون", "كسكسي بالسمك تونسي", "بريك دنوني فرن", "سلطة مشوية تونسية", "طاجن جلبانة جلفاوي", "شباكية دايت", "كفتة حسن باشا جزائرية", "عصبان تونسي", "رشتة عاصمية", "مثوم جزائري", "دولمة خضار مغاربية", "سفيرية عاصمية", "لحم حلو", "تليتلي دجاج", "بركوكش حامي", "موسلي تونسي", "كمونية باللحم", "مدفونة تونسية", "مرقة حلوة", "سلاطة مسموطة", "طاجن ملصوقة", "شخشوخة بسكرية", "قناوية تونسية", "محنشة مالحة"],
-            "بلاد الشام": ["كبة مشوية سورية", "منسف أردني أصلي", "مقلوبة دجاج فلسطينية", "مجدرة برغل لبنانية", "شيش برك باللبن", "شاكرية سورية", "يالنجي ورق عنب", "حراق اصبعه", "فتة حمص شامية", "مسخن فلسطيني", "قلاية بندورة أردنية", "عرايس لحم عالفحم", "كبة لبنية حلبية", "اوزي دجاج سوري", "مكمورة أردنية", "صيادية سمك لبنانية", "داوود باشا شامي", "تسقية بالسمنة", "كوسا محشي باللبن", "شيش طاووق", "فتة دجاج لبنانية", "كبة حميض", "مدردرة برغل", "لبنية حلبية", "بابا غنوج", "متبل باذنجان", "صفيحة بعلبكية", "شوربة فريكة", "مجدرة أرز", "كفتة بالطحينة"],
-            "حلويات مصرية": ["بسبوسة بالبندق لايت", "كنافة بالقشطة الكذابة", "قطايف بالمكسرات فرن", "أرز بلبن كريمي", "أم علي بالكرواسون", "مهلبية قمر الدين", "لقمة القاضي (زلابية)", "بلح الشام مقرمش", "عاشورا مصرية", "كنافة نابلية بالجبن", "أصابع زينب", "عزيزية دمياطي", "بسكويت العيد", "كعك السكر", "غريبة تذوب", "قراقيش بالعجوة", "مشابك دمياطي", "رموش الست", "عيش السرايا مصري", "فطيرة مشلتت بالعسل", "مدلعة طنطاوي", "رواني جوز الهند", "شكلمة", "بسيمة", "ترايفل المانجو", "فطيرة القشطة", "كوكيز العسل الأسود", "تارت بلح", "بودينج شوكولاتة", "جيلو فواكه"],
-            "حلويات الخليج": ["لقيمات دبس التمر", "عصيدة بوبر", "حلوى بحرينية خضراء", "بثيث تمر", "قرص عقيلي", "خبيصة إماراتية", "لقيمات جبن كيري", "حلوى عمانية سوداء", "ساغو خليجي", "بلاليط بالسكر", "محلبية زعفران", "كيكة التمر والهيل", "خنفروش بحريني", "لقيمات كاكاو", "كليجا سعودية", "معمول تمر", "عفوس قطري", "ساقو بالهيل", "مطبق زبيدي حلو", "حنيني سعودي", "قشد تمر", "كيكة دخن", "لقيمات عسل", "تمر محشي طحينة", "مصابيب بالعسل", "جبنية", "لقيمات مقرمشة", "غريبة هيل", "كوكيز تمر", "بودينج الهيل"],
-            "حلويات المغرب العربي": ["قلب اللوز جزائري", "زلالية تونسية", "مقروط بالتمر فرن", "شباكية مغربية", "سلو مغربي صحي", "طمينة جزائرية", "كعب الغزال", "حلويات اللوز المغربية", "غريبة بهلة", "بريوات بالعسل", "مسمن مغربي حلو", "بغرير بالعسل", "قريوش جزائري", "مقروط اللوز", "حلويات الوردة", "صابلي تذوب", "تشاراك مسكر", "بوقنوط تونسي", "حلويات الرخامة", "فقاص مغربي", "غريبة الكاوكاو", "قنيدلات جزائرية", "كعك النقاش", "حلويات صب الرشراش", "تشاراك العريان", "بنيون جزائري", "قوراية", "مقروط العسل", "حلوى الطابع", "غريبة الحمص"],
-            "حلويات الشام": ["كنافة نابلسية خشنة", "حلاوة الجبن حمصية", "بكلواة بالفستق", "عثملية بالقشطة", "مدلوقة سورية", "وربات بالقشطة", "كولاج فلسطيني", "عوامة مقرمشة", "هريسة نبكية", "نمورة لبنانية", "مفروكة فستق", "شعيبيات ادلبية", "برازق شامية", "غريبة شامية", "معمول بالفستق", "كرابيج حلب", "كنافة ناعمة بالجبن", "مشبك سوري", "قطايف عصافيري بالكريمة", "ليالي لبنان", "رز بحليب شامية", "هريسة شامية باللوز", "بشكاتة", "معمول التمر الشامي", "كنافة بين نارين", "زنود الست", "حلويات مشكلة", "تمرية نابلسية", "قزحة فلسطينية", "هريسة يقطين"],
-            "مشروبات رمضان": ["قمر الدين منزلي", "تمر هندي أصلي", "سوبيا رحماني", "خروب مركز", "عرقسوس بارد", "خشاف رمضان غني", "كركديه مثلج", "عصير جزر بالبرتقال", "شاي كرك أصلي", "قهوة عربية بالهيل", "عصير ليمون ونعناع", "سموزي فواكه رمضان", "لبن رائب بالنعناع", "ميلك شيك تمر", "شراب الورد", "عصير الرمان", "عصير الدوم", "عصير الأفوكادو بالعسل", "ميلك شيك فيمتو", "عصير المانجو المركز", "سموزي البطيخ", "عصير الكوكتيل الطبقات", "عصير البنجر والرمان", "شراب الزنجبيل البارد", "عصير التفاح بالقرفة", "عصير الكيوي والليمون", "سموزي التين الشوكي", "موكا باردة", "ايس تي خوخ", "قهوة سعودية شقراء"]
-        };
+        const recipes = [
+            // --- أكلات مصرية (25 وصفة) ---
+            { title: "الملوخية الخضراء المصرية", cat: "أكلات مصرية", ing: ["نصف كيلو ملوخية مخرطة", "شوربة دجاج دسمة", "5 فصوص ثوم مفروم", "ملعقة كبيرة كزبرة ناشفة", "سمن بلدي"], step: "1. سخني الشوربة حتى الغليان.\n2. أضيفي الملوخية وقلبيها بالمضرب اليدوي حتى تمتزج.\n3. في مقلاة صغيرة، حمري الثوم مع السمن حتى يصفر، ثم أضيفي الكزبرة وقلبي ثواني.\n4. اسكبي 'الطشة' فوق الملوخية وشهقي الشهقة المصرية الشهيرة وغطيها فوراً." },
+            { title: "كشري التحرير الأصلي", cat: "أكلات مصرية", ing: ["أرز مصري", "عدس بجبة", "مكرونة صغيرة", "بصل محمر (ورد)", "صلصة طماطم بالثوم"], step: "1. اسلقي العدس والمكرونة كلٍ على حدة.\n2. حضري الأرز بالشعيرية.\n3. للصلصة: ثوم محمر، خل، عصير طماطم، ملح، كمون.\n4. الدقة: ماء، ثوم، خل، ليمون، كمون وشطة.\n5. رصي الطبقات وزينيها بالبصل المقرمش." },
+            { title: "بط محشي فريك", cat: "أكلات مصرية", ing: ["بطة كاملة", "فريك منقوع", "بصل مفروم", "ملح وفلفل وبهارات", "مستكة وحبهان"], step: "1. شوحي البصل ثم أضيفي الفريك والكبد والقوانص المقطعة مع البهارات.\n2. احشي البطة بالخليط وأغلقيها جيداً.\n3. اسلقي البطة في ماء به بوكيه جارنيه.\n4. ادهني البطة بالصلصة والعسل وحمريها في الفرن لتأخذ لوناً ذهبياً." },
+            { title: "حواوشي بلدي مقرمش", cat: "أكلات مصرية", ing: ["لحم مفروم به نسبة دسم", "بصل مفروم ناعم", "فلفل رومي وحامي", "بهارات حواوشي", "خبز بلدي طازج"], step: "1. اخلطي اللحم مع البصل والفلفل والبهارات واعجنيها جيداً.\n2. افتحي أرغفة الخبز ووزعي اللحم بالتساوي.\n3. ادهني الخبز بالزيت أو السمن من الخارج.\n4. غلفيه بورق زبدة واخبزيه في الفرن أو في مقلاة على النار حتى ينضج ويقرمش." },
+            { title: "فتة موزة ضاني", cat: "أكلات مصرية", ing: ["لحم موزة ضاني", "أرز أبيض مصري", "خبز محمص بالسمن", "خل وثوم", "صلصة طماطم"], step: "1. اسلقي اللحم مع المنكهات حتى تمام النضج.\n2. شوحي الثوم في سمن ثم أضيفي الخل والصلصة.\n3. رصي الخبز المحمص، سقيه بالقليل من الشوربة والصلصة.\n4. أضيفي الأرز ثم رصي اللحم على الوجه ووزعي باقي الصلصة." },
+            { title: "مسقعة باللحمة المفرومة", cat: "أكلات مصرية", ing: ["باذنجان رومي مقلي", "فلفل أخضر", "لحم مفروم معصج", "صلصة طماطم متسبكة"], step: "1. رصي طبقة باذنجان وفلفل في الطاجن.\n2. ضعي طبقة اللحم المعصج.\n3. أضيفي باقي الباذنجان ثم اسكبي الصلصة.\n4. أدخليها الفرن لمدة 20 دقيقة حتى تتسبك تماماً." },
+            { title: "طاجن عكاوي بالبصل", cat: "أكلات مصرية", ing: ["عكاوي مغسولة", "كيلو بصل شرائح", "فلفل أسود وبهارات", "شوربة"], step: "1. شوحي العكاوي في سمن حتى يتغير لونها.\n2. أضيفي كمية كبيرة من البصل المكرمل والبهارات.\n3. ضعي المكونات في طاجن فخار مع القليل من المرق.\n4. غطيه بورق فويل وأدخليه الفرن حتى تصبح اللحمة 'دايبة'." },
+            { title: "مكرونة بالبشاميل", cat: "أكلات مصرية", ing: ["مكرونة قلم", "لحم مفروم", "دقيق وسمن", "لبن (حليب)"], step: "1. حضري البشاميل (سمن ودقيق ثم الحليب مع التقليب).\n2. اسلقي المكرونة وعصجي اللحم.\n3. اخلطي جزء من البشاميل مع المكرونة.\n4. رصي نصف المكرونة ثم اللحم ثم الباقي، وغطي الوجه بالبشاميل والبيض أو الجبن." },
+            { title: "ممبار (عصبان)", cat: "أكلات مصرية", ing: ["ممبار نظيف", "أرز مصري", "خضرة محشي", "صلصة وبصل"], step: "1. اخلطي الأرز مع الخضرة والبصل النيء والصلصة والبهارات (خلطة ني في ني).\n2. احشي الممبار ولا تملئيه كثيراً حتى لا ينفجر.\n3. اسلقيه في ماء مغلي به منكهات.\n4. بعد النضج، صفيه وحمريه في زيت غزير." },
+            { title: "كفتة أرز بالصلصة", cat: "أكلات مصرية", ing: ["لحم مفروم مع أرز مطحون", "خضرة وثوم", "صلصة طماطم", "مكعبات بطاطس (اختياري)"], step: "1. شكلي الكفتة أصابع وحمريها في الزيت.\n2. حضري صلصة بالثوم.\n3. ضعي الكفتة في الصلصة المغلية واتركيها تنضج.\n4. تقدم مع أرز بالشعيرية." },
+            { title: "صينية سمك ماكريل", cat: "أكلات مصرية", ing: ["سمك ماكريل", "شرائح بصل وطماطم", "ثوم وليمون", "كمون وكزبرة"], step: "1. تبلّي السمك بالثوم والليمون والبهارات.\n2. رصي الخضروات في الصينية وضعي السمك فوقها.\n3. أضيفي القليل من الزيت والماء.\n4. أدخليها الفرن حتى ينضج السمك تماماً." },
+            { title: "حمام محشي أرز", cat: "أكلات مصرية", ing: ["جوز حمام", "أرز مغسول", "كبد وقوانص", "بصل مفروم"], step: "1. شوحي البصل مع الكبد والقوانص ثم الأرز والبهارات.\n2. احشي الحمام من الداخل وتحت الجلد (برفق).\n3. اسلقي الحمام في ماء مغلي.\n4. ادهنيه باللبن وحمريه في سمن بلدي للون ذهبي رائع." },
+            { title: "بامية باللحمة الضاني", cat: "أكلات مصرية", ing: ["بامية", "لحم ضاني", "صلصة طماطم", "ثوم وفلفل أحمر"], step: "1. شوحي اللحم ثم أضيفي عصير الطماطم واتركيه يتسبك.\n2. أضيفي البامية وقليل من المرق.\n3. قبل النضج، أضيفي دقة الثوم والكزبرة النيئة.\n4. يفضل وضعها في طاجن ودخولها الفرن." },
+            { title: "قلقاس بالسلق", cat: "أكلات مصرية", ing: ["قلقاس مكعبات", "سلق وخضرة", "ثوم", "شوربة دسمة"], step: "1. اسلقي القلقاس في الشوربة.\n2. اضربي السلق في الخلاط وصفيه، ضعي الماء على القلقاس.\n3. شوحي تفل السلق مع الثوم والسمن حتى يغمق لونه.\n4. أضيفي الطشة للقلقاس." },
+            { title: "بصارة مصرية", cat: "أكلات مصرية", ing: ["فول مدشوش منقوع", "خضرة (شبت بقدونس كزبرة)", "بصل وثوم", "نعناع ناشف"], step: "1. اسلقي الفول مع الخضرة والبصل والثوم.\n2. اضربي الخليط في الخلاط بعد النضج.\n3. أعيديه للنار مع النعناع.\n4. صبيها في أطباق وزينيها بالبصل المحمر." },
+            { title: "أرز معمر فلاحي", cat: "أكلات مصرية", ing: ["أرز مصري", "لبن كامل الدسم", "قشطة بلدي", "سمن وملح"], step: "1. ادهني الطاجن بالسمن وضعي الأرز.\n2. أضيفي الملح واللبن المغلي.\n3. ضعي القشطة على الوجه.\n4. ادخليه فرن ساخن جداً حتى يتشرب ويأخذ وجهاً ذهبياً." },
+            { title: "كبدة إسكندراني", cat: "أكلات مصرية", ing: ["كبدة مقطعة صغير", "ثوم مفروم بكثرة", "فلفل أخضر حامي", "خل وليمون"], step: "1. في مقلاة ساخنة جداً بها زيت، ضعي الثوم ثم الكبدة.\n2. قلبي سريعاً وأضيفي الفلفل والملح والكمون.\n3. أضيفي الخل في النهاية واطفئي النار فوراً لتبقى طرية." },
+            { title: "شوربة عدس بالشعيرية", cat: "أكلات مصرية", ing: ["عدس أصفر", "جزر وطماطم وبصل", "ثوم", "شعيرية محمرة"], step: "1. اسلقي العدس مع الخضروات واضربيه في الخلاط.\n2. حمرى الشعيرية وأضيفيها للعدس.\n3. قلبي حتى تنضج الشعيرية وزينيها بالبصل المحمر." },
+            { title: "شكشوكة مصرية", cat: "أكلات مصرية", ing: ["بيض", "بصل مفروم", "طماطم مكعبات", "فلفل أخضر"], step: "1. شوحي البصل ثم الفلفل ثم الطماطم حتى تذبل.\n2. أضيفي البيض والملح والفلفل الأسود.\n3. قلبي حتى ينضج البيض وتقدم مع خبز بلدي." },
+            { title: "صينية بطاطس بالفراخ", cat: "أكلات مصرية", ing: ["شرائح بطاطس", "دجاج مقطع", "عصير طماطم", "بصل شرائح"], step: "1. قلبي البصل مع الملح والفلفل جيدا.\n2. رصي البطاطس والدجاج في الصينية.\n3. صبي عصير الطماطم وملعقة سمن.\n4. غطيها بالفويل وادخليها الفرن." },
+            { title: "ورق عنب بالكوارع", cat: "أكلات مصرية", ing: ["ورق عنب محشو", "كوارع مسلوقة ومخلية", "شوربة كوارع", "صلصة"], step: "1. رصي ورق العنب في الطاجن وضعي في المنتصف قطع الكوارع.\n2. اسقيه بشوربة الكوارع المضاف لها صلصة وليمون.\n3. غطيه وادخليه الفرن حتى يتشرب تماما." },
+            { title: "كفتة الحاتي", cat: "أكلات مصرية", ing: ["لحم مفروم به دسم", "بشر بصل (معصور)", "تفل البصل", "بهارات لحم"], step: "1. اخلطي اللحم مع تفل البصل والبهارات.\n2. صبّعي الكفتة على أسياخ باستخدام مياه البصل.\n3. اشويها على الفحم أو في الفرن مع فحم مشتعل في النهاية." },
+            { title: "كشك مصري بالدجاج", cat: "أكلات مصرية", ing: ["شوربة دجاج", "أرز", "زبادي ودقيق", "قطع دجاج"], step: "1. اسلقي ملعقة أرز في الشوربة حتى تذوب.\n2. اخلطي الزبادي مع الدقيق وأضيفيه للشوربة مع التقليب حتى يثقل.\n3. أضيفي قطع الدجاج المسلوقة.\n4. يصب في أطباق ويزين بالبصل المحمر." },
+            { title: "سبانخ بالحمص", cat: "أكلات مصرية", ing: ["سبانخ طازجة", "حمص طبيخ منقوع", "صلصة طماطم", "كزبرة وثوم"], step: "1. شوحي البصل وأضيفي الطماطم والحمص.\n2. بعد غليان الصلصة أضيفي السبانخ المقطعة.\n3. في النهاية أضيفي طشة الثوم والكزبرة." },
+            { title: "أرانب بالملوخية", cat: "أكلات مصرية", ing: ["أرنب مقطع", "ملوخية", "مستكة وحبهان", "ثوم"], step: "1. اسلقي الأرنب مع المستكة والحبهان.\n2. استخدمي الشوربة لعمل الملوخية بنفس الطريقة المعتادة.\n3. حمري قطع الأرنب في السمن البلدي وقدميها مع الملوخية." },
 
-        // --- محرك النظام ---
-        let masterDB = [];
-        let activeCat = "مصر";
-        let plan = JSON.parse(localStorage.getItem('ramadanPlan')) || [];
+            // --- حلويات (25 وصفة) ---
+            { title: "بسبوسة الحلواني المرملة", cat: "حلويات", ing: ["نصف كيلو سميد", "كوب سمن دافئ", "كوب سكر", "نصف كوب لبن", "شربات خفيف"], step: "1. ابسي السميد مع السمن جيدا حتى يتغلف.\n2. أضيفي السكر واللبن وقلبي بخفة (بدون عجن).\n3. ضعيها في صينية مدهونة وادخليها فرن متوسط.\n4. اسقيها بالشربات الخفيف الساخن فور خروجها." },
+            { title: "كنافة بالقشطة الكدابة", cat: "حلويات", ing: ["نصف كيلو كنافة", "سمن سايح", "لبن ونشا (للمهلبية)", "شربات ثقيل بارد"], step: "1. قطعي الكنافة واخلطيها بالسمن.\n2. حضري القشطة (غلي اللبن مع النشا حتى يثقل).\n3. ضعي نصف الكنافة في الصينية ثم القشطة ثم باقي الكنافة.\n4. اخبزيها واسقيها بالشربات البارد." },
+            { title: "لقيمات (قاضي القضاة)", cat: "حلويات", ing: ["دقيق", "خميرة فورية", "ملعقة نشا", "ماء دافئ"], step: "1. اعجني المكونات لتكون عجينة لينة واتركيها تخمر.\n2. شكلي كرات صغيرة واقليها في زيت غزير.\n3. بعد أن تبرد قليلاً، ضعيها في شربات ثقيل أو سكر بودرة." },
+            { title: "أم علي بالكرواسون", cat: "حلويات", ing: ["قطع كرواسون أو رقاق", "لبن مغلي بسكر", "قشطة", "مكسرات وجوز هند"], step: "1. رصي قطع الكرواسون والمكسرات في طاجن.\n2. اسكبي اللبن المغلي حتى يتغطى.\n3. ضعي القشطة على الوجه.\n4. ادخليها تحت الشواية تأخذ لوناً ذهبياً." },
+            { title: "بلح الشام المقرمش", cat: "حلويات", ing: ["كوب دقيق", "كوب ماء", "ربع كوب زيت", "2 بيضة", "فانيليا"], step: "1. اغلي الماء والزيت ثم أضيفي الدقيق دفعة واحدة وقلبي.\n2. اتركي العجين يبرد ثم أضيفي البيض تدريجياً مع الفانيليا.\n3. شكلي بقمح في زيت بارد ثم اشعلي النار.\n4. ضعيه في شربات ثقيل فور خروجه." },
+            { title: "أرز باللبن (زي المحلات)", cat: "حلويات", ing: ["نصف كوب أرز", "لتر لبن", "كوب سكر", "قشطة أو كريم شانتيه"], step: "1. اسلقي الأرز في ماء حتى ينضج تماماً.\n2. أضيفي اللبن والسكر واتركيه يغلي مع الأرز.\n3. أذيب النشا في قليل من اللبن وأضيفيه للخليط.\n4. أضيفي القشطة وصبيه في أطباق." },
+            { title: "قطايف بالمكسرات", cat: "حلويات", ing: ["وحدات قطايف", "سوداني ومكسرات", "جوز هند وزبيب", "زيت للقلي"], step: "1. احشي القطايف بخليط المكسرات وأغلقيها جيداً.\n2. اقليها في زيت غزير ساخن.\n3. ضعيها فوراً في شربات ثقيل بارد وصفّيها." },
+            { title: "مهلبية قمر الدين", cat: "حلويات", ing: ["لفافة قمر دين", "سكر", "نشا", "ماء زهر"], step: "1. انقعي قمر الدين في ماء مغلي ثم اضربيه في الخلاط.\n2. ضعيه على النار مع السكر.\n3. أضيفي النشا المذاب في ماء وقلبي حتى يثقل.\n4. صبيه في أطباق وزيني باللوز وجوز الهند." },
+            { title: "رموش الست", cat: "حلويات", ing: ["دقيق", "دقيق سميد", "زبدة", "سكر بودرة", "بيض"], step: "1. اخفقي الزبدة والسكر ثم البيض.\n2. أضيفي الدقيق والسميد واعجني.\n3. شكليها بيضاوية واضغطي بالشوكة.\n4. اخبزيها واسقيها بشربات خفيف." },
+            { title: "صوابع زينب", cat: "حلويات", ing: ["كوب سميد", "كوب دقيق", "خميرة", "ماء دافئ", "سمن"], step: "1. اعجني المكونات واتركيها ترتاح قليلاً.\n2. شكليها على مبشرة لتأخذ الشكل التقليدي.\n3. اقليها فوراً في زيت ساخن ثم ضعيها في الشربات الثقيل." },
+            { title: "عزيزية (مكرونة باللبن)", cat: "حلويات", ing: ["مكرونة مسلوقة", "لبن", "سكر", "نشا وبيض"], step: "1. اضربي المكرونة المسلوقة مع اللبن والسكر في الخلاط.\n2. ضعي الخليط على النار وأضيفي النشا حتى يثقل.\n3. صبيها في صينية مدهونة وادهني الوجه ببيضة وفانيليا.\n4. ادخليها الفرن حتى يحمر وجهها." },
+            { title: "غريبة ناعمة", cat: "حلويات", ing: ["4 أكواب دقيق", "2 كوب سمن بارد", "1 كوب سكر بودرة"], step: "1. اضربي السمن مع السكر حتى يصبح كريمياً.\n2. أضيفي الدقيق تدريجياً حتى تتشكل عجينة.\n3. شكليها كرات صغيرة وزينيها بالفصوص أو اللوز.\n4. اخبزيها في فرن هادئ جداً (لا يجب أن يتغير لونها)." },
+            { title: "كحك العيد الدايب", cat: "حلويات", ing: ["كيلو دقيق", "نصف كيلو سمن مقدوح", "ملعقة ريحة كحك", "خميرة وسمسم"], step: "1. ضعي السميد وريحة الكحك على الدقيق.\n2. اسكبي السمن المقدوح وبسّي الدقيق جيداً.\n3. أضيفي الخميرة المذابة في قليل من الماء.\n4. شكلي وانقشي واخبزيه في فرن متوسط." },
+            { title: "ليالي لبنان الباردة", cat: "حلويات", ing: ["لبن", "سميد ناعم", "مستكة", "قشطة وفستق"], step: "1. غلي اللبن مع السميد والمستكة مع التقليب المستمر.\n2. صبي الخليط في بايركس واتركيه يبرد.\n3. غطي الوجه بطبقة قشطة وزينيها بالفستق والعسل." },
+            { title: "تورتة الجيلي", cat: "حلويات", ing: ["كيكة إسفنجية", "جيلي فراولة", "قطع فواكه"], step: "1. حضري الجيلي واتركيه يبرد قليلاً.\n2. ضعي قطع الفواكه في القالب ثم صبي جزء من الجيلي وادخليه الثلاجة.\n3. ضعي الكيكة فوق الجيلي المتماسك وصبي باقي الجيلي.\n4. اتركيها تجمد تماماً ثم اقلبيها." },
+            { title: "بسكويت النشادر", cat: "حلويات", ing: ["دقيق", "بيض", "نشادر", "زبده أو سمن", "سكر بودرة"], step: "1. اخفقي الزبدة والسكر.\n2. أضيفي البيض والنشادر المذاب في قليل من اللبن.\n3. أضيفي الدقيق وشكلي باستخدام كيس الحلواني.\n4. اخبزي في فرن متوسط الحرارة." },
+            { title: "زلابية بالسكر البودرة", cat: "حلويات", ing: ["دقيق", "خميرة", "رشة ملح", "سكر بودرة للزينة"], step: "1. اعجني الدقيق والماء والخميرة.\n2. بعد التخمير، اقلي كرات الزلابية.\n3. فور خروجها رشي عليها السكر البودرة بكثافة." },
+            { title: "كنافة نابلسية (بالجبن)", cat: "حلويات", ing: ["كنافة ناعمة", "جبنة عكاوي منقوعة", "سمن ولون برتقالي"], step: "1. افركي الكنافة بالسمن واللون.\n2. رصي نصف الكنافة في الصينية وضعي الجبن.\n3. ضعي باقي الكنافة واضغطي جيداً.\n4. بعد النضج اسقيها بالشربات الخفيف وقدميها ساخنة." },
+            { title: "عاشورا مصرية", cat: "حلويات", ing: ["قمح (بليلة) مسلوق", "لبن", "نشا", "مكسرات"], step: "1. اضربي نصف كمية القمح المسلوق في الخلاط.\n2. ضعي القمح (المضروب والصحيح) مع اللبن والسكر على النار.\n3. أضيفي النشا المذاب في لبن وقلبي.\n4. تزين بالقرفة والمكسرات." },
+            { title: "مشط الحلا (حلوى المشط)", cat: "حلويات", ing: ["دقيق", "زبادي", "سمن", "شربات"], step: "1. اعجني المكونات وشكليها أصابع.\n2. اضغطي عليها بظهر مشط (نظيف ومخصص للمطبخ) لتأخذ الشكل.\n3. اقليها في الزيت وضعيها في الشربات." },
+            { title: "بقايا الحلويات (ترايفل)", cat: "حلويات", ing: ["قطع كيك أو بسبوسة", "كريم شانتيه", "فاكهة", "صوص شوكولاتة"], step: "1. ضعي طبقة من الكيك المفتت في كاسات.\n2. أضيفي طبقة كريم شانتيه وفاكهة.\n3. كرري الطبقات وزيني بالصوص." },
+            { title: "تمرة باللوز والسمسم", cat: "حلويات", ing: ["تمر منزوع النوى", "لوز محمص", "سمسم", "عسل"], step: "1. احشي التمر باللوز.\n2. ادهني التمر بمسحة عسل خفيفة.\n3. دحرجي التمر في السمسم المحمص." },
+            { title: "قرع عسل بالبشاميل", cat: "حلويات", ing: ["قطع قرع عسل", "سكر", "دقيق ولبن (بشاميل حلو)"], step: "1. اسلقي القرع مع السكر حتى ينضج تماماً واهرسيه.\n2. حضري بشاميل خفيف (سمن ودقيق ولبن وسكر).\n3. ضعي القرع في بايركس وفوقه البشاميل وادخليه الفرن." },
+            { title: "كيكة الرواني", cat: "حلويات", ing: ["دقيق", "دقيق سميد", "بيض", "زبادي", "شربات خفيف"], step: "1. اخفقي البيض والسكر والزبادي.\n2. أضيفي الدقيق والسميد والبيكنج بودر.\n3. اخبزيها وفور خروجها اسقيها بالشربات وزينيها بجوز الهند." },
+            { title: "عيش السرايا", cat: "حلويات", ing: ["خبز توست محمص", "سكر مكرمل", "قشطة بلدي", "فستق"], step: "1. ضعي التوست في صينية واسقيه بالسكر المكرمل الساخن حتى يتشرب.\n2. ضعي طبقة سميكة من القشطة على الوجه.\n3. زيني بالفستق وقدميها باردة." }
+        ];
 
-        function init() {
-            // تحويل البيانات لـ Flat Array لسرعة البحث
-            Object.entries(categoriesData).forEach(([cat, recipes]) => {
-                recipes.forEach((name, i) => {
-                    masterDB.push({
-                        id: `${cat}-${i}`,
-                        title: name,
-                        category: cat,
-                        cal: Math.floor(Math.random() * 400) + 150,
-                        ing: ["مكونات أساسية طازجة", "بهارات المطبخ العربي", "زيت زيتون بكر", "لمسة حب رمضانية"],
-                        step: `تُحضر وصفة ${name} بطرق صحية عبر تقليل الزيوت المشبعة واستخدام البدائل الطبيعية. يُفضل البدء بتجهيز المكونات قبل الإفطار بساعة لضمان نكهة طازجة.`
-                    });
-                });
-            });
-            renderTabs();
-            renderRecipes();
-            updateTracker();
-            fakeVisitorCount();
+        let currentCat = "الكل";
+
+        function filterCat(cat) {
+            currentCat = cat;
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            if(cat === 'الكل') document.getElementById('btn-all').classList.add('active');
+            if(cat === 'أكلات مصرية') document.getElementById('btn-egy').classList.add('active');
+            if(cat === 'حلويات') document.getElementById('btn-sweet').classList.add('active');
+            render();
         }
 
-        function renderTabs() {
-            const html = Object.keys(categoriesData).map(cat => 
-                `<button class="category-btn ${cat === activeCat ? 'active' : ''}" onclick="switchCat('${cat}')">${cat}</button>`
-            ).join('');
-            document.getElementById('tabContainer').innerHTML = html;
-        }
-
-        function renderRecipes(search = "") {
-            const grid = document.getElementById('recipeGrid');
-            const filtered = masterDB.filter(r => 
-                (search === "" ? r.category === activeCat : r.title.includes(search))
-            );
-            
+        function render(data = recipes) {
+            const filtered = currentCat === "الكل" ? data : data.filter(r => r.cat === currentCat);
+            const grid = document.getElementById('grid');
             grid.innerHTML = filtered.map(r => `
-                <div class="card" onclick="openRecipe('${r.id}')">
-                    <small style="color:var(--dark-gold)">${r.category}</small>
-                    <h3>${r.title}</h3>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="visitor-badge" style="font-size:0.8rem">⚡ ${r.cal} Cal</span>
-                        <i class="fa-solid fa-chevron-left" style="color:var(--neon-gold)"></i>
+                <div class="card" onclick="openRecipe('${r.title}')">
+                    <div>
+                        <span class="badge">${r.cat}</span>
+                        <h3>${r.title}</h3>
                     </div>
+                    <p style="color:var(--dark-gold); font-weight:bold; font-size:0.9rem;">عرض الوصفة <i class="fa-solid fa-arrow-left"></i></p>
                 </div>
             `).join('');
         }
 
-        function switchCat(cat) {
-            activeCat = cat;
-            renderTabs();
-            renderRecipes();
+        function doSearch() {
+            const q = document.getElementById('search').value.toLowerCase();
+            const results = recipes.filter(r => r.title.toLowerCase().includes(q));
+            render(results);
         }
 
-        function handleSearch() {
-            const val = document.getElementById('recipeSearch').value;
-            renderRecipes(val);
-        }
-
-        function openRecipe(id) {
-            const r = masterDB.find(x => x.id === id);
+        function openRecipe(title) {
+            const r = recipes.find(x => x.title === title);
             document.getElementById('mTitle').innerText = r.title;
-            document.getElementById('mMeta').innerText = `${r.category} | ${r.cal} سعر حراري`;
-            document.getElementById('mIngredients').innerHTML = r.ing.map(i => `<li>${i}</li>`).join('');
-            document.getElementById('mSteps').innerText = r.step;
-            document.getElementById('addBtnInModal').onclick = () => addToPlan(r);
-            document.getElementById('recipeModal').style.display = 'flex';
+            document.getElementById('mBadge').innerText = r.cat;
+            document.getElementById('mIng').innerHTML = r.ing.map(i => `<li>${i}</li>`).join('');
+            document.getElementById('mStep').innerText = r.step;
+            document.getElementById('modal').style.display = 'flex';
+
+            document.getElementById('shareBtn').onclick = () => {
+                const url = window.location.href;
+                const text = `شوف طريقة عمل "${r.title}" من موسوعة سحورنا 🌙🥘\n\n${url}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+            };
         }
 
-        function closeModal() { document.getElementById('recipeModal').style.display = 'none'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        window.onclick = (e) => { if(e.target == document.getElementById('modal')) closeModal(); };
 
-        function addToPlan(r) {
-            plan.push(r);
-            localStorage.setItem('ramadanPlan', JSON.stringify(plan));
-            updateTracker();
-            closeModal();
-            document.getElementById('calcSection').scrollIntoView();
-        }
-
-        function updateTracker() {
-            const body = document.getElementById('trackerBody');
-            let total = 0;
-            body.innerHTML = plan.map((r, i) => {
-                total += r.cal;
-                return `<tr>
-                    <td>${r.title}</td>
-                    <td>${r.category}</td>
-                    <td>${r.cal}</td>
-                    <td><i class="fa-solid fa-trash" onclick="removeItem(${i})" style="cursor:pointer; color:#ff4444"></i></td>
-                </tr>`;
-            }).join('');
-            document.getElementById('totalCaloriesDisplay').innerText = `الإجمالي: ${total} سعر حراري`;
-        }
-
-        function removeItem(i) {
-            plan.splice(i, 1);
-            localStorage.setItem('ramadanPlan', JSON.stringify(plan));
-            updateTracker();
-        }
-
-        function clearPlan() {
-            plan = [];
-            localStorage.removeItem('ramadanPlan');
-            updateTracker();
-        }
-
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
-        function fakeVisitorCount() {
-            const count = Math.floor(Math.random() * 500) + 1200;
-            document.getElementById('visitorBadge').innerText = `👁️ زوار اليوم: ${count}`;
-        }
-
-        window.onload = init;
-        window.onclick = (e) => { if(e.target.classList.contains('modal')) closeModal(); }
+        window.onload = () => render();
     </script>
 </body>
 </html>
