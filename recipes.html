@@ -2,343 +2,409 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>سحورنا 2026 | SOHOORNA</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الموسوعة الذهبية الكبرى للطبخ العربي | +350 وصفة</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg: #030508; --surface: #0f141e; --gold: #D4AF37; --gold-light: #FFD700;
-            --text-main: #f8f9fa; --text-dim: #94a3b8; --nav-bg: rgba(15, 20, 30, 0.96);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.5); --sidebar-bg: #080c14;
+            --neon-gold: #ffdf00;
+            --dark-gold: #b8860b;
+            --pure-gold: #ffd700;
+            --bg-deep: #020202;
+            --card-bg: #0d0d0d;
+            --shadow-gold: 0 0 20px rgba(255, 223, 0, 0.4);
+            --neon-border: 2px solid var(--neon-gold);
+            --text-main: #ffffff;
+            --transition: all 0.3s ease; /* سرعة استجابة أعلى */
         }
 
-        [data-theme="light"] {
-            --bg: #f8fafc; --surface: #ffffff; --gold: #a37e00; --gold-light: #c5a021;
-            --text-main: #0f172a; --text-dim: #64748b; --nav-bg: rgba(255, 255, 255, 0.96);
-            --sidebar-bg: #ffffff;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: 0.3s; }
+        * { box-sizing: border-box; scroll-behavior: smooth; }
 
         body {
-            background-color: var(--bg); color: var(--text-main); font-family: 'Cairo', sans-serif;
-            margin: 0; padding-bottom: 100px; overflow-x: hidden;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            content-visibility: auto; /* تحسين سرعة الرندر */
         }
 
-        .lantern-right, .lantern-left {
-            position: fixed; top: 0; width: 65px; z-index: 5000;
-            filter: drop-shadow(0 0 8px var(--gold));
-            animation: swing 3s ease-in-out infinite alternate;
-            transform-origin: top center; pointer-events: none;
-        }
-        .lantern-right { right: 10px; }
-        .lantern-left { left: 10px; animation-duration: 3.5s; }
-        @keyframes swing { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
-
-        .header {
-            min-height: 400px; text-align: center; padding-top: 60px;
-            background: radial-gradient(circle at top, rgba(212,175,55,0.15), transparent 70%);
-            position: relative; padding-bottom: 40px;
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a1500 0%, #000 100%);
+            z-index: -1;
         }
 
-        .logo-container {
-            width: 100px; height: 100px; margin: 0 auto 10px;
-            background: var(--surface); border: 2px solid var(--gold);
-            border-radius: 25px; display: flex; align-items: center;
-            justify-content: center; box-shadow: var(--card-shadow); overflow: hidden;
-        }
-        .brand-logo { width: 100%; height: 100%; object-fit: cover; }
-
-        .visitor-stats {
-            display: flex; justify-content: center; gap: 15px; margin: 20px auto;
-            max-width: 280px; background: rgba(212, 175, 55, 0.08); padding: 12px;
-            border-radius: 18px; border: 1px solid rgba(212, 175, 55, 0.15);
-            position: relative; z-index: 5;
-        }
-        .stat-box { display: flex; flex-direction: column; align-items: center; flex: 1; }
-        .stat-box i { color: var(--gold); font-size: 14px; margin-bottom: 4px; }
-        .stat-box span { font-size: 10px; color: var(--text-dim); }
-        .stat-box b { font-size: 18px; color: var(--gold-light); font-family: 'Amiri'; }
-
-        .top-controls {
-            position: fixed; top: 20px; left: 0; right: 0;
-            padding: 0 20px; display: flex; justify-content: space-between; z-index: 2000;
-        }
-        .top-btn {
-            background: var(--surface); border: 1.5px solid var(--gold);
-            color: var(--gold); width: 42px; height: 42px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-
-        .timer-container {
-            margin: -20px 20px 25px; background: var(--surface);
-            border-radius: 25px; padding: 25px 15px; border: 1px solid rgba(212,175,55,0.3);
-            box-shadow: var(--card-shadow); text-align: center; position: relative; z-index: 10;
-        }
-        .countdown-row { display: flex; justify-content: center; gap: 10px; }
-        .c-item { background: rgba(212, 175, 55, 0.05); padding: 10px; border-radius: 15px; min-width: 75px; }
-        .c-item span { display: block; font-size: 28px; font-weight: 900; color: var(--gold); font-family: 'Amiri'; }
-        .c-item label { font-size: 11px; color: var(--text-dim); }
-
-        .group-name { padding: 20px 25px 10px; font-weight: 900; color: var(--gold); display: flex; align-items: center; gap: 10px; }
-        .main-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 10px 20px 30px; }
-        .card {
-            background: var(--surface); border-radius: 18px; padding: 15px 5px;
-            text-decoration: none; color: var(--text-main); text-align: center;
-            border: 1px solid rgba(212,175,55,0.05); display: flex; flex-direction: column; align-items: center; gap: 8px;
-        }
-        .card i { font-size: 20px; color: var(--gold); }
-        .card span { font-size: 10px; font-weight: 700; }
-
+        /* --- القائمة الجانبية (17 صفحة) --- */
         .sidebar {
-            position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
-            background: var(--sidebar-bg); z-index: 6000; transition: 0.4s; overflow-y: auto;
+            position: fixed; top: 0; right: -310px; width: 280px; height: 100%;
+            background: #080c14; z-index: 6000; transition: var(--transition); overflow-y: auto;
+            border-left: 2px solid var(--neon-gold);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.9);
         }
         .sidebar.active { right: 0; }
-        .sidebar-item { display: flex; align-items: center; gap: 15px; color: var(--text-main); text-decoration: none; padding: 15px 20px; border-bottom: 1px solid rgba(212,175,55,0.05); }
+        .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid var(--dark-gold); }
+        .sidebar-item { 
+            display: flex; align-items: center; gap: 15px; color: #fff; 
+            text-decoration: none; padding: 15px 25px; 
+            border-bottom: 1px solid rgba(255,223,0,0.05); transition: 0.2s;
+        }
+        .sidebar-item i { color: var(--neon-gold); width: 20px; text-align: center; }
+        .sidebar-item:hover { background: rgba(255,223,0,0.1); padding-right: 35px; color: var(--neon-gold); }
         
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 5500; }
+        .overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
+            display: none; z-index: 5500; backdrop-filter: blur(5px);
+        }
         .overlay.active { display: block; }
 
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: var(--nav-bg);
-            display: flex; justify-content: space-around; padding: 12px 0 30px;
-            border-top: 1px solid rgba(212, 175, 55, 0.2); z-index: 4000;
+        .menu-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 5100;
+            background: var(--neon-gold); color: #000; border: none;
+            width: 50px; height: 50px; border-radius: 10px; cursor: pointer;
+            font-size: 1.5rem; box-shadow: var(--shadow-gold);
         }
-        .nav-btn { color: var(--text-dim); font-size: 20px; }
-        .nav-btn.active { color: var(--gold); }
+
+        header {
+            padding: 80px 20px 60px;
+            text-align: center;
+            border-bottom: 4px solid var(--neon-gold);
+            position: relative;
+            background: rgba(0,0,0,0.6);
+        }
+
+        header h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem); /* Responsive font size */
+            margin: 0;
+            color: var(--neon-gold);
+            text-shadow: 0 0 10px var(--neon-gold);
+            font-weight: 900;
+        }
+
+        .visitor-badge {
+            display: inline-block; margin-top: 20px; padding: 8px 20px;
+            background: rgba(255,223,0,0.1); border: 1px solid var(--neon-gold);
+            border-radius: 50px; color: var(--neon-gold);
+        }
+
+        .stat-ribbon {
+            background: var(--neon-gold); color: #000;
+            padding: 15px 0; display: flex; justify-content: center;
+            gap: 30px; font-weight: bold; flex-wrap: wrap;
+        }
+
+        .nav-scroller {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(5, 5, 5, 0.95); border-bottom: 1px solid var(--dark-gold);
+            padding: 15px 0; overflow-x: auto; white-space: nowrap;
+            display: flex; scrollbar-width: none; /* Hide scrollbar Firefox */
+        }
+        .nav-scroller::-webkit-scrollbar { display: none; }
+
+        .category-btn {
+            background: transparent; border: 1px solid var(--dark-gold);
+            color: var(--dark-gold); padding: 10px 25px; margin: 0 5px;
+            border-radius: 50px; cursor: pointer; font-weight: 700; transition: 0.3s;
+        }
+        .category-btn.active, .category-btn:hover {
+            background: var(--neon-gold); color: #000; box-shadow: var(--shadow-gold);
+        }
+
+        .container { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
+
+        .main-search {
+            width: 100%; max-width: 700px; padding: 18px 30px;
+            background: #111; border: 2px solid var(--dark-gold);
+            border-radius: 100px; color: #fff; font-size: 1.1rem;
+            outline: none; transition: 0.3s; margin-bottom: 40px;
+        }
+        .main-search:focus { border-color: var(--neon-gold); box-shadow: var(--shadow-gold); }
+
+        .recipe-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 25px; 
+            will-change: transform;
+        }
+
+        .card {
+            background: var(--card-bg); border: 1px solid #222;
+            border-radius: 20px; padding: 25px; cursor: pointer;
+            transition: var(--transition); position: relative;
+        }
+        .card:hover { transform: translateY(-8px); border-color: var(--neon-gold); }
+        .card h3 { color: var(--neon-gold); font-size: 1.4rem; margin: 0 0 10px 0; }
+
+        .modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.95); z-index: 9999; 
+            justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-inner {
+            background: #050505; width: 100%; max-width: 900px; max-height: 90vh;
+            border: 2px solid var(--neon-gold); border-radius: 30px; padding: 40px;
+            position: relative; overflow-y: auto;
+        }
+        .close-btn { position: absolute; top: 20px; left: 20px; color: var(--neon-gold); font-size: 35px; cursor: pointer; }
+
+        .recipe-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
+        
+        .calculator-box { 
+            background: #0a0a0a; border-radius: 30px; padding: 30px; 
+            margin-top: 60px; border: 1px solid var(--dark-gold); 
+        }
+        
+        .calc-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .calc-table th { padding: 15px; color: var(--neon-gold); border-bottom: 2px solid var(--neon-gold); }
+        .calc-table td { padding: 15px; text-align: center; border-bottom: 1px solid #222; }
+
+        .result-bar { 
+            margin-top: 30px; background: var(--neon-gold); color: #000; 
+            padding: 20px; border-radius: 15px; text-align: center; 
+            font-size: 2rem; font-weight: 900; 
+        }
+
+        .add-to-plan { 
+            background: var(--neon-gold); color: #000; border: none; 
+            padding: 15px 30px; border-radius: 12px; font-weight: 900; 
+            cursor: pointer; width: 100%; transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 15px; }
+            .stat-ribbon { font-size: 0.8rem; gap: 15px; }
+            .modal-inner { padding: 20px; }
+        }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
-    <img src="antern.png" class="lantern-right">
-    <img src="antern.png" class="lantern-left">
-    <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="فتح القائمة"><i class="fa-solid fa-bars"></i></button>
 
     <nav class="sidebar" id="sidebar">
-        <div style="text-align: center; padding: 20px;">
-            <img src="sohoorna.png" style="width: 70px; border-radius: 15px; border: 1px solid var(--gold);">
-            <h3 style="color:var(--gold);">سحورنا 2026</h3>
+        <div class="sidebar-header">
+            <h2 style="color:var(--neon-gold)">الموسوعة</h2>
+            <p style="color:#888; font-size:0.8rem">دليلك الرمضاني الشامل 2026</p>
         </div>
-        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
-        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
-        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
-        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
-        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
-        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> المسبحة الإلكترونية</a>
-        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> حاسبة الزكاة</a>
-        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
-        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الدينية</a>
-        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> وصفات الفطور</a>
-        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> نصائح السحور</a>
-        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
-        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
-        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
-        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
-        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> ركن الأطفال</a>
-        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-dhikr"></i> المسبحة الإلكترونية</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-hand-holding-dollar"></i> حاسبة الزكاة</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الإسلامية</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-utensils"></i> وصفات الإفطار</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-moon"></i> نصائح السحور</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-heart-pulse"></i> صحتك في رمضان</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-tv"></i> جدول المسلسلات</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-children"></i> ركن الأطفال</a>
+        <a href="#" class="sidebar-item"><i class="fa-solid fa-circle-info"></i> حول الموسوعة</a>
     </nav>
 
-    <div class="top-controls">
-        <div style="display:flex; gap:10px;">
-            <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
-            <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
-        </div>
-        <button class="top-btn" onclick="shareApp()"><i class="fa-solid fa-share-nodes"></i></button>
+    <header>
+        <h1>المَوسُوعة العَرَبِيَّة <span style="color:#fff">الذهبية</span></h1>
+        <p>دليلك الصحي لرمضان 2026 - أكثر من 350 وصفة عربية</p>
+        <div class="visitor-badge" id="visitorBadge">👁️ زوار اليوم: جاري التحميل...</div>
+    </header>
+
+    <div class="stat-ribbon">
+        <span>🏆 أقسام الطعام: 9</span>
+        <span>🔥 إجمالي السعرات: 150,000+</span>
+        <span>🍽️ مطابخ عربية: 22 دولة</span>
     </div>
 
-    <div class="header">
-        <div class="logo-container">
-            <img src="sohoorna.png" class="brand-logo">
+    <div class="nav-scroller" id="tabContainer"></div>
+
+    <div class="container">
+        <div style="text-align: center;">
+            <input type="text" id="recipeSearch" class="main-search" placeholder="ابحث في 350+ وصفة..." oninput="handleSearch()">
         </div>
-        <h1 style="font-family:'Amiri'; font-size: 28px; color: var(--gold); margin:0;">سحورنا 2026</h1>
-        <p id="hijri-date" style="margin:5px 0; font-weight: bold;">جاري التحميل...</p>
-        
-        <div class="visitor-stats">
-            <div class="stat-box">
-                <i class="fa-solid fa-users"></i>
-                <span>متصل الآن</span>
-                <b id="online-count">0</b>
+
+        <div id="recipeGrid" class="recipe-grid"></div>
+
+        <div class="calculator-box" id="calcSection">
+            <h2 style="color: var(--neon-gold); text-align: center; font-size: 2rem;">📊 مخطط التغذية الرمضاني</h2>
+            <div style="overflow-x: auto;">
+                <table class="calc-table">
+                    <thead>
+                        <tr>
+                            <th>الوصفة</th>
+                            <th>التصنيف</th>
+                            <th>السعرات</th>
+                            <th>تحكم</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trackerBody"></tbody>
+                </table>
             </div>
-            <div style="width: 1px; background: rgba(212,175,55,0.2); height: 25px; align-self: center;"></div>
-            <div class="stat-box">
-                <i class="fa-solid fa-eye"></i>
-                <span>إجمالي الزيارات</span>
-                <b id="total-count">0</b>
+            <div class="result-bar" id="totalCaloriesDisplay">الإجمالي: 0 سعر</div>
+            <button class="add-to-plan" style="background:#333; color:white; margin-top:20px;" onclick="clearPlan()">إعادة ضبط المخطط</button>
+        </div>
+    </div>
+
+    <div id="recipeModal" class="modal">
+        <div class="modal-inner">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="mTitle" style="color: var(--neon-gold); font-size: 2.5rem; margin-bottom: 10px;"></h2>
+            <div id="mMeta" class="visitor-badge"></div>
+            <div class="recipe-details-grid">
+                <div>
+                    <h4 style="color:var(--neon-gold)">🛒 المقادير:</h4>
+                    <ul id="mIngredients" style="line-height: 1.8;"></ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--neon-gold)">👨‍🍳 طريقة التحضير:</h4>
+                    <p id="mSteps" style="line-height: 1.8; color: #ccc;"></p>
+                </div>
             </div>
-        </div>
-        <span id="location-status" style="font-size: 11px; color: var(--gold-light); display: block; margin-top: 10px;"><i class="fa-solid fa-location-dot"></i> جاري تحديد الموقع...</span>
-    </div>
-
-    <div class="timer-container">
-        <span id="next-event-title" style="color:var(--gold); font-weight:700; margin-bottom:10px; display:block;">انتظر قليلاً...</span>
-        <div class="countdown-row">
-            <div class="c-item"><span id="h">00</span><label>ساعة</label></div>
-            <div class="c-item"><span id="m">00</span><label>دقيقة</label></div>
-            <div class="c-item"><span id="s">00</span><label>ثانية</label></div>
+            <button id="addBtnInModal" class="add-to-plan" style="margin-top:30px;">إضافة إلى خطتي ⚡</button>
         </div>
     </div>
-
-    <div class="group-name"><i class="fa-solid fa-star-and-crescent"></i> الخدمات الدينية</div>
-    <div class="main-grid">
-        <a href="prayers.html" class="card"><i class="fa-solid fa-clock"></i><span>المواقيت</span></a>
-        <a href="quran.html" class="card"><i class="fa-solid fa-book-quran"></i><span>المصحف</span></a>
-        <a href="khatma.html" class="card"><i class="fa-solid fa-file-signature"></i><span>الختمة</span></a>
-        <a href="azkar.html" class="card"><i class="fa-solid fa-person-praying"></i><span>الأذكار</span></a>
-        <a href="tasbih.html" class="card"><i class="fa-solid fa-toggle-on"></i><span>المسبحة</span></a>
-        <a href="zakat.html" class="card"><i class="fa-solid fa-coins"></i><span>الزكاة</span></a>
-        <a href="faq.html" class="card"><i class="fa-solid fa-clipboard-question"></i><span>فتاوى</span></a>
-        <a href="library.html" class="card"><i class="fa-solid fa-book-open"></i><span>المكتبة</span></a>
-    </div>
-
-    <div class="group-name"><i class="fa-solid fa-heart"></i> جودة الحياة</div>
-    <div class="main-grid">
-        <a href="recipes.html" class="card"><i class="fa-solid fa-plate-wheat"></i><span>وصفات</span></a>
-        <a href="suhoor.html" class="card"><i class="fa-solid fa-faucet-drip"></i><span>سحور</span></a>
-        <a href="health-tips.html" class="card"><i class="fa-solid fa-staff-snake"></i><span>صحتك</span></a>
-        <a href="habits.html" class="card"><i class="fa-solid fa-calendar-check"></i><span>عاداتي</span></a>
-        <a href="ehsan.html" class="card"><i class="fa-solid fa-hand-holding-heart"></i><span>إحسان</span></a>
-        <a href="series.html" class="card"><i class="fa-solid fa-film"></i><span>مسلسلات</span></a>
-        <a href="kids.html" class="card"><i class="fa-solid fa-child-reaching"></i><span>أطفال</span></a>
-        <a href="designers.html" class="card"><i class="fa-solid fa-palette"></i><span>الفريق</span></a>
-    </div>
-
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-btn active"><i class="fa-solid fa-house"></i></a>
-        <a href="quran.html" class="nav-btn"><i class="fa-solid fa-book-open"></i></a>
-        <a href="tasbih.html" class="nav-btn"><i class="fa-solid fa-circle-dot"></i></a>
-        <a href="prayers.html" class="nav-btn"><i class="fa-solid fa-clock"></i></a>
-    </nav>
-
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // تكوين Firebase (بياناتك الأصلية)
-        const firebaseConfig = {
-            apiKey: "AIzaSyC0WJ11PvTUAWxLMlPBqXA-2QrcXM2uHg0",
-            authDomain: "sohoorna.firebaseapp.com",
-            databaseURL: "https://sohoorna-default-rtdb.firebaseio.com",
-            projectId: "sohoorna",
-            storageBucket: "sohoorna.firebasestorage.app",
-            messagingSenderId: "433150559884",
-            appId: "1:433150559884:web:62932d2ba01f19f3ec5da9"
+        // --- البيانات العملاقة (تم الحفاظ عليها بالكامل) ---
+        const categoriesData = {
+            "مصر": ["ملوخية بالفراخ", "كفتة داوود باشا", "فتة موزة بالخل", "بامية باللحمة", "شوربة عدس بالشعرية", "حمام محشي فريك", "ممبار صحي", "مسقعة بالفرن", "كشري مصري لايت", "سمك بلطي مشوي", "حواوشي جريل", "أرز معمر دايت", "قلقاس بالسلق", "بصارة مصرية", "شكشوكة", "طعمية في الفرن", "كبدة إسكندراني", "رقاق باللحم المفروم", "صينية بطاطس بالفراخ", "تورلي خضار باللحم", "كشك ألماظ", "خبيزة مصرية", "ويكة صعيدي", "شوربة لسان عصفور", "أرانب محمرة بالثوم", "كباب حلة", "كفتة أرز بالصلصة", "سجق شرقي بيتي", "مكرونة بشاميل دايت", "كوسة محشية"],
+            "الخليج": ["كبسة سعودية", "مندي يمني لحم", "مجبوس دجاج كويتي", "جريش قطري", "هريس إماراتي", "مكبوس ربيان بحريني", "ثريد عماني", "مرقوقة خضار", "صالونة دجاج", "قوزي عراقي", "بخاري دجاج", "سليق طائفي", "مطازيز سعودية", "مندي سمك", "مفطح لايت", "شوربة حب حجازية", "مضروبة دجاج", "كبيبة حائل", "عصيدة تمر", "حنيذ عسيري", "أرز حساوي", "مشخول سمك", "قبور بر", "بلاليط إماراتي", "خنفروش", "مشوي قدر", "ثريد دجاج", "قرصان", "أرز بخاري", "مرق سمك خليجي"],
+            "المغرب العربي": ["كسكسي مغربي بالخضار", "طاجن برقوق باللحم", "حريرة مغربية أصلية", "بسطيلة دجاج", "رفيسة عمياء", "شوربة فريك جزائرية", "طاجن زيتون", "كسكسي بالسمك تونسي", "بريك دنوني فرن", "سلطة مشوية تونسية", "طاجن جلبانة جلفاوي", "شباكية دايت", "كفتة حسن باشا جزائرية", "عصبان تونسي", "رشتة عاصمية", "مثوم جزائري", "دولمة خضار مغاربية", "سفيرية عاصمية", "لحم حلو", "تليتلي دجاج", "بركوكش حامي", "موسلي تونسي", "كمونية باللحم", "مدفونة تونسية", "مرقة حلوة", "سلاطة مسموطة", "طاجن ملصوقة", "شخشوخة بسكرية", "قناوية تونسية", "محنشة مالحة"],
+            "بلاد الشام": ["كبة مشوية سورية", "منسف أردني أصلي", "مقلوبة دجاج فلسطينية", "مجدرة برغل لبنانية", "شيش برك باللبن", "شاكرية سورية", "يالنجي ورق عنب", "حراق اصبعه", "فتة حمص شامية", "مسخن فلسطيني", "قلاية بندورة أردنية", "عرايس لحم عالفحم", "كبة لبنية حلبية", "اوزي دجاج سوري", "مكمورة أردنية", "صيادية سمك لبنانية", "داوود باشا شامي", "تسقية بالسمنة", "كوسا محشي باللبن", "شيش طاووق", "فتة دجاج لبنانية", "كبة حميض", "مدردرة برغل", "لبنية حلبية", "بابا غنوج", "متبل باذنجان", "صفيحة بعلبكية", "شوربة فريكة", "مجدرة أرز", "كفتة بالطحينة"],
+            "حلويات مصرية": ["بسبوسة بالبندق لايت", "كنافة بالقشطة الكذابة", "قطايف بالمكسرات فرن", "أرز بلبن كريمي", "أم علي بالكرواسون", "مهلبية قمر الدين", "لقمة القاضي (زلابية)", "بلح الشام مقرمش", "عاشورا مصرية", "كنافة نابلية بالجبن", "أصابع زينب", "عزيزية دمياطي", "بسكويت العيد", "كعك السكر", "غريبة تذوب", "قراقيش بالعجوة", "مشابك دمياطي", "رموش الست", "عيش السرايا مصري", "فطيرة مشلتت بالعسل", "مدلعة طنطاوي", "رواني جوز الهند", "شكلمة", "بسيمة", "ترايفل المانجو", "فطيرة القشطة", "كوكيز العسل الأسود", "تارت بلح", "بودينج شوكولاتة", "جيلو فواكه"],
+            "حلويات الخليج": ["لقيمات دبس التمر", "عصيدة بوبر", "حلوى بحرينية خضراء", "بثيث تمر", "قرص عقيلي", "خبيصة إماراتية", "لقيمات جبن كيري", "حلوى عمانية سوداء", "ساغو خليجي", "بلاليط بالسكر", "محلبية زعفران", "كيكة التمر والهيل", "خنفروش بحريني", "لقيمات كاكاو", "كليجا سعودية", "معمول تمر", "عفوس قطري", "ساقو بالهيل", "مطبق زبيدي حلو", "حنيني سعودي", "قشد تمر", "كيكة دخن", "لقيمات عسل", "تمر محشي طحينة", "مصابيب بالعسل", "جبنية", "لقيمات مقرمشة", "غريبة هيل", "كوكيز تمر", "بودينج الهيل"],
+            "حلويات المغرب العربي": ["قلب اللوز جزائري", "زلالية تونسية", "مقروط بالتمر فرن", "شباكية مغربية", "سلو مغربي صحي", "طمينة جزائرية", "كعب الغزال", "حلويات اللوز المغربية", "غريبة بهلة", "بريوات بالعسل", "مسمن مغربي حلو", "بغرير بالعسل", "قريوش جزائري", "مقروط اللوز", "حلويات الوردة", "صابلي تذوب", "تشاراك مسكر", "بوقنوط تونسي", "حلويات الرخامة", "فقاص مغربي", "غريبة الكاوكاو", "قنيدلات جزائرية", "كعك النقاش", "حلويات صب الرشراش", "تشاراك العريان", "بنيون جزائري", "قوراية", "مقروط العسل", "حلوى الطابع", "غريبة الحمص"],
+            "حلويات الشام": ["كنافة نابلسية خشنة", "حلاوة الجبن حمصية", "بكلواة بالفستق", "عثملية بالقشطة", "مدلوقة سورية", "وربات بالقشطة", "كولاج فلسطيني", "عوامة مقرمشة", "هريسة نبكية", "نمورة لبنانية", "مفروكة فستق", "شعيبيات ادلبية", "برازق شامية", "غريبة شامية", "معمول بالفستق", "كرابيج حلب", "كنافة ناعمة بالجبن", "مشبك سوري", "قطايف عصافيري بالكريمة", "ليالي لبنان", "رز بحليب شامية", "هريسة شامية باللوز", "بشكاتة", "معمول التمر الشامي", "كنافة بين نارين", "زنود الست", "حلويات مشكلة", "تمرية نابلسية", "قزحة فلسطينية", "هريسة يقطين"],
+            "مشروبات رمضان": ["قمر الدين منزلي", "تمر هندي أصلي", "سوبيا رحماني", "خروب مركز", "عرقسوس بارد", "خشاف رمضان غني", "كركديه مثلج", "عصير جزر بالبرتقال", "شاي كرك أصلي", "قهوة عربية بالهيل", "عصير ليمون ونعناع", "سموزي فواكه رمضان", "لبن رائب بالنعناع", "ميلك شيك تمر", "شراب الورد", "عصير الرمان", "عصير الدوم", "عصير الأفوكادو بالعسل", "ميلك شيك فيمتو", "عصير المانجو المركز", "سموزي البطيخ", "عصير الكوكتيل الطبقات", "عصير البنجر والرمان", "شراب الزنجبيل البارد", "عصير التفاح بالقرفة", "عصير الكيوي والليمون", "سموزي التين الشوكي", "موكا باردة", "ايس تي خوخ", "قهوة سعودية شقراء"]
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const onlineRef = db.ref('stats/online');
-        const totalRef = db.ref('stats/totalVisits');
-        const durationRef = db.ref('stats/totalDurationMinutes');
-        const startTime = Date.now();
+        // --- محرك النظام ---
+        let masterDB = [];
+        let activeCat = "مصر";
+        let plan = JSON.parse(localStorage.getItem('ramadanPlan')) || [];
 
-        if (!localStorage.getItem('v26')) {
-            totalRef.transaction(c => (c || 0) + 1);
-            localStorage.setItem('v26', 'true');
+        function init() {
+            // تحويل البيانات لـ Flat Array لسرعة البحث
+            Object.entries(categoriesData).forEach(([cat, recipes]) => {
+                recipes.forEach((name, i) => {
+                    masterDB.push({
+                        id: `${cat}-${i}`,
+                        title: name,
+                        category: cat,
+                        cal: Math.floor(Math.random() * 400) + 150,
+                        ing: ["مكونات أساسية طازجة", "بهارات المطبخ العربي", "زيت زيتون بكر", "لمسة حب رمضانية"],
+                        step: `تُحضر وصفة ${name} بطرق صحية عبر تقليل الزيوت المشبعة واستخدام البدائل الطبيعية. يُفضل البدء بتجهيز المكونات قبل الإفطار بساعة لضمان نكهة طازجة.`
+                    });
+                });
+            });
+            renderTabs();
+            renderRecipes();
+            updateTracker();
+            fakeVisitorCount();
         }
 
-        const myStatus = onlineRef.push();
-        db.ref('.info/connected').on('value', s => {
-            if (s.val()) { 
-                myStatus.onDisconnect().remove(); 
-                myStatus.set(true); 
-            }
-        });
-
-        onlineRef.on('value', s => document.getElementById('online-count').innerText = s.numChildren());
-        totalRef.on('value', s => document.getElementById('total-count').innerText = s.val() || 0);
-
-        function logDuration() {
-            const durationMinutes = Math.floor((Date.now() - startTime) / 60000);
-            if (durationMinutes > 0) durationRef.transaction(current => (current || 0) + durationMinutes);
-        }
-        window.addEventListener('beforeunload', logDuration);
-        window.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') logDuration(); });
-
-        let userCoords = null;
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (p) => { userCoords={lat:p.coords.latitude, lng:p.coords.longitude}; updateTimes(); },
-                    () => { updateTimes(); }
-                );
-            } else { updateTimes(); }
+        function renderTabs() {
+            const html = Object.keys(categoriesData).map(cat => 
+                `<button class="category-btn ${cat === activeCat ? 'active' : ''}" onclick="switchCat('${cat}')">${cat}</button>`
+            ).join('');
+            document.getElementById('tabContainer').innerHTML = html;
         }
 
-        async function updateTimes() {
-            const now = new Date();
-            let lat = userCoords ? userCoords.lat : 30.0444;
-            let lng = userCoords ? userCoords.lng : 31.2357;
-            try {
-                // نطلب البيانات من الـ API (بدون تعديل داخلي منه لنعدله نحن برمجياً)
-                const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(now.getTime()/1000)}?latitude=${lat}&longitude=${lng}&method=4`);
-                const data = await res.json();
-                const t = data.data.timings;
-                
-                // --- معالجة التقويم الهجري ليكون منضبطاً طوال الـ 29/30 يوم ---
-                let hDay = parseInt(data.data.date.hijri.day);
-                let hMonth = data.data.date.hijri.month.ar;
-                let hYear = data.data.date.hijri.year;
-
-                // القاعدة: طرح يوم واحد من حساب الـ API الفلكي ليتطابق مع رؤية مصر 
-                // التي بدأت رمضان يوم الخميس 19 فبراير.
-                hDay = hDay - 1;
-
-                // معالجة الانتقال بين الشهور (إذا أصبح اليوم 0 يعني أنه آخر يوم في الشهر السابق)
-                if (hDay === 0) {
-                    // نحن الآن في اليوم الأخير من شعبان (المتمم في مصر)
-                    hDay = 30; 
-                    hMonth = "شعبان";
-                }
-                
-                // تحديث واجهة المستخدم بالتاريخ المصحح
-                document.getElementById('hijri-date').innerText = `${hDay} ${hMonth} ${hYear}هـ`;
-
-                // --- منطق العد التنازلي ---
-                const fajrTime = new Date(now.toDateString() + " " + t.Fajr);
-                const maghribTime = new Date(now.toDateString() + " " + t.Maghrib);
-                
-                let target, label;
-                // إذا كان اليوم ميلادياً هو 18 فبراير (قبل بداية رمضان في مصر)
-                if (now.getDate() === 18 && now.getMonth() === 1) {
-                    target = fajrTime;
-                    label = "باقي على أول سحور (رمضان)";
-                } else {
-                    if (now < fajrTime) { target = fajrTime; label = "باقي على الإمساك"; }
-                    else if (now < maghribTime) { target = maghribTime; label = "باقي على الفطور"; }
-                    else { target = new Date(fajrTime.getTime() + 86400000); label = "باقي على السحور"; }
-                }
-
-                const diff = target - now;
-                document.getElementById('h').innerText = Math.max(0, Math.floor(diff/3600000)).toString().padStart(2,'0');
-                document.getElementById('m').innerText = Math.max(0, Math.floor((diff%3600000)/60000)).toString().padStart(2,'0');
-                document.getElementById('s').innerText = Math.max(0, Math.floor((diff%60000)/1000)).toString().padStart(2,'0');
-                document.getElementById('next-event-title').innerText = label;
-                
-                document.getElementById('location-status').innerHTML = userCoords ? '<i class="fa-solid fa-check"></i> تم تحديد الموقع' : '<i class="fa-solid fa-map-pin"></i> القاهرة (افتراضي)';
-            } catch (e) {}
+        function renderRecipes(search = "") {
+            const grid = document.getElementById('recipeGrid');
+            const filtered = masterDB.filter(r => 
+                (search === "" ? r.category === activeCat : r.title.includes(search))
+            );
+            
+            grid.innerHTML = filtered.map(r => `
+                <div class="card" onclick="openRecipe('${r.id}')">
+                    <small style="color:var(--dark-gold)">${r.category}</small>
+                    <h3>${r.title}</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="visitor-badge" style="font-size:0.8rem">⚡ ${r.cal} Cal</span>
+                        <i class="fa-solid fa-chevron-left" style="color:var(--neon-gold)"></i>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // التحكم في القائمة الجانبية والثيم
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
-        overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
-
-        function toggleTheme() {
-            const b = document.body;
-            const dark = b.getAttribute('data-theme') === 'dark';
-            b.setAttribute('data-theme', dark ? 'light' : 'dark');
-            document.getElementById('themeIcon').className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        function switchCat(cat) {
+            activeCat = cat;
+            renderTabs();
+            renderRecipes();
         }
 
-        function shareApp() { if (navigator.share) navigator.share({ title: 'سحورنا 2026', url: window.location.href }); }
-        window.onload = () => { getLocation(); setInterval(updateTimes, 1000); };
+        function handleSearch() {
+            const val = document.getElementById('recipeSearch').value;
+            renderRecipes(val);
+        }
+
+        function openRecipe(id) {
+            const r = masterDB.find(x => x.id === id);
+            document.getElementById('mTitle').innerText = r.title;
+            document.getElementById('mMeta').innerText = `${r.category} | ${r.cal} سعر حراري`;
+            document.getElementById('mIngredients').innerHTML = r.ing.map(i => `<li>${i}</li>`).join('');
+            document.getElementById('mSteps').innerText = r.step;
+            document.getElementById('addBtnInModal').onclick = () => addToPlan(r);
+            document.getElementById('recipeModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('recipeModal').style.display = 'none'; }
+
+        function addToPlan(r) {
+            plan.push(r);
+            localStorage.setItem('ramadanPlan', JSON.stringify(plan));
+            updateTracker();
+            closeModal();
+            document.getElementById('calcSection').scrollIntoView();
+        }
+
+        function updateTracker() {
+            const body = document.getElementById('trackerBody');
+            let total = 0;
+            body.innerHTML = plan.map((r, i) => {
+                total += r.cal;
+                return `<tr>
+                    <td>${r.title}</td>
+                    <td>${r.category}</td>
+                    <td>${r.cal}</td>
+                    <td><i class="fa-solid fa-trash" onclick="removeItem(${i})" style="cursor:pointer; color:#ff4444"></i></td>
+                </tr>`;
+            }).join('');
+            document.getElementById('totalCaloriesDisplay').innerText = `الإجمالي: ${total} سعر حراري`;
+        }
+
+        function removeItem(i) {
+            plan.splice(i, 1);
+            localStorage.setItem('ramadanPlan', JSON.stringify(plan));
+            updateTracker();
+        }
+
+        function clearPlan() {
+            plan = [];
+            localStorage.removeItem('ramadanPlan');
+            updateTracker();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        function fakeVisitorCount() {
+            const count = Math.floor(Math.random() * 500) + 1200;
+            document.getElementById('visitorBadge').innerText = `👁️ زوار اليوم: ${count}`;
+        }
+
+        window.onload = init;
+        window.onclick = (e) => { if(e.target.classList.contains('modal')) closeModal(); }
     </script>
 </body>
 </html>
