@@ -102,6 +102,13 @@
         .sidebar.active { right: 0; }
         .sidebar-item { display: flex; align-items: center; gap: 15px; color: var(--text-main); text-decoration: none; padding: 15px 20px; border-bottom: 1px solid rgba(212,175,55,0.05); }
         
+        /* تنسيق زر التثبيت الخاص */
+        .install-btn-sidebar { 
+            background: linear-gradient(45deg, var(--gold), #b38f00) !important; 
+            color: #000 !important; font-weight: bold; margin: 10px; border-radius: 12px; 
+            display: none; /* مخفي افتراضياً ويظهر بالجافاسكريبت */
+        }
+
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 5500; }
         .overlay.active { display: block; }
 
@@ -125,6 +132,11 @@
             <img src="sohoorna.png" style="width: 70px; border-radius: 15px; border: 1px solid var(--gold);">
             <h3 style="color:var(--gold);">سحورنا 2026</h3>
         </div>
+        
+        <a href="javascript:void(0)" class="sidebar-item install-btn-sidebar" id="installBtn">
+            <i class="fa-solid fa-download"></i> تثبيت التطبيق
+        </a>
+
         <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
         <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
         <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
@@ -275,36 +287,27 @@
             let lat = userCoords ? userCoords.lat : 30.0444;
             let lng = userCoords ? userCoords.lng : 31.2357;
             try {
-                // نطلب البيانات من الـ API (بدون تعديل داخلي منه لنعدله نحن برمجياً)
                 const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(now.getTime()/1000)}?latitude=${lat}&longitude=${lng}&method=4`);
                 const data = await res.json();
                 const t = data.data.timings;
                 
-                // --- معالجة التقويم الهجري ليكون منضبطاً طوال الـ 29/30 يوم ---
                 let hDay = parseInt(data.data.date.hijri.day);
                 let hMonth = data.data.date.hijri.month.ar;
                 let hYear = data.data.date.hijri.year;
 
-                // القاعدة: طرح يوم واحد من حساب الـ API الفلكي ليتطابق مع رؤية مصر 
-                // التي بدأت رمضان يوم الخميس 19 فبراير.
                 hDay = hDay - 1;
 
-                // معالجة الانتقال بين الشهور (إذا أصبح اليوم 0 يعني أنه آخر يوم في الشهر السابق)
                 if (hDay === 0) {
-                    // نحن الآن في اليوم الأخير من شعبان (المتمم في مصر)
                     hDay = 30; 
                     hMonth = "شعبان";
                 }
                 
-                // تحديث واجهة المستخدم بالتاريخ المصحح
                 document.getElementById('hijri-date').innerText = `${hDay} ${hMonth} ${hYear}هـ`;
 
-                // --- منطق العد التنازلي ---
                 const fajrTime = new Date(now.toDateString() + " " + t.Fajr);
                 const maghribTime = new Date(now.toDateString() + " " + t.Maghrib);
                 
                 let target, label;
-                // إذا كان اليوم ميلادياً هو 18 فبراير (قبل بداية رمضان في مصر)
                 if (now.getDate() === 18 && now.getMonth() === 1) {
                     target = fajrTime;
                     label = "باقي على أول سحور (رمضان)";
@@ -324,7 +327,6 @@
             } catch (e) {}
         }
 
-        // التحكم في القائمة الجانبية والثيم
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
@@ -338,8 +340,30 @@
         }
 
         function shareApp() { if (navigator.share) navigator.share({ title: 'سحورنا 2026', url: window.location.href }); }
+
+        // --- منطق تنزيل التطبيق (PWA) ---
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'flex'; // إظهار الزر عند توفر ميزة التثبيت
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            }
+        });
+
         window.onload = () => { getLocation(); setInterval(updateTimes, 1000); };
     </script>
 </body>
-                                                                                         </html>
-                                                   
+</html>
