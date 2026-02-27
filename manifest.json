@@ -1,0 +1,20 @@
+{
+  "name": "سحورنا 2026",
+  "short_name": "سحورنا",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#030508",
+  "theme_color": "#D4AF37",
+  "icons": [
+    {
+      "src": "sohoorna.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "sohoorna.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
