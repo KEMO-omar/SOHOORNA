@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خاتمة رمضان | التجربة الملكية</title>
+    <title>مساعد الختمة الذكي | رمضان 1447</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --gold: #ffcf33;
-            --gold-glow: #ffcf3388;
-            --dark-bg: #030303;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 207, 51, 0.2);
+            --gold-glow: #ffcf3344;
+            --dark-bg: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 207, 51, 0.15);
             --text: #ffffff;
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --sidebar-width: 280px;
+            --card-bg: rgba(20, 20, 20, 0.6);
         }
 
+        /* الوضع النهاري */
         [data-theme="light"] {
-            --dark-bg: #f9f6f0;
-            --glass: rgba(0, 0, 0, 0.02);
+            --dark-bg: #f4f1ea;
+            --glass: rgba(0, 0, 0, 0.05);
             --glass-border: rgba(184, 134, 11, 0.3);
             --text: #2c2410;
             --gold: #b8860b;
+            --card-bg: rgba(255, 255, 255, 0.9);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,35 +34,10 @@
             font-family: 'Tajawal', sans-serif;
             background-color: var(--dark-bg);
             color: var(--text);
+            transition: background 0.4s, color 0.4s;
+            display: flex;
+            min-height: 100vh;
             overflow-x: hidden;
-            transition: var(--transition);
-            display: flex;
-        }
-
-        /* زر فتح القائمة الجديد */
-        .menu-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 1002;
-            backdrop-filter: blur(10px);
-            transition: var(--transition);
-        }
-
-        .menu-toggle:hover {
-            background: var(--gold);
-            color: #000;
         }
 
         /* القائمة الجانبية */
@@ -68,364 +45,373 @@
             width: var(--sidebar-width);
             height: 100vh;
             background: var(--glass);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
             border-left: 1px solid var(--glass-border);
-            padding: 30px 15px;
+            padding: 20px 10px;
             position: fixed;
             right: 0; top: 0;
-            overflow-y: auto;
             z-index: 1001;
-            transition: transform 0.5s ease;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
         }
+
+        .sidebar-closed .sidebar { transform: translateX(100%); }
+        .sidebar-closed .main-content { margin-right: 0; width: 100%; }
 
         .sidebar-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 12px 20px;
+            gap: 12px;
+            padding: 12px 15px;
             color: var(--text);
             text-decoration: none;
             border-radius: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
             transition: 0.3s;
-            font-weight: 500;
         }
 
+        .sidebar-item:hover { background: var(--glass-border); color: var(--gold); }
         .sidebar-item i { color: var(--gold); width: 20px; text-align: center; }
-        .sidebar-item:hover { background: var(--glass-border); transform: translateX(-5px); }
 
-        /* محتوى الصفحة الرئيسي */
+        /* المحتوى الرئيسي */
         .main-content {
             margin-right: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
-            min-height: 100vh;
-            transition: margin 0.5s ease, width 0.5s ease;
+            padding: 60px 20px 40px;
+            transition: margin 0.4s, width 0.4s;
         }
 
-        /* تحسينات الشاشات الصغيرة والتفاعلية */
-        @media (max-width: 992px) {
-            .sidebar { transform: translateX(100%); }
-            .sidebar.active { transform: translateX(0); }
-            .main-content { margin-right: 0; width: 100%; }
-        }
+        .container { max-width: 1000px; margin: 0 auto; }
 
-        /* لإخفاء القائمة في الشاشات الكبيرة إذا أردت (اختياري) */
-        body.sidebar-closed .sidebar { transform: translateX(100%); }
-        body.sidebar-closed .main-content { margin-right: 0; width: 100%; }
-
-        .bg-glow {
+        /* الأزرار العلوية */
+        .top-controls {
             position: fixed;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
-            filter: blur(80px);
-            z-index: -1;
-            pointer-events: none;
-            animation: moveGlow 15s infinite alternate;
+            top: 15px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1002;
         }
 
-        @keyframes moveGlow {
-            0% { top: -10%; left: -10%; }
-            100% { top: 80%; left: 80%; }
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        header { text-align: center; margin-bottom: 50px; }
-        .logo-area h1 {
-            font-family: 'Amiri', serif;
-            font-size: 4rem;
-            letter-spacing: -1px;
-            background: linear-gradient(45deg, var(--gold), #fff, var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px var(--gold-glow));
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        @media (max-width: 600px) { .dashboard { grid-template-columns: 1fr; } }
-
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
+        .ctrl-btn {
+            width: 45px; height: 45px;
+            border-radius: 12px;
             border: 1px solid var(--glass-border);
-            border-radius: 30px;
+            background: var(--glass);
+            color: var(--gold);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+
+        .ctrl-btn:hover { background: var(--gold); color: #000; }
+
+        .menu-btn { right: 20px; left: auto; }
+
+        /* لوحة الإحصائيات */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            background: var(--glass);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .online-count { color: #4caf50; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
+        .pulse { width: 8px; height: 8px; background: #4caf50; border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* البطاقات */
+        .goal-card {
+            background: var(--card-bg);
+            border-radius: 20px;
             padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            transition: var(--transition);
+            margin-bottom: 30px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
         }
 
-        .glass-card:hover { border-color: var(--gold); transform: translateY(-5px); }
-
-        .progress-container {
-            position: relative;
-            width: 150px; height: 150px;
-            margin: 0 auto;
+        .goal-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        svg { transform: rotate(-90deg); width: 150px; height: 150px; }
-        circle {
-            fill: none; stroke-width: 10; stroke-linecap: round;
-            transition: stroke-dashoffset 1s ease-in-out;
-        }
-        .bg-circle { stroke: rgba(255,255,255,0.05); }
-        .main-circle { stroke: var(--gold); stroke-dasharray: 440; stroke-dashoffset: 440; filter: drop-shadow(0 0 5px var(--gold)); }
-
-        .progress-text {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.8rem; font-weight: 800; color: var(--gold);
-        }
-
-        .plan-selector { display: flex; flex-direction: column; gap: 10px; }
-
-        .plan-btn {
-            background: rgba(255,255,255,0.02);
+        input[type="number"], input[type="text"] {
+            background: rgba(0,0,0,0.1);
             border: 1px solid var(--glass-border);
             color: var(--text);
-            padding: 12px; border-radius: 15px;
-            cursor: pointer; transition: 0.3s;
-            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+            outline: none;
         }
 
-        .plan-btn.active {
+        /* شبكة الأيام */
+        .tracker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .day-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+
+        .day-card.completed-day { border-color: #4caf50; }
+
+        .day-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; }
+
+        .progress-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .full-width { grid-column: span 2; }
+
+        .btn-save {
             background: var(--gold);
-            color: #000; font-weight: bold;
-            box-shadow: 0 0 20px var(--gold-glow);
-        }
-
-        .task-list {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-        }
-
-        .day-box {
-            height: 120px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border-radius: 20px; cursor: pointer; position: relative;
-            background: var(--glass); border: 1px solid var(--glass-border);
-            transition: var(--transition);
-        }
-
-        .day-box b { font-size: 1.4rem; }
-        .day-box span { font-size: 0.7rem; opacity: 0.7; }
-
-        .day-box.done {
-            background: linear-gradient(145deg, #d4af37, #ffcf33);
             color: #000;
-            border-color: transparent;
-            box-shadow: 0 10px 20px var(--gold-glow);
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            margin-top: 15px;
+            width: 100%;
         }
 
-        .day-box.done::after {
-            content: "✓"; position: absolute; top: 10px; right: 10px;
-            font-weight: bold; font-size: 1rem;
+        /* التجاوب مع الموبايل */
+        @media (max-width: 768px) {
+            .sidebar { width: 85%; transform: translateX(100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-right: 0; width: 100%; padding-top: 80px; }
+            .status-bar { font-size: 0.8rem; flex-direction: column; text-align: center; }
+            .sidebar-closed .sidebar { transform: translateX(100%); }
+            .top-controls { left: 10px; }
         }
-
-        /* أدوات التحكم العائمة */
-        .floating-controls {
-            position: fixed; bottom: 30px; left: 30px;
-            display: flex; flex-direction: column; gap: 15px;
-            z-index: 1000;
-        }
-
-        .float-btn {
-            width: 60px; height: 60px;
-            border-radius: 50%; background: var(--gold);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 10px 25px var(--gold-glow);
-            font-size: 1.5rem; transition: 0.3s;
-            border: none; color: #000;
-        }
-
-        .float-btn:active { transform: scale(0.9); }
-        .share-btn { background: #fff; color: #000; }
-
     </style>
 </head>
-<body data-theme="dark">
+<body class="sidebar-closed" id="bodyBody">
 
-    <div class="menu-toggle" onclick="toggleSidebar()">
-        <i class="fa-solid fa-bars"></i>
+    <div class="top-controls">
+        <button class="ctrl-btn" onclick="toggleTheme()" title="تبديل الوضع">
+            <i class="fa-solid fa-circle-half-stroke"></i>
+        </button>
+        <button class="ctrl-btn" onclick="shareApp()" title="مشاركة الموقع">
+            <i class="fa-solid fa-share-nodes"></i>
+        </button>
     </div>
 
-    <nav class="sidebar" id="mainSidebar">
-        <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border); margin-bottom: 20px;">
-            <h2 style="font-family: 'Amiri'; color: var(--gold);">فهرس النور</h2>
+    <button class="ctrl-btn menu-btn" style="position:fixed; top:15px; right:20px; z-index:1005;" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <nav class="sidebar" id="sidebar">
+        <div style="text-align:center; padding: 20px; border-bottom: 1px solid var(--glass-border);">
+            <h2 style="font-family:'Amiri'; color:var(--gold);">فهرس النور</h2>
         </div>
-        <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
-        <a href="prayers.html" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
-        <a href="quran.html" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الشريف</a>
-        <a href="khatma.html" class="sidebar-item"><i class="fa-solid fa-file-signature"></i> متابعة الختمة</a>
-        <a href="azkar.html" class="sidebar-item"><i class="fa-solid fa-person-praying"></i> أذكار المسلم</a>
-        <a href="tasbih.html" class="sidebar-item"><i class="fa-solid fa-toggle-on"></i> المسبحة الإلكترونية</a>
-        <a href="zakat.html" class="sidebar-item"><i class="fa-solid fa-coins"></i> حاسبة الزكاة</a>
-        <a href="faq.html" class="sidebar-item"><i class="fa-solid fa-clipboard-question"></i> فتاوى الصيام</a>
-        <a href="library.html" class="sidebar-item"><i class="fa-solid fa-book-open"></i> المكتبة الدينية</a>
-        <a href="recipes.html" class="sidebar-item"><i class="fa-solid fa-plate-wheat"></i> وصفات الفطور</a>
-        <a href="suhoor.html" class="sidebar-item"><i class="fa-solid fa-faucet-drip"></i> نصائح السحور</a>
-        <a href="health-tips.html" class="sidebar-item"><i class="fa-solid fa-staff-snake"></i> صحتك في رمضان</a>
-        <a href="habits.html" class="sidebar-item"><i class="fa-solid fa-calendar-check"></i> متبع العادات</a>
-        <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
-        <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
-        <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> ركن الأطفال</a>
-        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
+        <div style="padding: 10px;">
+            <a href="index.html" class="sidebar-item"><i class="fa-solid fa-house"></i> الرئيسية</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-clock"></i> مواقيت الصلاة</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-book-quran"></i> المصحف الإلكتروني</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-star"></i> متابعة الختمة</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أذكار المسلم</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-bead-reefs"></i> المسبحة الذكية</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-coins"></i> ركن الزكاة</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-circle-question"></i> فتاوى الصيام</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-book-open"></i> مكتبة رمضان</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-utensils"></i> وصفات الإفطار</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-moon"></i> دليل السحور</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-heart-pulse"></i> الصحة في رمضان</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-list-check"></i> متبع العادات</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-mosque"></i> خريطة المساجد</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-tv"></i> جدول البرامج</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-child"></i> ركن براعم الإيمان</a>
+            <a href="#" class="sidebar-item"><i class="fa-solid fa-users-gear"></i> فريق التطوير</a>
+        </div>
     </nav>
 
-    <main class="main-content" id="mainContent">
-        <div class="bg-glow"></div>
+    <main class="main-content">
         <div class="container">
-            <header>
-                <div class="logo-area">
-                    <h1>خاتمة</h1>
-                    <p style="font-size: 1.2rem; opacity: 0.8;">رمضان كريم | 1447 هـ</p>
+            
+            <div class="status-bar">
+                <div class="online-count">
+                    <div class="pulse"></div>
+                    يتعبد الآن: <span id="onlineUsers">1,447</span> صائم
                 </div>
-            </header>
-
-            <div class="dashboard">
-                <div class="glass-card" style="text-align: center;">
-                    <p style="margin-bottom: 15px; font-weight: bold;">مستوى إتمام الختمة</p>
-                    <div class="progress-container">
-                        <svg>
-                            <circle class="bg-circle" cx="75" cy="75" r="70"></circle>
-                            <circle id="progCircle" class="main-circle" cx="75" cy="75" r="70"></circle>
-                        </svg>
-                        <div class="progress-text" id="progText">0%</div>
-                    </div>
-                    <p id="quote" style="margin-top: 15px; font-size: 0.9rem; font-style: italic; opacity: 0.8;"></p>
-                </div>
-
-                <div class="glass-card plan-selector">
-                    <p style="font-weight: bold; margin-bottom: 10px;">اختر وتيرة الختم:</p>
-                    <button class="plan-btn" id="p1" onclick="updatePlan(1)">ختمة واحدة <span>جزء/يوم</span></button>
-                    <button class="plan-btn" id="p2" onclick="updatePlan(2)">ختمتين <span>جزئين/يوم</span></button>
-                    <button class="plan-btn active" id="p3" onclick="updatePlan(3)">3 ختمات <span>3 أجزاء/يوم</span></button>
-                </div>
+                <div id="currentDate"></div>
             </div>
 
-            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                <span style="width: 10px; height: 10px; background: var(--gold); border-radius: 50%;"></span>
-                جدول الأيام
-            </h3>
-            
-            <div class="task-list" id="taskList"></div>
+            <header style="text-align: center; margin-bottom: 30px;">
+                <h1 style="font-family: 'Amiri'; font-size: clamp(2.5rem, 8vw, 3.5rem); color: var(--gold);">خاتمة رمضان</h1>
+                <p style="opacity: 0.8;">سجل تلاوتك اليومية ونافس نفسك في الخير</p>
+            </header>
+
+            <section class="goal-card">
+                <h3 style="margin-bottom:10px;"><i class="fa-solid fa-bullseye"></i> خطتك الشخصية</h3>
+                <div class="goal-inputs">
+                    <div class="input-group">
+                        <label style="font-size:0.8rem; display:block; margin-bottom:5px;">عدد الختمات</label>
+                        <input type="number" id="targetKhatmas" value="1" min="1" onchange="updateCalculations()">
+                    </div>
+                    <div class="input-group">
+                        <label style="font-size:0.8rem; display:block; margin-bottom:5px;">إجمالي الأجزاء</label>
+                        <input type="number" id="totalParts" value="30" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label style="font-size:0.8rem; display:block; margin-bottom:5px;">الورد اليومي</label>
+                        <div id="dailySuggested" style="font-weight: 800; color: var(--gold); padding: 10px; background:rgba(0,0,0,0.1); border-radius:10px;">1 جزء</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="status-bar" style="background: var(--gold-glow); border-color: var(--gold);">
+                <span>المنجز: <b id="partsDone">0</b> جزء</span>
+                <span>المتبقي: <b id="partsLeft">30</b> جزء</span>
+                <span>التقدم: <b id="percentText">0%</b></span>
+            </div>
+
+            <div class="tracker-grid" id="trackerGrid">
+                </div>
+
         </div>
     </main>
 
-    <div class="floating-controls">
-        <button class="float-btn share-btn" onclick="shareSite()" title="مشاركة الموقع">
-            <i class="fa-solid fa-share-nodes"></i>
-        </button>
-        <button class="float-btn" onclick="toggleTheme()" id="themeToggle">☀️</button>
-    </div>
-
     <script>
-        let state = JSON.parse(localStorage.getItem('ramadan_ultra_v1')) || {
+        // نظام البيانات
+        let userData = JSON.parse(localStorage.getItem('ramadan_tracker_v2')) || {
             theme: 'dark',
-            plan: 3,
-            completed: []
+            targetKhatmas: 1,
+            days: Array(30).fill().map(() => ({ part: '', surah: '', verse: '' }))
         };
 
-        const quotes = [
-            "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ",
-            "نورٌ لقلبك، وضياءٌ ليومك",
-            "رتل وارتقِ كما كنت ترتل في الدنيا",
-            "القرآن يشفع لأصحابه يوم القيامة"
-        ];
+        // تفعيل الثيم المحفوظ
+        document.body.setAttribute('data-theme', userData.theme);
 
-        // دالة التحكم في القائمة
+        function toggleTheme() {
+            userData.theme = userData.theme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', userData.theme);
+            saveData();
+        }
+
         function toggleSidebar() {
-            const sidebar = document.getElementById('mainSidebar');
-            const isMobile = window.innerWidth <= 992;
-            
-            if (isMobile) {
-                sidebar.classList.toggle('active');
+            const sb = document.getElementById('sidebar');
+            if (window.innerWidth <= 768) {
+                sb.classList.toggle('open');
             } else {
                 document.body.classList.toggle('sidebar-closed');
             }
         }
 
-        function save() {
-            localStorage.setItem('ramadan_ultra_v1', JSON.stringify(state));
-        }
-
-        function toggleTheme() {
-            state.theme = state.theme === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', state.theme);
-            document.getElementById('themeToggle').innerText = state.theme === 'dark' ? '☀️' : '🌙';
-            save();
-        }
-
-        function shareSite() {
+        function shareApp() {
+            const shareData = {
+                title: 'مساعد الختمة الذكي',
+                text: 'أفضل رفيق لك في ختم القرآن خلال شهر رمضان المبارك',
+                url: 'https://kemo-omar.github.io/SOHOORNA/index.html'
+            };
             if (navigator.share) {
-                navigator.share({
-                    title: 'خاتمة رمضان',
-                    text: 'تابع ختمتك في رمضان بكل سهولة عبر هذا الموقع المميز',
-                    url: window.location.href
-                });
+                navigator.share(shareData);
             } else {
-                alert("نسخ الرابط: " + window.location.href);
+                navigator.clipboard.writeText(shareData.url);
+                alert('تم نسخ رابط الموقع بنجاح!');
             }
         }
 
-        function updatePlan(p) {
-            state.plan = p;
-            render();
-            save();
+        function updateCalculations() {
+            userData.targetKhatmas = Math.max(1, document.getElementById('targetKhatmas').value);
+            const total = userData.targetKhatmas * 30;
+            document.getElementById('totalParts').value = total;
+            document.getElementById('dailySuggested').innerText = (total / 30).toFixed(1) + " جزء";
+            saveData();
+            renderStats();
         }
 
-        function toggleDay(day) {
-            const index = state.completed.indexOf(day);
-            if (index > -1) state.completed.splice(index, 1);
-            else state.completed.push(day);
-            render();
-            save();
+        function saveDay(i) {
+            const card = document.querySelectorAll('.day-card')[i];
+            userData.days[i] = {
+                part: card.querySelector('.in-part').value,
+                surah: card.querySelector('.in-surah').value,
+                verse: card.querySelector('.in-verse').value
+            };
+            saveData();
+            renderStats();
+            
+            // تأثير الحفظ
+            const btn = card.querySelector('.btn-save');
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> تم الحفظ';
+            btn.style.background = '#4caf50';
+            setTimeout(() => {
+                btn.innerHTML = 'حفظ التقدم';
+                btn.style.background = 'var(--gold)';
+            }, 2000);
         }
 
-        function render() {
-            document.body.setAttribute('data-theme', state.theme);
-            document.querySelectorAll('.plan-btn').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById('p' + state.plan);
-            if(activeBtn) activeBtn.classList.add('active');
+        function saveData() {
+            localStorage.setItem('ramadan_tracker_v2', JSON.stringify(userData));
+        }
 
-            const percent = Math.round((state.completed.length / 30) * 100);
-            const offset = 440 - (440 * percent / 100);
-            document.getElementById('progCircle').style.strokeDashoffset = offset;
-            document.getElementById('progText').innerText = percent + '%';
-            document.getElementById('quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+        function renderStats() {
+            const done = userData.days.reduce((acc, day) => acc + (parseFloat(day.part) || 0), 0);
+            const total = userData.targetKhatmas * 30;
+            const percent = Math.min(100, ((done / total) * 100)).toFixed(1);
 
-            const list = document.getElementById('taskList');
-            list.innerHTML = '';
-            for (let i = 1; i <= 30; i++) {
-                const isDone = state.completed.includes(i);
+            document.getElementById('partsDone').innerText = done;
+            document.getElementById('partsLeft').innerText = Math.max(0, total - done);
+            document.getElementById('percentText').innerText = percent + "%";
+        }
+
+        function initGrid() {
+            const grid = document.getElementById('trackerGrid');
+            grid.innerHTML = '';
+            
+            userData.days.forEach((day, i) => {
                 const card = document.createElement('div');
-                card.className = `day-box ${isDone ? 'done' : ''}`;
-                card.onclick = () => toggleDay(i);
+                card.className = 'day-card';
                 card.innerHTML = `
-                    <span>اليوم</span>
-                    <b>${i}</b>
-                    <span>${state.plan > 1 ? 'ورد مضاعف' : 'جزء ' + i}</span>
+                    <div class="day-header">
+                        <span>اليوم ${i+1}</span>
+                        <i class="fa-solid fa-quran" style="color:var(--gold)"></i>
+                    </div>
+                    <div class="progress-inputs">
+                        <div class="input-group">
+                            <label style="font-size:0.7rem;">الجزء</label>
+                            <input type="number" class="in-part" value="${day.part}" placeholder="0">
+                        </div>
+                        <div class="input-group">
+                            <label style="font-size:0.7rem;">الآية</label>
+                            <input type="number" class="in-verse" value="${day.verse}" placeholder="0">
+                        </div>
+                        <div class="input-group full-width">
+                            <label style="font-size:0.7rem;">اسم السورة</label>
+                            <input type="text" class="in-surah" value="${day.surah}" placeholder="...">
+                        </div>
+                    </div>
+                    <button class="btn-save" onclick="saveDay(${i})">حفظ التقدم</button>
                 `;
-                list.appendChild(card);
-            }
+                grid.appendChild(card);
+            });
         }
 
-        render();
-        setInterval(() => {
-            document.getElementById('quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
-        }, 10000);
+        // التاريخ الهجري/الميلادي
+        document.getElementById('currentDate').innerText = new Intl.DateTimeFormat('ar-SA', {
+            dateStyle: 'full'
+        }).format(new Date());
+
+        // التشغيل
+        initGrid();
+        renderStats();
+        document.getElementById('targetKhatmas').value = userData.targetKhatmas;
     </script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <script src="stats.js"></script>
 </body>
 </html>
