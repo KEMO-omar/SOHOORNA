@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>سحورنا 2026 | SOHOORNA</title>
     
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#D4AF37">
+    <link rel="apple-touch-icon" href="sohoorna.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -102,11 +106,11 @@
         .sidebar.active { right: 0; }
         .sidebar-item { display: flex; align-items: center; gap: 15px; color: var(--text-main); text-decoration: none; padding: 15px 20px; border-bottom: 1px solid rgba(212,175,55,0.05); }
         
-        /* تنسيق زر التثبيت الخاص */
+        /* تنسيق زر التثبيت */
         .install-btn-sidebar { 
             background: linear-gradient(45deg, var(--gold), #b38f00) !important; 
             color: #000 !important; font-weight: bold; margin: 10px; border-radius: 12px; 
-            display: none; /* مخفي افتراضياً ويظهر بالجافاسكريبت */
+            display: none; /* سيظهر بالجافاسكريبت */
         }
 
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 5500; }
@@ -153,7 +157,7 @@
         <a href="ehsan.html" class="sidebar-item"><i class="fa-solid fa-hand-holding-heart"></i> أعمال الخير</a>
         <a href="series.html" class="sidebar-item"><i class="fa-solid fa-film"></i> جدول المسلسلات</a>
         <a href="kids.html" class="sidebar-item"><i class="fa-solid fa-child-reaching"></i> ركن الأطفال</a>
-        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-code"></i> فريق العمل</a>
+        <a href="designers.html" class="sidebar-item"><i class="fa-solid fa-palette"></i> فريق العمل</a>
     </nav>
 
     <div class="top-controls">
@@ -231,7 +235,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // تكوين Firebase (بياناتك الأصلية)
+        // تكوين Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC0WJ11PvTUAWxLMlPBqXA-2QrcXM2uHg0",
             authDomain: "sohoorna.firebaseapp.com",
@@ -246,7 +250,6 @@
         const db = firebase.database();
         const onlineRef = db.ref('stats/online');
         const totalRef = db.ref('stats/totalVisits');
-        const durationRef = db.ref('stats/totalDurationMinutes');
         const startTime = Date.now();
 
         if (!localStorage.getItem('v26')) {
@@ -264,13 +267,6 @@
 
         onlineRef.on('value', s => document.getElementById('online-count').innerText = s.numChildren());
         totalRef.on('value', s => document.getElementById('total-count').innerText = s.val() || 0);
-
-        function logDuration() {
-            const durationMinutes = Math.floor((Date.now() - startTime) / 60000);
-            if (durationMinutes > 0) durationRef.transaction(current => (current || 0) + durationMinutes);
-        }
-        window.addEventListener('beforeunload', logDuration);
-        window.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') logDuration(); });
 
         let userCoords = null;
         function getLocation() {
@@ -296,11 +292,7 @@
                 let hYear = data.data.date.hijri.year;
 
                 hDay = hDay - 1;
-
-                if (hDay === 0) {
-                    hDay = 30; 
-                    hMonth = "شعبان";
-                }
+                if (hDay === 0) { hDay = 30; hMonth = "شعبان"; }
                 
                 document.getElementById('hijri-date').innerText = `${hDay} ${hMonth} ${hYear}هـ`;
 
@@ -309,8 +301,7 @@
                 
                 let target, label;
                 if (now.getDate() === 18 && now.getMonth() === 1) {
-                    target = fajrTime;
-                    label = "باقي على أول سحور (رمضان)";
+                    target = fajrTime; label = "باقي على أول سحور (رمضان)";
                 } else {
                     if (now < fajrTime) { target = fajrTime; label = "باقي على الإمساك"; }
                     else if (now < maghribTime) { target = maghribTime; label = "باقي على الفطور"; }
@@ -329,6 +320,9 @@
 
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
+        const installBtn = document.getElementById('installBtn');
+        let deferredPrompt;
+
         document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
         overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 
@@ -341,27 +335,25 @@
 
         function shareApp() { if (navigator.share) navigator.share({ title: 'سحورنا 2026', url: window.location.href }); }
 
-        // --- منطق تنزيل التطبيق (PWA) ---
-        let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
-
+        // --- معالجة تثبيت التطبيق ---
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            installBtn.style.display = 'flex'; // إظهار الزر عند توفر ميزة التثبيت
+            // إظهار الزر
+            installBtn.style.display = 'flex';
         });
 
-        installBtn.addEventListener('click', async () => {
+        installBtn.onclick = async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
+                    console.log('App Installed');
                 }
                 deferredPrompt = null;
                 installBtn.style.display = 'none';
             }
-        });
+        };
 
         window.onload = () => { getLocation(); setInterval(updateTimes, 1000); };
     </script>
