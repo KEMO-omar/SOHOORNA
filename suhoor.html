@@ -7,9 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* =========================================
-           1. CSS - النمط الذهبي النيوني المتوهج
-           ========================================= */
         :root {
             --neon-gold: #ffdf00;
             --dark-gold: #b8860b;
@@ -22,8 +19,8 @@
         }
 
         [data-theme="light"] {
-            --bg-color: #ffffff;
-            --card-bg: #f9f9f9;
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
             --text-color: #1a1a1a;
             --dark-gold: #8a6d3b;
             --sidebar-bg: #ffffff;
@@ -39,237 +36,54 @@
             overflow-x: hidden;
         }
 
-        /* القائمة الجانبية المضافة */
         .sidebar {
             position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
             background: var(--sidebar-bg); z-index: 6000; transition: 0.4s; overflow-y: auto;
             box-shadow: -5px 0 15px rgba(0,0,0,0.5); border-left: 1px solid var(--neon-gold);
         }
         .sidebar.active { right: 0; }
-        .sidebar-item { display: flex; align-items: center; gap: 15px; color: var(--text-color); text-decoration: none; padding: 15px 20px; border-bottom: 1px solid rgba(255,223,0,0.05); font-size: 14px; }
+        .sidebar-item { display: flex; align-items: center; gap: 15px; color: var(--text-color); text-decoration: none; padding: 12px 20px; border-bottom: 1px solid rgba(255,223,0,0.05); font-size: 14px; }
         .sidebar-item i { color: var(--neon-gold); width: 20px; text-align: center; }
         .sidebar-item:hover { background: rgba(255,223,0,0.1); }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 5500; }
         .overlay.active { display: block; }
 
-        /* الهيدر والمؤقت */
         header {
-            padding: 120px 20px 80px;
+            padding: 130px 20px 80px;
             text-align: center;
             background: linear-gradient(180deg, rgba(255, 223, 0, 0.1) 0%, transparent 100%);
             border-bottom: 2px solid var(--neon-gold);
-            position: relative;
         }
 
-        /* تثبيت العناصر العلوية */
         .sticky-controls {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            background: var(--bg-color);
-            padding: 10px 20px;
-            border-bottom: 1px solid var(--dark-gold);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: var(--bg-color); padding: 10px 20px; border-bottom: 1px solid var(--dark-gold);
         }
 
-        .top-row {
-            display: flex; justify-content: space-between; align-items: center;
-            max-width: 1200px; margin: 0 auto 10px;
-        }
+        .top-row { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 10px; }
+        .action-btn { background: var(--neon-gold); color: #000; border: none; padding: 8px 15px; border-radius: 50px; cursor: pointer; font-weight: 900; display: flex; align-items: center; gap: 8px; }
 
-        .action-btn {
-            background: var(--neon-gold);
-            color: #000;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 900;
-            box-shadow: var(--glow);
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.9rem;
-        }
+        .search-input { width: 100%; padding: 12px 25px; background: var(--card-bg); border: 2px solid var(--dark-gold); border-radius: 100px; color: var(--text-color); }
 
-        .search-container {
-            max-width: 1200px; margin: 0 auto;
-        }
+        h1 { font-size: 3.5rem; color: var(--neon-gold); text-shadow: var(--glow); margin: 0; }
 
-        .search-input {
-            width: 100%;
-            padding: 12px 25px;
-            background: var(--card-bg);
-            border: 2px solid var(--dark-gold);
-            border-radius: 100px;
-            color: var(--text-color);
-            font-size: 1rem;
-            outline: none;
-            transition: var(--transition);
-        }
+        .timer-box { background: var(--card-bg); border: 2px solid var(--neon-gold); max-width: 450px; margin: -40px auto 40px; padding: 25px; border-radius: 25px; text-align: center; box-shadow: var(--glow); position: relative; z-index: 5; }
+        #countdown { font-size: 3rem; color: var(--neon-gold); font-weight: 900; }
 
-        .search-input:focus {
-            border-color: var(--neon-gold);
-            box-shadow: var(--glow);
-        }
+        .category-tabs { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+        .tab { padding: 10px 20px; background: transparent; border: 1px solid var(--dark-gold); color: var(--dark-gold); border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .tab.active { background: var(--neon-gold); color: #000; box-shadow: var(--glow); border-color: var(--neon-gold); }
 
-        h1 {
-            font-size: 4.5rem;
-            color: var(--neon-gold);
-            text-shadow: var(--glow);
-            margin: 0;
-            font-weight: 900;
-        }
+        .recipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; max-width: 1300px; margin: 0 auto; padding: 20px; }
+        .recipe-card { background: var(--card-bg); border: 1px solid #333; border-radius: 20px; padding: 25px; cursor: pointer; transition: 0.3s; }
+        .recipe-card:hover { transform: translateY(-10px); border-color: var(--neon-gold); box-shadow: var(--glow); }
+        .recipe-card h3 { color: var(--neon-gold); margin-top: 0; font-size: 1.4rem; }
 
-        .timer-box {
-            background: var(--card-bg);
-            border: 2px solid var(--neon-gold);
-            max-width: 500px;
-            margin: -50px auto 40px;
-            padding: 30px;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: var(--glow);
-            position: relative;
-            z-index: 5;
-        }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 7000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--card-bg); border: 2px solid var(--neon-gold); width: 100%; max-width: 800px; border-radius: 30px; padding: 40px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .close-btn { position: absolute; top: 20px; left: 20px; color: var(--neon-gold); font-size: 35px; cursor: pointer; }
 
-        #countdown {
-            font-size: 3.5rem;
-            color: var(--neon-gold);
-            font-weight: 900;
-            font-family: monospace;
-        }
-
-        .category-tabs {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 50px;
-            padding: 0 20px;
-        }
-
-        .tab {
-            padding: 15px 30px;
-            background: transparent;
-            border: 1px solid var(--dark-gold);
-            color: var(--dark-gold);
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: var(--transition);
-        }
-
-        .tab.active, .tab:hover {
-            background: var(--neon-gold);
-            color: #000;
-            box-shadow: var(--glow);
-            border-color: var(--neon-gold);
-        }
-
-        /* شبكة الوصفات */
-        .recipe-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .recipe-card {
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 25px;
-            padding: 30px;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .recipe-card:hover {
-            transform: translateY(-15px);
-            border-color: var(--neon-gold);
-            box-shadow: var(--glow);
-        }
-
-        .recipe-card h3 {
-            color: var(--neon-gold);
-            font-size: 1.8rem;
-            margin: 0 0 10px 0;
-        }
-
-        .recipe-card .meta {
-            font-size: 0.9rem;
-            color: #888;
-            border-top: 1px solid #222;
-            padding-top: 15px;
-            margin-top: 15px;
-        }
-
-        /* قسم النصائح */
-        .tips-container {
-            max-width: 1200px;
-            margin: 80px auto;
-            padding: 40px;
-            background: rgba(255, 223, 0, 0.05);
-            border-radius: 40px;
-            border: 1px dashed var(--neon-gold);
-        }
-
-        .tip-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 25px;
-            padding: 20px;
-            background: var(--card-bg);
-            border-radius: 20px;
-        }
-
-        .tip-icon {
-            font-size: 2.5rem;
-            color: var(--neon-gold);
-        }
-
-        /* نافذة المودال */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 7000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            border: 2px solid var(--neon-gold);
-            width: 100%;
-            max-width: 900px;
-            border-radius: 40px;
-            padding: 50px;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--glow);
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 30px; left: 30px;
-            color: var(--neon-gold);
-            font-size: 40px;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            #countdown { font-size: 2.5rem; }
-            header { padding-top: 160px; }
-        }
+        @media (max-width: 768px) { h1 { font-size: 2rem; } #countdown { font-size: 2rem; } }
     </style>
 </head>
 <body>
@@ -281,9 +95,7 @@
             <button class="action-btn" id="menuBtn"><i class="fa-solid fa-bars"></i> القائمة</button>
             <button class="action-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i> الوضع</button>
         </div>
-        <div class="search-container">
-            <input type="text" id="masterSearch" class="search-input" placeholder="ابحث عن مكون (فول، بيض، زبادي، شوفان)..." onkeyup="filterContent()">
-        </div>
+        <input type="text" id="masterSearch" class="search-input" placeholder="ابحث عن أكلة سحور..." onkeyup="filterContent()">
     </div>
 
     <nav class="sidebar" id="sidebar">
@@ -311,66 +123,34 @@
     </nav>
 
     <header>
-        <h1>سُحورُك <span style="color:#fff">مُبارك</span></h1>
-        <p style="color: var(--neon-gold); font-size: 1.5rem; margin-top: 10px;">أكثر من 200 وصفة سحور صحية بلمسة ذهبية</p>
+        <h1>موسوعة السحور 2026</h1>
+        <p style="color: var(--neon-gold);">أكلات صحية لطاقة تدوم طوال نهار رمضان</p>
     </header>
 
     <div class="timer-box">
-        <h3 style="margin-top:0">⏳ المتبقي على أذان الفجر</h3>
+        <h4 style="margin:0 0 10px">⏳ متبقي على الإمساك</h4>
         <div id="countdown">00:00:00</div>
-        <p style="color: #888; font-size: 0.9rem;">بناءً على التوقيت المحلي لجهازك</p>
     </div>
 
     <div class="category-tabs">
         <button class="tab active" onclick="switchCategory('all', this)">الكل</button>
         <button class="tab" onclick="switchCategory('بقوليات', this)">بقوليات</button>
-        <button class="tab" onclick="switchCategory('بيض', this)">أطباق البيض</button>
+        <button class="tab" onclick="switchCategory('بيض', this)">بيض</button>
         <button class="tab" onclick="switchCategory('خفيف', this)">سحور خفيف</button>
-        <button class="tab" onclick="switchCategory('ألبان', this)">ألبان وأجبان</button>
+        <button class="tab" onclick="switchCategory('ألبان', this)">ألبان</button>
     </div>
 
     <div id="recipeContainer" class="recipe-grid"></div>
 
-    <div class="tips-container">
-        <h2 style="color: var(--neon-gold); text-align: center; font-size: 2.5rem; margin-bottom: 40px;">🌟 نصائح السحور الذكي</h2>
-        <div class="tip-item">
-            <div class="tip-icon">💧</div>
-            <div>
-                <h4 style="margin:0; color:var(--neon-gold)">البوتاسيوم يمنع العطش</h4>
-                <p style="margin:5px 0 0">تناول الموز، التمر، أو المشمش المجفف في السحور لتقليل الشعور بالعطش نهاراً.</p>
-            </div>
-        </div>
-        <div class="tip-item">
-            <div class="tip-icon">🥣</div>
-            <div>
-                <h4 style="margin:0; color:var(--neon-gold)">الألياف هي السر</h4>
-                <p style="margin:5px 0 0">الفول والشوفان والخبز الأسمر يمنحونك شعوراً بالشبع يدوم لأكثر من 8 ساعات.</p>
-            </div>
-        </div>
-        <div class="tip-item">
-            <div class="tip-icon">🚫</div>
-            <div>
-                <h4 style="margin:0; color:var(--neon-gold)">تجنب هذه الأطعمة</h4>
-                <p style="margin:5px 0 0">ابتعد تماماً عن المخللات، الأجبان المالحة، والحلويات المصنعة لتجنب الجوع المفاجئ.</p>
-            </div>
-        </div>
-    </div>
-
     <div id="recipeModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle" style="color: var(--neon-gold); font-size: 3rem; margin-bottom: 10px;"></h2>
-            <div id="modalMeta" style="color: var(--dark-gold); font-weight: bold; margin-bottom: 30px;"></div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px;">
-                <div id="mobile-stack">
-                    <h3 style="color: var(--neon-gold); border-bottom: 1px solid #333; padding-bottom: 10px;">🛒 المكونات</h3>
-                    <ul id="modalIngs" style="line-height: 2;"></ul>
-                </div>
-                <div>
-                    <h3 style="color: var(--neon-gold); border-bottom: 1px solid #333; padding-bottom: 10px;">👨‍🍳 الطريقة الصحية</h3>
-                    <p id="modalSteps" style="line-height: 1.8; text-align: justify;"></p>
-                </div>
+            <h2 id="modalTitle" style="color: var(--neon-gold);"></h2>
+            <div style="border-top: 1px solid #333; padding-top: 20px;">
+                <h4 style="color: var(--neon-gold)">🛒 المقادير:</h4>
+                <ul id="modalIngs"></ul>
+                <h4 style="color: var(--neon-gold)">🍳 الطريقة:</h4>
+                <p id="modalSteps"></p>
             </div>
         </div>
     </div>
@@ -380,49 +160,75 @@
     <script src="stats.js"></script>
 
     <script>
-        /* =========================================
-           2. JS - محرك البيانات والمؤقت والتحكم
-           ========================================= */
+        const recipesDB = [
+            // بقوليات (1-13)
+            { id: 1, category: "بقوليات", title: "فول بالزيت الحار والليمون", ings: ["كوب فول مدمس", "2 ملعقة زيت حار", "عصير ليمونة", "كمون وملح"], steps: "سخن الفول جيداً، أضف الملح والكمون، ثم الزيت والليمون وقدمه ساخناً." },
+            { id: 2, category: "بقوليات", title: "فول بالزبادي والطحينة", ings: ["فول", "علبة زبادي", "ملعقة طحينة", "فص ثوم مهروس"], steps: "اخلط الزبادي والطحينة والثوم، صبه فوق الفول الساخن المهروس." },
+            { id: 3, category: "بقوليات", title: "فول إسكندراني بالبصل والفلفل", ings: ["فول", "بصلة صغيرة", "فلفل أخضر", "طماطم مكعبات"], steps: "شوح البصل والفلفل، أضف الطماطم ثم الفول وقلبهم 5 دقائق." },
+            { id: 4, category: "بقوليات", title: "حمص بالشبت والليمون", ings: ["حمص مسلوق", "شبت مفروم", "ثوم", "زيت زيتون"], steps: "اخلط الحمص مع الشبت والليمون والزيت والثوم للحصول على طبق مشبع." },
+            { id: 5, category: "بقوليات", title: "فول بالخلطة السرية والصلصة", ings: ["فول", "ملعقة صلصة", "بقدونس", "بهارات"], steps: "سخن الصلصة مع القليل من الماء، أضف الفول والبهارات والبقدونس." },
+            { id: 6, category: "بقوليات", title: "بليلة مصرية بالحليب", ings: ["قمح مسلوق", "حليب كامل الدسم", "ملعقة عسل", "مكسرات"], steps: "اغلي القمح مع الحليب، حليه بالعسل وأضف المكسرات للطاقة." },
+            { id: 7, category: "بقوليات", title: "عدس أصفر خفيف بالكمون", ings: ["عدس مسلوق ومصفى", "كمون", "شريحة توست"], steps: "سخن العدس مع الكمون والملح، يقدم كشوربة دافئة ومشبعة." },
+            { id: 8, category: "بقوليات", title: "فول بالسمن البلدي", ings: ["فول", "ملعقة سمن بلدي", "ملح وفلفل"], steps: "أضف السمن البلدي للفول الساخن المهروس لتعزيز الطعم." },
+            { id: 9, category: "بقوليات", title: "فاصوليا بيضاء باردة بالزيت", ings: ["فاصوليا بيضاء مسلوقة", "زيت زيتون", "بقدونس", "بصل أخضر"], steps: "اخلط المكونات معاً وقدمها كسلطة مشبعة بالألياف." },
+            { id: 10, category: "بقوليات", title: "فول مشوي بالفرن", ings: ["فول", "طماطم", "فلفل حار", "زيت"], steps: "ضع الفول مع المكونات في طاجن وبالفرن لمدة 10 دقائق." },
+            { id: 11, category: "بقوليات", title: "فول بالبيض المقلي", ings: ["فول", "2 بيضة", "ملح"], steps: "حضر الفول العادي وضع فوقه بيضتين مقليتين بصفار سائل." },
+            { id: 12, category: "بقوليات", title: "حمص بالطحينة (مسبحة)", ings: ["حمص مهروس", "نصف كوب طحينة", "ليمون"], steps: "اخلط الحمص مع الطحينة والليمون وقليل من ماء السلق." },
+            { id: 13, category: "بقوليات", title: "فول بالبسطرمة", ings: ["فول", "شرائح بسطرمة", "فص ثوم"], steps: "شوح البسطرمة مع الثوم ثم أضف الفول وقلب جيداً." },
 
-        const categories = {
-            "بقوليات": ["فول بالزيت الحار", "فول بالزبادي والكمون", "فول إسكندراني دايت", "حمص بالطحينة والليمون", "فول بالخلطة السرية", "فول مشوي بالفرن", "بليلة مصرية باللبن", "عدس أصفر خفيف", "فاصوليا بيضاء باردة", "فول بزيت الزيتون"],
-            "بيض": ["بيض عيون بالزعتر", "أومليت خضروات مشكل", "بيض مسلوق بالبابريكا", "شكشوكة تونسية حارة", "مافن البيض بالسبانخ", "بيض بالجبنة القريش", "عجة بيض بالفرن", "بيض بالمشروم والنعناع", "بيض مدحرج بزيت خفيف", "سلطة بيض مسلوق بالخيار"],
-            "خفيف": ["شوفان بالحليب والموز", "زبادي بالبذور والعسل", "سلطة فواكه رمضانية", "توست أسمر بالأفوكادو", "تمر باللبن البارد", "سموذي الطاقة الأخضر", "موز باللوز والعسل", "زبادي يوناني بالتوت", "رقائق حبوب كاملة", "مهلبية قمر الدين دايت"],
-            "ألبان": ["جبنة قريش بالطماطم", "لبنة بالزيتون والزعتر", "جبنة فيتا بالنعناع", "زبادي بلدي طازج", "جبنة حلوم مشوية", "سلطة أجبان بالخيار", "رايب طبيعي هاضم", "جبنة بيضاء قليلة الملح", "مكعبات جبن مع بطيخ", "لبنة مكبوسة بالزيت"]
-        };
+            // بيض (14-25)
+            { id: 14, category: "بيض", title: "شكشوكة تونسية حارة", ings: ["بيض", "فلفل حار", "طماطم", "بصل"], steps: "حضر صلصة الطماطم والبصل والفلفل، ثم اكسر البيض فوقها واتركه ينضج." },
+            { id: 15, category: "بيض", title: "بيض مسلوق بالزعتر والزيت", ings: ["2 بيضة مسلوقة", "ملعقة زعتر", "زيت زيتون"], steps: "قطع البيض المسلوق ورش عليه الزعتر وزيت الزيتون." },
+            { id: 16, category: "بيض", title: "أومليت بالخضروات والجبن", ings: ["بيض", "فلفل ألوان", "موزاريلا", "بقدونس"], steps: "اخفق البيض مع الخضروات، ضعه في المقلاة وأضف الجبن في المنتصف." },
+            { id: 17, category: "بيض", title: "بيض عيون بالزبدة", ings: ["2 بيضة", "ملعقة زبدة", "ملح وفلفل أسود"], steps: "اقلِ البيض في الزبدة مع الحفاظ على الصفار سائلاً." },
+            { id: 18, category: "بيض", title: "عجة بيض بالفرن", ings: ["4 بيضات", "دقيق", "بقدونس", "بصل مفروم"], steps: "اخلط المكونات وصبها في صينية فرن حتى تتماسك وتتحمر." },
+            { id: 19, category: "بيض", title: "بيض بالمشروم والسبانخ", ings: ["بيض", "مشروم طازج", "أوراق سبانخ"], steps: "شوح المشروم والسبانخ ثم أضف البيض المخفوق فوقهم." },
+            { id: 20, category: "بيض", title: "مافن البيض الصحي", ings: ["بيض", "بروكلي مقطع", "جبنة شيدر"], steps: "صب خليط البيض في قوالب الكب كيك واخبزها في الفرن." },
+            { id: 21, category: "بيض", title: "بيض مدحرج بالسمن", ings: ["بيض مسلوق", "سمن بلدي", "كركم"], steps: "حمر البيض المسلوق في السمن مع رشة كركم للون ذهبي." },
+            { id: 22, category: "بيض", title: "سلطة بيض بالمايونيز", ings: ["بيض مسلوق", "ملعقة مايونيز لايت", "مستردة"], steps: "اهدس البيض مع المايونيز والمستردة وقدمه في ساندوتش." },
+            { id: 23, category: "بيض", title: "بيض بالجبنة القريش", ings: ["بيض مخفوق", "جبنة قريش", "زيت زيتون"], steps: "قلب الجبنة القريش مع البيض في المقلاة للحصول على بروتين عالٍ." },
+            { id: 24, category: "بيض", title: "أومليت بالبطاطس (تور tortilla)", ings: ["بيض", "مكعبات بطاطس مقلية", "بصل"], steps: "اخلط البطاطس مع البيض واقلِها كقرص سميك." },
+            { id: 25, category: "بيض", title: "بيض باللانشون المنزلي", ings: ["بيض", "قطع لانشون", "فلفل أسود"], steps: "شوح اللانشون سريعاً ثم أضف البيض المخفوق." },
 
-        const recipesDB = [];
+            // خفيف (26-38)
+            { id: 26, category: "خفيف", title: "شوفان بالحليب والموز", ings: ["نصف كوب شوفان", "كوب حليب", "موزة", "عسل"], steps: "اغلي الشوفان مع الحليب، زين بشرائح الموز والعسل." },
+            { id: 27, category: "خفيف", title: "زبادي ببذور الشيا والتوت", ings: ["زبادي", "ملعقة بذور شيا", "توت أو فراولة"], steps: "اخلط الشيا مع الزبادي واتركها 10 دقائق ثم أضف الفاكهة." },
+            { id: 28, category: "خفيف", title: "توست أسمر بالأفوكادو", ings: ["شريحة توست", "نصف حبة أفوكادو", "رشة شطة"], steps: "اهرس الأفوكادو على التوست المحمص مع ملح وليمون." },
+            { id: 29, category: "خفيف", title: "سلطة فواكه رمضانية", ings: ["تفاح", "برتقال", "تمر مقطع", "عنب"], steps: "قطع الفواكه واخلطها مع قليل من عصير البرتقال الطبيعي." },
+            { id: 30, category: "خفيف", title: "تمر باللبن البارد", ings: ["7 تمرات", "كوب حليب بارد"], steps: "انقع التمر في الحليب لمدة ساعتين قبل السحور." },
+            { id: 31, category: "خفيف", title: "سموذي الموز واللوز", ings: ["موزة", "حفنة لوز", "حليب لوز أو عادي"], steps: "اضرب المكونات في الخلاط لمشروب مشبع ومنعش." },
+            { id: 32, category: "خفيف", title: "مهلبية قمر الدين دايت", ings: ["عصير قمر دين", "نشا", "سكر دايت"], steps: "حضر المهلبية العادية واستبدل السكر ببديل صحي." },
+            { id: 33, category: "خفيف", title: "كورن فليكس كامل الحبة", ings: ["رقائق ذرة", "حليب دافئ", "ملعقة زبيب"], steps: "وجبة سريعة وخفيفة على المعدة." },
+            { id: 34, category: "خفيف", title: "زبادي يوناني بالعسل", ings: ["زبادي يوناني", "عسل نحل", "عين جمل"], steps: "وجبة غنية بالبروتين تمنع الجوع لفترة طويلة." },
+            { id: 35, category: "خفيف", title: "موز باللوز وزبدة الفول السوداني", ings: ["موزة", "ملعقة زبدة فول سوداني"], steps: "ادهن الموز بالزبدة ورش اللوز المطحون." },
+            { id: 36, category: "خفيف", title: "بسكويت دايجستف بالحليب", ings: ["3 قطع بسكويت", "كوب حليب خالي الدسم"], steps: "سحور خفيف وسريع جداً." },
+            { id: 37, category: "خفيف", title: "سلطة خيار بالزبادي والنعناع", ings: ["خيار مبشور", "علبة زبادي", "نعناع جاف"], steps: "تساعد جداً في ترطيب الجسم ومنع العطش." },
+            { id: 38, category: "خفيف", title: "تفاح بزبادي القرفة", ings: ["تفاحة مقطعة", "زبادي", "رشة قرفة"], steps: "اخلط القرفة مع الزبادي واغمس التفاح بها." },
+
+            // ألبان (39-50)
+            { id: 39, category: "ألبان", title: "جبنة قريش بالطماطم والريحان", ings: ["جبنة قريش", "طماطم مكعبات", "ريحان طازج", "زيت زيتون"], steps: "اخلط المكونات للحصول على طبق رطب ومشبع." },
+            { id: 40, category: "ألبان", title: "لبنة بالزعتر والزيتون", ings: ["لبنة تركية", "زعتر فلسطيني", "زيتون أسود"], steps: "افرد اللبنة وزينها بالزعتر والزيتون وزيت الزيتون." },
+            { id: 41, category: "ألبان", title: "جبنة حلوم مشوية مع خيار", ings: ["شرائح حلوم", "خيار طازج", "نعناع"], steps: "اشوِ الحلوم في مقلاة بدون زيت وقدمها مع الخيار." },
+            { id: 42, category: "ألبان", title: "سلطة أجبان مشكلة", ings: ["جبنة بيضاء", "شيدر", "رومي", "زيتون"], steps: "قطع الأجبان مكعبات صغيرة واخلطها مع زيت وزعتر." },
+            { id: 43, category: "ألبان", title: "زبادي بلدي بالعسل الأسود", ings: ["زبادي بلدي", "ملعقة عسل أسود"], steps: "مد الجسم بالحديد والطاقة بطعم تقليدي." },
+            { id: 44, category: "ألبان", title: "جبنة فيتا بالنعناع والفلفل", ings: ["جبنة فيتا", "نعناع أخضر", "فلفل بارد"], steps: "اهرس الجبنة مع النعناع المفروم لتعزيز الانتعاش." },
+            { id: 45, category: "ألبان", title: "رايب هاضم بالكمون", ings: ["لبن رايب", "رشة كمون", "رشة ملح"], steps: "يساعد في عملية الهضم ويريح المعدة قبل النوم." },
+            { id: 46, category: "ألبان", title: "مكعبات جبنة مع بطيخ", ings: ["جبنة براميلي ملح خفيف", "مكعبات بطيخ بارد"], steps: "أفضل سحور مرطب في الأيام الحارة." },
+            { id: 47, category: "ألبان", title: "سندوتش جبنة كيري بالمربى", ings: ["جبنة كيري", "مربى فراولة", "خبز فين"], steps: "لمحبي الطعم المالح والحلو معاً." },
+            { id: 48, category: "ألبان", title: "جبنة بيضاء بالبصل الأخضر", ings: ["جبنة بيضاء", "بصل أخضر مفروم", "طماطم"], steps: "اخلط الجبنة مع البصل الأخضر المفروم وزيت الذرة." },
+            { id: 49, category: "ألبان", title: "قشطة بالعسل والمكسرات", ings: ["قشطة طازجة", "عسل", "فستق"], steps: "سحور غني جداً بالطاقة والمذاق الرائع." },
+            { id: 50, category: "ألبان", title: "جبنة موزاريلا بالطماطم المجففة", ings: ["كرات موزاريلا", "طماطم مجففة", "زيت زيتون"], steps: "طبق راقٍ وخفيف الغني بالكالسيوم." }
+        ];
+
         let currentCategory = 'all';
-
-        function initRecipes() {
-            Object.keys(categories).forEach(cat => {
-                categories[cat].forEach((baseName, index) => {
-                    for(let i=1; i<=5; i++) {
-                        recipesDB.push({
-                            id: `${cat}-${index}-${i}`,
-                            title: i === 1 ? baseName : `${baseName} (نمط ${i})`,
-                            category: cat,
-                            cal: Math.floor(Math.random() * 250) + 120,
-                            ingredients: ["مكون أساسي طازج", "ملعقة زيت زيتون بكر", "توابل رمضانية هادئة", "خضروات ورقية منعشة"],
-                            steps: "يتم تحضير هذه الوجبة بأسلوب الطهي البطيء للحفاظ على السوائل. نضع المكونات في وعاء غير لاصق، ونبتعد عن القلي لضمان عدم الشعور بالعطش أثناء الصيام."
-                        });
-                    }
-                });
-            });
-        }
 
         function renderGrid() {
             const container = document.getElementById('recipeContainer');
-            const filtered = currentCategory === 'all' 
-                ? recipesDB 
-                : recipesDB.filter(r => r.category === currentCategory);
-            
+            const filtered = currentCategory === 'all' ? recipesDB : recipesDB.filter(r => r.category === currentCategory);
             container.innerHTML = filtered.map(r => `
-                <div class="recipe-card" onclick="openModal('${r.id}')">
+                <div class="recipe-card" onclick="openModal(${r.id})">
                     <h3>${r.title}</h3>
-                    <div class="meta">
-                        <span style="color:var(--neon-gold)">⚡ ${r.cal} سعرة</span> | ${r.category}
-                    </div>
+                    <p style="color:#888; font-size:0.9rem;">📂 ${r.category}</p>
                 </div>
             `).join('');
         }
@@ -439,11 +245,26 @@
             const filtered = recipesDB.filter(r => r.title.toLowerCase().includes(term));
             const container = document.getElementById('recipeContainer');
             container.innerHTML = filtered.map(r => `
-                <div class="recipe-card" onclick="openModal('${r.id}')">
+                <div class="recipe-card" onclick="openModal(${r.id})">
                     <h3>${r.title}</h3>
-                    <div class="meta">⚡ ${r.cal} سعرة | ${r.category}</div>
+                    <p style="color:#888; font-size:0.9rem;">📂 ${r.category}</p>
                 </div>
             `).join('');
+        }
+
+        function openModal(id) {
+            const r = recipesDB.find(x => x.id === id);
+            document.getElementById('modalTitle').innerText = r.title;
+            document.getElementById('modalIngs').innerHTML = r.ings.map(i => `<li>${i}</li>`).join('');
+            document.getElementById('modalSteps').innerText = r.steps;
+            document.getElementById('recipeModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('recipeModal').style.display = 'none'; }
+
+        function toggleTheme() {
+            const body = document.body;
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
         }
 
         function startTimer() {
@@ -461,34 +282,12 @@
             }, 1000);
         }
 
-        function openModal(id) {
-            const r = recipesDB.find(x => x.id === id);
-            document.getElementById('modalTitle').innerText = r.title;
-            document.getElementById('modalMeta').innerText = `القسم: ${r.category} | السعرات: ${r.cal} Cal`;
-            document.getElementById('modalIngs').innerHTML = r.ingredients.map(i => `<li>${i}</li>`).join('');
-            document.getElementById('modalSteps').innerText = r.steps;
-            document.getElementById('recipeModal').style.display = 'flex';
-        }
-
-        function closeModal() { document.getElementById('recipeModal').style.display = 'none'; }
-
-        function toggleTheme() {
-            const body = document.body;
-            const isDark = body.getAttribute('data-theme') !== 'light';
-            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        }
-
-        // تحكم القائمة الجانبية
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
         overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 
-        window.onload = () => {
-            initRecipes();
-            renderGrid();
-            startTimer();
-        };
+        window.onload = () => { renderGrid(); startTimer(); };
     </script>
 </body>
 </html>
