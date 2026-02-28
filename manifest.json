@@ -1,8 +1,8 @@
 {
   "name": "سحورنا 2026",
   "short_name": "سحورنا",
-  "start_url": "/PROJECT_NAME/index.html",
-  "scope": "/PROJECT_NAME/",
+  "start_url": "/SOHOORNA/index.html",
+  "scope": "/SOHOORNA/",
   "display": "standalone",
   "background_color": "#030508",
   "theme_color": "#D4AF37",
