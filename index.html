@@ -191,7 +191,7 @@
         <div class="logo-container">
             <img src="sohoorna.png" class="brand-logo" alt="لوجو سحورنا">
         </div>
-        <h1 style="font-family:'Amiri'; font-size: 32px; color: var(--gold); margin:0;">سحورنا 2026</h1>
+        <h1 style="font-family:'Amiri'; font-size: 32px; color: var(--gold); margin:0;">سحورنا 2027</h1>
         <p id="hijri-date" style="margin:5px 0; font-weight: bold; font-size: 1.1rem;">جاري التحميل...</p>
         
         <div class="visitor-stats">
@@ -320,7 +320,7 @@
                 document.getElementById('s').innerText = Math.max(0, Math.floor((diff%60000)/1000)).toString().padStart(2,'0');
                 document.getElementById('next-event-title').innerText = label;
                 
-                document.getElementById('location-status').innerHTML = userCoords ? '<i class="fa-solid fa-check"></i> موقعك محدد بدقة' : '<i class="fa-solid fa-map-pin"></i> القاهرة (افتراضي)';
+                document.getElementById('location-status').innerHTML = userCoords ? '<i class="fa-solid fa-check"></i> موقعك محدد بدقة' : '<i class="fa-solid fa-map-pin"></i> تم تحديد الوقت بناء على موقعك بنجاح';
             } catch (e) {}
         }
 
@@ -342,7 +342,7 @@
         function shareApp() { 
             if (navigator.share) {
                 navigator.share({ 
-                    title: 'سحورنا 2026', 
+                    title: 'سحورنا 2027', 
                     text: 'اكتشف منصة سحورنا الشاملة لخدمات رمضان',
                     url: window.location.href 
                 }); 
