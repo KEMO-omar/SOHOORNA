@@ -1,8 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://kemo-omar.github.io/SOHOORNA/</loc>
-    <lastmod>2024-03-11</lastmod>
+    <loc>https://kemo-omar.github.io/SOHOORNA/index.html</loc>
+    <lastmod>2026-03-11</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/quran.html</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/prayers.html</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/khatma.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/azkar.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/tasbih.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/zakat.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/faq.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/library.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/recipes.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/suhoor.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/health-tips.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/habits.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/ehsan.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/series.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/kids.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://kemo-omar.github.io/SOHOORNA/designers.html</loc>
+    <priority>0.5</priority>
   </url>
 </urlset>
