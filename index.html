@@ -3,11 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>سحورنا 2026 | SOHOORNA</title>
     
-    <link rel="manifest" href="manifest.json">
+    <title>سحورنا 2026 | SOHOORNA </title>
+    <meta name="description" content="منصة سحورنا 2026 الشاملة: مواقيت الصلاة، المصحف الإلكتروني، أذكار المسلم، وحاسبة الزكاة. صُمم بواسطة كريم عمر و مصطفى محمد و محمد بركات و يوسف عويس و يوسف مصطفي لتقديم تجربة رمضانية فريدة.">
+    <meta name="keywords" content="سحورنا, رمضان 2026, مواقيت الصلاة, اذكار, قرآن كريم, كريم عمر, مصطفى محمد, عبقرينو, وصفات الطعام , منصه رمضانيه شامله ,رمضان كريم,sohoorna ">
+    <meta name="author" content="كريم عمر,مصطفى محمد , محمد بركات , يوسف عويس, يوسف مصطفى">
     <meta name="theme-color" content="#D4AF37">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "سحورنا 2026",
+      "url": "https://kemo-omar.github.io/Kareem/",
+      "description": "تطبيق ويب تفاعلي يقدم خدمات رمضانية متكاملة لعام 2026.",
+      "applicationCategory": "LifestyleApplication",
+      "author": {
+        "@type": "Person",
+        "name": "كريم عمر , مصطفى محمد , يوسف مصطفى,  يوسف عويس , محمد بركات "
+      }
+    }
+    </script>
+
+    <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="sohoorna.png">
+    <link rel="icon" type="image/png" href="sohoorna.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -106,11 +126,10 @@
         .sidebar.active { right: 0; }
         .sidebar-item { display: flex; align-items: center; gap: 15px; color: var(--text-main); text-decoration: none; padding: 15px 20px; border-bottom: 1px solid rgba(212,175,55,0.05); }
         
-        /* تنسيق زر التثبيت */
         .install-btn-sidebar { 
             background: linear-gradient(45deg, var(--gold), #b38f00) !important; 
             color: #000 !important; font-weight: bold; margin: 10px; border-radius: 12px; 
-            display: none; /* سيظهر بالجافاسكريبت */
+            display: none; 
         }
 
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 5500; }
@@ -127,13 +146,13 @@
 </head>
 <body data-theme="dark">
 
-    <img src="antern.png" class="lantern-right">
-    <img src="antern.png" class="lantern-left">
+    <img src="antern.png" class="lantern-right" alt="فانوس رمضان">
+    <img src="antern.png" class="lantern-left" alt="فانوس رمضان">
     <div class="overlay" id="overlay"></div>
 
     <nav class="sidebar" id="sidebar">
         <div style="text-align: center; padding: 20px;">
-            <img src="sohoorna.png" style="width: 70px; border-radius: 15px; border: 1px solid var(--gold);">
+            <img src="sohoorna.png" style="width: 70px; border-radius: 15px; border: 1px solid var(--gold);" alt="لوجو سحورنا">
             <h3 style="color:var(--gold);">سحورنا 2026</h3>
         </div>
         
@@ -162,18 +181,18 @@
 
     <div class="top-controls">
         <div style="display:flex; gap:10px;">
-            <button class="top-btn" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
-            <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+            <button class="top-btn" id="menuBtn" aria-label="القائمة"><i class="fa-solid fa-bars-staggered"></i></button>
+            <button class="top-btn" onclick="toggleTheme()" aria-label="تغيير المظهر"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         </div>
-        <button class="top-btn" onclick="shareApp()"><i class="fa-solid fa-share-nodes"></i></button>
+        <button class="top-btn" onclick="shareApp()" aria-label="مشاركة التطبيق"><i class="fa-solid fa-share-nodes"></i></button>
     </div>
 
     <div class="header">
         <div class="logo-container">
-            <img src="sohoorna.png" class="brand-logo">
+            <img src="sohoorna.png" class="brand-logo" alt="لوجو سحورنا">
         </div>
-        <h1 style="font-family:'Amiri'; font-size: 28px; color: var(--gold); margin:0;">سحورنا 2026</h1>
-        <p id="hijri-date" style="margin:5px 0; font-weight: bold;">جاري التحميل...</p>
+        <h1 style="font-family:'Amiri'; font-size: 32px; color: var(--gold); margin:0;">سحورنا 2026</h1>
+        <p id="hijri-date" style="margin:5px 0; font-weight: bold; font-size: 1.1rem;">جاري التحميل...</p>
         
         <div class="visitor-stats">
             <div class="stat-box">
@@ -192,7 +211,7 @@
     </div>
 
     <div class="timer-container">
-        <span id="next-event-title" style="color:var(--gold); font-weight:700; margin-bottom:10px; display:block;">انتظر قليلاً...</span>
+        <span id="next-event-title" style="color:var(--gold); font-weight:700; margin-bottom:10px; display:block; font-size: 1.2rem;">انتظر قليلاً...</span>
         <div class="countdown-row">
             <div class="c-item"><span id="h">00</span><label>ساعة</label></div>
             <div class="c-item"><span id="m">00</span><label>دقيقة</label></div>
@@ -235,7 +254,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // تكوين Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC0WJ11PvTUAWxLMlPBqXA-2QrcXM2uHg0",
             authDomain: "sohoorna.firebaseapp.com",
@@ -250,7 +268,6 @@
         const db = firebase.database();
         const onlineRef = db.ref('stats/online');
         const totalRef = db.ref('stats/totalVisits');
-        const startTime = Date.now();
 
         if (!localStorage.getItem('v26')) {
             totalRef.transaction(c => (c || 0) + 1);
@@ -287,26 +304,15 @@
                 const data = await res.json();
                 const t = data.data.timings;
                 
-                let hDay = parseInt(data.data.date.hijri.day);
-                let hMonth = data.data.date.hijri.month.ar;
-                let hYear = data.data.date.hijri.year;
-
-                hDay = hDay - 1;
-                if (hDay === 0) { hDay = 30; hMonth = "شعبان"; }
-                
-                document.getElementById('hijri-date').innerText = `${hDay} ${hMonth} ${hYear}هـ`;
+                document.getElementById('hijri-date').innerText = `${data.data.date.hijri.day} ${data.data.date.hijri.month.ar} ${data.data.date.hijri.year}هـ`;
 
                 const fajrTime = new Date(now.toDateString() + " " + t.Fajr);
                 const maghribTime = new Date(now.toDateString() + " " + t.Maghrib);
                 
                 let target, label;
-                if (now.getDate() === 18 && now.getMonth() === 1) {
-                    target = fajrTime; label = "باقي على أول سحور (رمضان)";
-                } else {
-                    if (now < fajrTime) { target = fajrTime; label = "باقي على الإمساك"; }
-                    else if (now < maghribTime) { target = maghribTime; label = "باقي على الفطور"; }
-                    else { target = new Date(fajrTime.getTime() + 86400000); label = "باقي على السحور"; }
-                }
+                if (now < fajrTime) { target = fajrTime; label = "باقي على الإمساك"; }
+                else if (now < maghribTime) { target = maghribTime; label = "باقي على الفطور"; }
+                else { target = new Date(fajrTime.getTime() + 86400000); label = "باقي على السحور القادم"; }
 
                 const diff = target - now;
                 document.getElementById('h').innerText = Math.max(0, Math.floor(diff/3600000)).toString().padStart(2,'0');
@@ -314,7 +320,7 @@
                 document.getElementById('s').innerText = Math.max(0, Math.floor((diff%60000)/1000)).toString().padStart(2,'0');
                 document.getElementById('next-event-title').innerText = label;
                 
-                document.getElementById('location-status').innerHTML = userCoords ? '<i class="fa-solid fa-check"></i> تم تحديد الموقع' : '<i class="fa-solid fa-map-pin"></i> القاهرة (افتراضي)';
+                document.getElementById('location-status').innerHTML = userCoords ? '<i class="fa-solid fa-check"></i> موقعك محدد بدقة' : '<i class="fa-solid fa-map-pin"></i> القاهرة (افتراضي)';
             } catch (e) {}
         }
 
@@ -333,23 +339,25 @@
             document.getElementById('themeIcon').className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
 
-        function shareApp() { if (navigator.share) navigator.share({ title: 'سحورنا 2026', url: window.location.href }); }
+        function shareApp() { 
+            if (navigator.share) {
+                navigator.share({ 
+                    title: 'سحورنا 2026', 
+                    text: 'اكتشف منصة سحورنا الشاملة لخدمات رمضان',
+                    url: window.location.href 
+                }); 
+            } 
+        }
 
-        // --- معالجة تثبيت التطبيق ---
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // إظهار الزر
             installBtn.style.display = 'flex';
         });
 
         installBtn.onclick = async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    console.log('App Installed');
-                }
                 deferredPrompt = null;
                 installBtn.style.display = 'none';
             }
