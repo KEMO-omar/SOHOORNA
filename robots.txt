@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kemo-omar.github.io/SOHOORNA/sitemap.xml
