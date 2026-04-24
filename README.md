@@ -1,4 +1,4 @@
-# 🌙 منصة سحورنا 2027 | SOHOORNA
+# 🌙 منصة سحورنا | SOHOORNA
 > **التطبيق الرمضاني المتكامل لتقديم تجربة روحانية وعصرية فريدة.**
 
 [![Version](https://img.shields.io/badge/Version-2.0.27-gold)](https://kemo-omar.github.io/SOHOORNA/)
