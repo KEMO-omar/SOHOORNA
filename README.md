@@ -3,7 +3,7 @@
 
 [![Version](https://img.shields.io/badge/Version-2.0.27-gold)](https://kemo-omar.github.io/SOHOORNA/)
 [![Framework](https://img.shields.io/badge/Tech-HTML5_/_CSS3_/_JS-orange)](https://kemo-omar.github.io/SOHOORNA/)
-[![Firebase](https://img.shields.io/badge/Database-Firebase-yellow)](https://sohoorna.firebaseapp.com)
+[![LINK](https://img.shields.io/badge/LINK-Live_Preview-00f2ff?style=for-the-badge&logo=googlechrome&logoColor=white)](https://kemo-omar.github.io/SOHOORNA/)
 
 ---
 
@@ -57,6 +57,10 @@
 ## 📧 التواصل
 للمساهمة في المشروع أو الاستفسار، يمكنك زيارة الموقع الرسمي:  
 [SOHOORNA 2027](https://kemo-omar.github.io/SOHOORNA/)
+
+
+[KAREEM](https://kemo-omar.github.io/Kareem/)
+
 
 ---
 **حقوق النشر © 2026 - تم التطوير بكل حب لدعم المجتمع الرقمي الإسلامي.**
