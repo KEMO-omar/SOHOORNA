@@ -50,7 +50,7 @@
 ---
 
 ## 📸 لقطات من الموقع 
-sohoorna.png
+[LOGO](https://kemo-omar.github.io/SOHOORNA/sohoorna.png)
 
 ---
 
