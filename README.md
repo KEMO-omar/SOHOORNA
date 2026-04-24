@@ -49,8 +49,8 @@
 
 ---
 
-## 📸 لقطات من التطبيق
-https://kemo-omar.github.io/SOHOORNA/sohoorna.png
+## 📸 لقطات من الموقع 
+sohoorna.png
 
 ---
 
