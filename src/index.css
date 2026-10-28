@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-color: #030508;
+    --surface-color: #0f141e;
+    --gold: #D4AF37;
+    --gold-light: #FFD700;
+    --text-main: #f8f9fa;
+    --text-dim: #94a3b8;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --border-gold: rgba(212, 175, 55, 0.25);
+  }
+
+  [data-theme="light"] {
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --gold: #b8860b;
+    --gold-light: #c5a021;
+    --text-main: #0f172a;
+    --text-dim: #64748b;
+    --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    --border-gold: rgba(184, 134, 11, 0.25);
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Cairo', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@keyframes swing {
+  from {
+    transform: rotate(-5deg);
+  }
+  to {
+    transform: rotate(5deg);
+  }
+}
+
+.animate-lantern-right {
+  animation: swing 3s ease-in-out infinite alternate;
+  transform-origin: top center;
+}
+
+.animate-lantern-left {
+  animation: swing 3.5s ease-in-out infinite alternate;
+  transform-origin: top center;
+}
+
+.font-amiri {
+  font-family: 'Amiri', serif;
+}
+
+.font-tajawal {
+  font-family: 'Tajawal', sans-serif;
+}
+
+.font-orbitron {
+  font-family: 'Orbitron', monospace;
+}
+
+.font-reem {
+  font-family: 'Reem Kufi', sans-serif;
+}
+
+.gold-glow {
+  text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+.gold-box-glow {
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+}
